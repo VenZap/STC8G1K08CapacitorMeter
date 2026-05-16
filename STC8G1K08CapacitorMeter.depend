@@ -1,0 +1,47 @@
+# depslib dependency file v1.0
+1766100899 source:c:\users\nebula\desktop\cb_n24\stc_ssd1306\ascii_font.c
+	<stdint.h>
+	"ssd1306.h"
+
+1766159039 source:c:\users\nebula\desktop\cb_n24\stc_ssd1306\i2c_seven_segment.c
+	<stdint.h>
+	"ssd1306.h"
+	"stc_i2c.h"
+	"i2c_seven_segment.h"
+
+1766171018 c:\users\nebula\desktop\cb_n24\stc_ssd1306\ssd1306.h
+	<stdint.h>
+
+1766191463 c:\users\nebula\desktop\cb_n24\stc_ssd1306\stc_i2c.h
+	<stdint.h>
+
+1766193933 c:\users\nebula\desktop\cb_n24\stc_ssd1306\stc8g_reg.h
+
+1766192360 c:\users\nebula\desktop\cb_n24\stc_ssd1306\i2c_seven_segment.h
+
+1766157947 source:c:\users\nebula\desktop\cb_n24\stc_ssd1306\main.c
+	<stdint.h>
+	<mcs51/at89x051.h>
+	"stc_i2c.h"
+	"ssd1306.h"
+	"ascii_font.h"
+	"i2c_seven_segment.h"
+
+1766192814 source:c:\users\nebula\desktop\cb_n24\stc_ssd1306\ssd1306.c
+	<stdint.h>
+	"stc_i2c.h"
+	"ssd1306.h"
+
+1766191867 source:c:\users\nebula\desktop\cb_n24\stc_ssd1306\stc_i2c.c
+	<stdint.h>
+	"stc_i2c.h"
+	"stc8g_reg.h"
+
+1766104778 c:\users\nebula\desktop\cb_n24\stc_ssd1306\ascii_font.h
+	<stdint.h>
+
+1778962804 source:c:\users\cociska\desktop\stc_ssd1306-master\main.c
+	<stdint.h>
+
+1778942938 c:\users\cociska\desktop\stc_ssd1306-master\stc8g_reg.h
+
