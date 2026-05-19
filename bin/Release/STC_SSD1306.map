@@ -8,6 +8,8 @@ CABS                                00000000    00000000 =           0. bytes (A
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   00000000  l_BIT_BANK                      
+C:   00000000  l_BSEG                          
+C:   00000000  l_BSEG_BYTES                    
 C:   00000000  l_CABS                          
 C:   00000000  l_GSINIT                        
 C:   00000000  l_GSINIT1                       
@@ -22,8 +24,6 @@ C:   00000000  l_RSEG
 C:   00000000  l_RSEG0                         
 C:   00000000  l_RSEG1                         
 C:   00000000  l_XABS                          
-C:   00000000  l_XINIT                         
-C:   00000000  l_XISEG                         
 C:   00000000  l__CODE                         
 C:   00000000  s_BSEG                          
 C:   00000000  s_CABS                          
@@ -36,27 +36,27 @@ C:   00000000  s_RSEG
 C:   00000000  s_RSEG0                         
 C:   00000000  s_RSEG1                         
 C:   00000000  s_XABS                          
-C:   00000001  l_BSEG                          
-C:   00000001  l_BSEG_BYTES                    
 C:   00000001  s_PSEG                          
 C:   00000001  s_XSEG                          
+C:   00000002  l_XINIT                         
+C:   00000002  l_XISEG                         
 C:   00000003  l_GSFINAL                       
 C:   00000003  l_GSINIT0                       
 C:   00000004  l_OSEG                          
-C:   00000006  l_HOME                          
-C:   00000006  s_GSINIT0                       
 C:   00000008  l_REG_BANK_0                    
 C:   00000008  s_REG_BANK_1                    
-C:   00000009  s_GSINIT1                       
-C:   00000009  s_GSINIT2                       
 C:   0000000A  l_GSINIT2                       
 C:   00000010  s_REG_BANK_2                    
-C:   00000013  s_GSINIT3                       
 C:   00000018  s_BIT_BANK                      
 C:   00000018  s_REG_BANK_3                    
 C:   00000019  s_OSEG                          
+C:   0000001D  s_SSEG                          
 C:   00000020  s_BSEG_BYTES                    
 C:   00000020  s__CODE                         
+C:   00000022  l_GSINIT3                       
+C:   0000002A  l_GSINIT4                       
+C:   00000045  l_XSEG                          
+C:   00000046  s_XISEG                         
 ASxxxx Linker V03.00/V05.40 + sdld,  page 2.
 Hexadecimal  [32-Bits]
 
@@ -66,23 +66,23 @@ CABS                                00000000    00000000 =           0. bytes (A
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000021  s_SSEG                          
-C:   00000022  l_GSINIT3                       
-C:   0000002A  l_GSINIT4                       
-C:   00000035  s_GSINIT4                       
-C:   00000041  l_XSEG                          
-C:   00000042  s_XISEG                         
-C:   0000005F  s_GSFINAL                       
-C:   0000005F  s_GSINIT                        
-C:   0000005F  s_GSINIT5                       
-C:   00000062  s_CSEG                          
-C:   0000007D  l_DSEG                          
-C:   000000DF  l_SSEG                          
+C:   00000054  l_HOME                          
+C:   00000054  s_GSINIT0                       
+C:   00000057  s_GSINIT1                       
+C:   00000057  s_GSINIT2                       
+C:   00000061  s_GSINIT3                       
+C:   00000080  l_DSEG                          
+C:   00000083  s_GSINIT4                       
+C:   000000AD  s_GSFINAL                       
+C:   000000AD  s_GSINIT                        
+C:   000000AD  s_GSINIT5                       
+C:   000000B0  s_CSEG                          
+C:   000000E3  l_SSEG                          
 C:   00000100  l_IRAM                          
 C:   00000166  l_CONST                         
-C:   00001315  l_CSEG                          
-C:   00001377  s_CONST                         
-C:   000014DD  s_XINIT                         
+C:   00000F56  l_CSEG                          
+C:   00001006  s_CONST                         
+C:   0000116C  s_XINIT                         
 
 ASxxxx Linker V03.00/V05.40 + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -109,13 +109,15 @@ Area                                    Addr        Size        Decimal Bytes (A
      0000009D  _CLKSEL                            main
      000000A0  _P2                                main
      000000A0  __XPAGE                            
+     000000A8  _IE                                main
+     000000A9  _ET0                               main
+     000000AF  _EA                                main
      000000B0  _P3                                main
      000000B0  _PIN_BUTTON                        main
      000000B1  _P3M1                              main
      000000B1  _PIN_R1_10K                        main
      000000B2  _P3M0                              main
      000000C0  _P4                                main
-     000000C4  _PIN_R3_1K                         main
      000000C8  _P5                                main
      000000C9  _P5M1                              main
      000000CA  _P5M0                              main
@@ -128,7 +130,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-BSEG_BYTES                          00000020    00000001 =           1. bytes (REL,CON)
+REG_BANK_0                          00000000    00000008 =           8. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -137,7 +139,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-REG_BANK_0                          00000000    00000008 =           8. bytes (REL,OVR)
+DSEG                                00000000    00000080 =         128. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -146,7 +148,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-DSEG                                00000000    0000007D =         125. bytes (REL,CON)
+OSEG                                00000019    00000004 =           4. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -155,27 +157,18 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-OSEG                                00000019    00000004 =           4. bytes (REL,OVR)
+SSEG                                0000001D    000000E3 =         227. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
+     0000001D  __start__stack                     main
+
 ASxxxx Linker V03.00/V05.40 + sdld,  page 8.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-SSEG                                00000021    000000DF =         223. bytes (REL,OVR)
-
-      Value  Global                              Global Defined In Module
-      -----  --------------------------------   ------------------------
-     00000021  __start__stack                     main
-
-ASxxxx Linker V03.00/V05.40 + sdld,  page 9.
-Hexadecimal  [32-Bits]
-
-Area                                    Addr        Size        Decimal Bytes (Attributes)
---------------------------------        ----        ----        ------- ----- ------------
-XSEG                                00000001    00000041 =          65. bytes (REL,CON,XDATA)
+XSEG                                00000001    00000045 =          69. bytes (REL,CON,XDATA)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -189,35 +182,51 @@ D:   00000014  _SSD1306_DisplayResult_PARM_3      main
 D:   00000018  _SSD1306_DisplayResult_PARM_4      main
 D:   0000002C  __modulong_PARM_2                  _modulong
 D:   00000035  __divulong_PARM_2                  _divulong
+D:   00000042  __mullong_PARM_2                   _mullong
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 9.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+XISEG                               00000046    00000002 =           2. bytes (REL,CON,XDATA)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+D:   00000046  _timer0_overflows                  main
 
 ASxxxx Linker V03.00/V05.40 + sdld,  page 10.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-HOME                                00000000    00000006 =           6. bytes (REL,CON,CODE)
+HOME                                00000000    00000054 =          84. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000003  __sdcc_program_startup             main
+C:   00000010  sdcc_atomic_exchange_rollback_st   main
+C:   00000037  sdcc_atomic_exchange_gptr_impl     main
+C:   00000037  sdcc_atomic_exchange_rollback_en   main
+C:   00000047  sdcc_atomic_compare_exchange_gpt   main
+C:   00000051  __sdcc_program_startup             main
 
 ASxxxx Linker V03.00/V05.40 + sdld,  page 11.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT0                             00000006    00000003 =           3. bytes (REL,CON,CODE)
+GSINIT0                             00000054    00000003 =           3. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000006  __sdcc_gsinit_startup              
+C:   00000054  __sdcc_gsinit_startup              
 
 ASxxxx Linker V03.00/V05.40 + sdld,  page 12.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT2                             00000009    0000000A =          10. bytes (REL,CON,CODE)
+GSINIT2                             00000057    0000000A =          10. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -226,30 +235,30 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT3                             00000013    00000022 =          34. bytes (REL,CON,CODE)
+GSINIT3                             00000061    00000022 =          34. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000013  __mcs51_genXINIT                   
+C:   00000061  __mcs51_genXINIT                   
 
 ASxxxx Linker V03.00/V05.40 + sdld,  page 14.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT4                             00000035    0000002A =          42. bytes (REL,CON,CODE)
+GSINIT4                             00000083    0000002A =          42. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000035  __mcs51_genRAMCLEAR                
-C:   0000003B  __mcs51_genXRAMCLEAR               
+C:   00000083  __mcs51_genRAMCLEAR                
+C:   00000089  __mcs51_genXRAMCLEAR               
 
 ASxxxx Linker V03.00/V05.40 + sdld,  page 15.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSFINAL                             0000005F    00000003 =           3. bytes (REL,CON,CODE)
+GSFINAL                             000000AD    00000003 =           3. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -258,67 +267,57 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000062    00001315 =        4885. bytes (REL,CON,CODE)
+CSEG                                000000B0    00000F56 =        3926. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000062  _Delay_ms                          main
-C:   000000BB  _I2C_Delay                         main
-C:   000000CC  _SCL_HIGH                          main
-C:   000000D6  _SCL_LOW                           main
-C:   000000E0  _SDA_HIGH                          main
-C:   000000EA  _SDA_LOW                           main
-C:   000000F4  _I2C_Start                         main
-C:   00000109  _I2C_Stop                          main
-C:   00000118  _I2C_Write_Byte                    main
-C:   00000166  _SSD1306_Command                   main
-C:   00000187  _SSD1306_Init                      main
-C:   0000023B  _SSD1306_Clear                     main
-C:   0000028A  _SSD1306_SetCursor                 main
-C:   000002C7  _SSD1306_WriteChar                 main
-C:   000003B1  _SSD1306_PrintString               main
-C:   00000406  _SSD1306_DisplayResult             main
-C:   00000827  _Measure_Single                    main
-C:   000008FE  _main                              main
-C:   00000E4B  ___fssub                           _fssub
-C:   00000E56  __modulong                         _modulong
-C:   00000F95  ___fsmul                           _fsmul
-C:   00001038  fsgetargs                          _fsget2args
-C:   00001066  __divulong                         _divulong
-C:   0000115A  fs_normalize_a                     _fsnormalize
-C:   0000118D  ___ulong2fs                        _ulong2fs
-C:   00001196  ulong2fs_doit                      _ulong2fs
-C:   000011A0  ___fs2ulong                        _fs2ulong
-C:   000011A2  fs2ulong_begin                     _fs2ulong
-C:   000011C7  fsgetarg                           _fsget1arg
-C:   000011D9  ___fslt                            _fslt
-C:   00001209  ___fsadd                           _fsadd
-C:   0000120C  fsadd_direct_entry                 _fsadd
-C:   00001262  fs_compare_uint32                  _fscmp
-C:   00001280  fs_check_negative_zeros            _fscmp
-C:   000012AB  fs_round_and_return                _fsreturnval
-C:   000012C3  fs_zerocheck_return                _fsreturnval
-C:   000012CC  fs_return_zero                     _fsreturnval
-C:   000012D4  fs_direct_return                   _fsreturnval
-C:   000012E2  fs_return_inf                      _fsreturnval
-C:   000012EF  fs_return_nan                      _fsreturnval
-C:   000012FA  fs_swap_a_b                        _fsswapargs
-C:   00001314  __gptrget                          _gptrget
-C:   00001330  fs_rshift_a                        _fsrshift
-C:   00001373  ___sdcc_external_startup           _startup
+C:   000000B0  _Delay_ms                          main
+C:   00000109  _I2C_Delay                         main
+C:   0000011A  _SCL_HIGH                          main
+C:   00000124  _SCL_LOW                           main
+C:   0000012E  _SDA_HIGH                          main
+C:   00000138  _SDA_LOW                           main
+C:   00000142  _I2C_Start                         main
+C:   00000157  _I2C_Stop                          main
+C:   00000166  _I2C_Write_Byte                    main
+C:   000001B4  _SSD1306_Command                   main
+C:   000001D5  _SSD1306_Init                      main
+C:   00000289  _SSD1306_Clear                     main
+C:   000002D8  _SSD1306_SetCursor                 main
+C:   00000314  _SSD1306_WriteChar                 main
+C:   000003FB  _SSD1306_PrintString               main
+C:   00000450  _SSD1306_DisplayResult             main
+C:   00000871  _Timer0_ISR                        main
+C:   000008A0  _Measure_Single                    main
+C:   00000929  _main                              main
+C:   00000D47  __modulong                         _modulong
+C:   00000E86  __divulong                         _divulong
+C:   00000F7A  __mullong                          _mullong
+C:   00000F7A  __mullong_dummy                    _mullong
+C:   00000FE6  __gptrget                          _gptrget
+C:   00001002  ___sdcc_external_startup           _startup
 
 ASxxxx Linker V03.00/V05.40 + sdld,  page 17.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               00001377    00000166 =         358. bytes (REL,CON,CODE)
+CONST                               00001006    00000166 =         358. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00001377  _Font_8x8                          main
+C:   00001006  _Font_8x8                          main
 
 ASxxxx Linker V03.00/V05.40 + sdld,  page 18.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+XINIT                               0000116C    00000002 =           2. bytes (REL,CON,CODE)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00/V05.40 + sdld,  page 19.
 
 Files Linked                              [ module(s) ]
 
@@ -327,52 +326,28 @@ obj\Release\main.rel                      [  ]
 
 Libraries Linked                          [ object file ]
 
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _fssub.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/liblong.lib
+C:\Program Files\SDCC\bin\..\lib\large/liblong.lib
                                           [ _modulong.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _fsmul.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _fsget2args.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/liblong.lib
+C:\Program Files\SDCC\bin\..\lib\large/liblong.lib
                                           [ _divulong.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/mcs51.lib
+C:\Program Files\SDCC\bin\..\lib\large/mcs51.lib
                                           [ crtclear.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _fsnormalize.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/mcs51.lib
+C:\Program Files\SDCC\bin\..\lib\large/mcs51.lib
                                           [ crtxinit.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _ulong2fs.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _fs2ulong.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _fsget1arg.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _fslt.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/mcs51.lib
+C:\Program Files\SDCC\bin\..\lib\large/liblong.lib
+                                          [ _mullong.rel ]
+C:\Program Files\SDCC\bin\..\lib\large/mcs51.lib
                                           [ crtxclear.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _fsadd.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _fscmp.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _fsreturnval.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/mcs51.lib
+C:\Program Files\SDCC\bin\..\lib\large/mcs51.lib
                                           [ crtpagesfr.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _fsswapargs.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/mcs51.lib
+C:\Program Files\SDCC\bin\..\lib\large/mcs51.lib
                                           [ crtstart.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libsdcc.lib
+C:\Program Files\SDCC\bin\..\lib\large/libsdcc.lib
                                           [ _gptrget.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libfloat.lib
-                                          [ _fsrshift.rel ]
-C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large/libsdcc.lib
+C:\Program Files\SDCC\bin\..\lib\large/libsdcc.lib
                                           [ _startup.rel ]
 
-ASxxxx Linker V03.00/V05.40 + sdld,  page 19.
+ASxxxx Linker V03.00/V05.40 + sdld,  page 20.
 
 User Base Address Definitions
 

@@ -1,2997 +1,2969 @@
                                       1 ;--------------------------------------------------------
-                                      2 ; File Created by SDCC : free open source ISO C Compiler 
-                                      3 ; Version 4.4.0 #14620 (MINGW32)
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.0 #15242 (MINGW64)
                                       4 ;--------------------------------------------------------
                                       5 	.module main
-                                      6 	.optsdcc -mmcs51 --model-large
-                                      7 	
+                                      6 	
+                                      7 	.optsdcc -mmcs51 --model-large
                                       8 ;--------------------------------------------------------
                                       9 ; Public variables in this module
                                      10 ;--------------------------------------------------------
                                      11 	.globl _Font_8x8
                                      12 	.globl _main
                                      13 	.globl _Measure_Single
-                                     14 	.globl _SSD1306_DisplayResult
-                                     15 	.globl _SSD1306_PrintString
-                                     16 	.globl _SSD1306_WriteChar
-                                     17 	.globl _SSD1306_SetCursor
-                                     18 	.globl _SSD1306_Clear
-                                     19 	.globl _SSD1306_Init
-                                     20 	.globl _SSD1306_Command
-                                     21 	.globl _I2C_Write_Byte
-                                     22 	.globl _I2C_Stop
-                                     23 	.globl _I2C_Start
-                                     24 	.globl _SDA_LOW
-                                     25 	.globl _SDA_HIGH
-                                     26 	.globl _SCL_LOW
-                                     27 	.globl _SCL_HIGH
-                                     28 	.globl _I2C_Delay
-                                     29 	.globl _Delay_ms
-                                     30 	.globl _PIN_BUTTON
-                                     31 	.globl _PIN_R3_1K
+                                     14 	.globl _Timer0_ISR
+                                     15 	.globl _SSD1306_DisplayResult
+                                     16 	.globl _SSD1306_PrintString
+                                     17 	.globl _SSD1306_WriteChar
+                                     18 	.globl _SSD1306_SetCursor
+                                     19 	.globl _SSD1306_Clear
+                                     20 	.globl _SSD1306_Init
+                                     21 	.globl _SSD1306_Command
+                                     22 	.globl _I2C_Write_Byte
+                                     23 	.globl _I2C_Stop
+                                     24 	.globl _I2C_Start
+                                     25 	.globl _SDA_LOW
+                                     26 	.globl _SDA_HIGH
+                                     27 	.globl _SCL_LOW
+                                     28 	.globl _SCL_HIGH
+                                     29 	.globl _I2C_Delay
+                                     30 	.globl _Delay_ms
+                                     31 	.globl _PIN_BUTTON
                                      32 	.globl _PIN_R1_10K
-                                     33 	.globl _TF0
-                                     34 	.globl _TR0
-                                     35 	.globl _AUXR
-                                     36 	.globl _TH0
-                                     37 	.globl _TL0
-                                     38 	.globl _TCON
-                                     39 	.globl _TMOD
-                                     40 	.globl _CLKSEL
-                                     41 	.globl _P_SW2
-                                     42 	.globl _P5M0
-                                     43 	.globl _P5M1
-                                     44 	.globl _P5
-                                     45 	.globl _P4
-                                     46 	.globl _P3M0
-                                     47 	.globl _P3M1
-                                     48 	.globl _P3
-                                     49 	.globl _P2
-                                     50 	.globl _P1M0
-                                     51 	.globl _P1M1
-                                     52 	.globl _P1
-                                     53 	.globl _P0
-                                     54 	.globl _SSD1306_DisplayResult_PARM_4
-                                     55 	.globl _SSD1306_DisplayResult_PARM_3
-                                     56 	.globl _SSD1306_DisplayResult_PARM_2
-                                     57 	.globl _SSD1306_PrintString_PARM_3
-                                     58 	.globl _SSD1306_PrintString_PARM_2
-                                     59 	.globl _SSD1306_WriteChar_PARM_3
-                                     60 	.globl _SSD1306_WriteChar_PARM_2
-                                     61 	.globl _SSD1306_SetCursor_PARM_2
-                                     62 ;--------------------------------------------------------
-                                     63 ; special function registers
-                                     64 ;--------------------------------------------------------
-                                     65 	.area RSEG    (ABS,DATA)
-      000000                         66 	.org 0x0000
-                           000080    67 _P0	=	0x0080
-                           000090    68 _P1	=	0x0090
-                           000093    69 _P1M1	=	0x0093
-                           000094    70 _P1M0	=	0x0094
-                           0000A0    71 _P2	=	0x00a0
-                           0000B0    72 _P3	=	0x00b0
-                           0000B1    73 _P3M1	=	0x00b1
-                           0000B2    74 _P3M0	=	0x00b2
-                           0000C0    75 _P4	=	0x00c0
-                           0000C8    76 _P5	=	0x00c8
-                           0000C9    77 _P5M1	=	0x00c9
-                           0000CA    78 _P5M0	=	0x00ca
-                           00008E    79 _P_SW2	=	0x008e
-                           00009D    80 _CLKSEL	=	0x009d
-                           000089    81 _TMOD	=	0x0089
-                           000088    82 _TCON	=	0x0088
-                           00008A    83 _TL0	=	0x008a
-                           00008C    84 _TH0	=	0x008c
-                           00008E    85 _AUXR	=	0x008e
-                                     86 ;--------------------------------------------------------
-                                     87 ; special function bits
-                                     88 ;--------------------------------------------------------
-                                     89 	.area RSEG    (ABS,DATA)
-      000000                         90 	.org 0x0000
-                           00008C    91 _TR0	=	0x008c
-                           00008D    92 _TF0	=	0x008d
-                           0000B1    93 _PIN_R1_10K	=	0x00b1
-                           0000C4    94 _PIN_R3_1K	=	0x00c4
-                           0000B0    95 _PIN_BUTTON	=	0x00b0
-                                     96 ;--------------------------------------------------------
-                                     97 ; overlayable register banks
-                                     98 ;--------------------------------------------------------
-                                     99 	.area REG_BANK_0	(REL,OVR,DATA)
-      000000                        100 	.ds 8
-                                    101 ;--------------------------------------------------------
-                                    102 ; internal ram data
-                                    103 ;--------------------------------------------------------
-                                    104 	.area DSEG    (DATA)
-      000008                        105 _SSD1306_DisplayResult_sloc0_1_0:
-      000008                        106 	.ds 1
-      000009                        107 _SSD1306_DisplayResult_sloc1_1_0:
-      000009                        108 	.ds 4
-      00000D                        109 _SSD1306_DisplayResult_sloc2_1_0:
-      00000D                        110 	.ds 4
-      000011                        111 _main_sloc0_1_0:
-      000011                        112 	.ds 4
-      000015                        113 _main_sloc1_1_0:
-      000015                        114 	.ds 4
-                                    115 ;--------------------------------------------------------
-                                    116 ; overlayable items in internal ram
-                                    117 ;--------------------------------------------------------
-                                    118 ;--------------------------------------------------------
-                                    119 ; Stack segment in internal ram
-                                    120 ;--------------------------------------------------------
-                                    121 	.area SSEG
-      000021                        122 __start__stack:
-      000021                        123 	.ds	1
-                                    124 
-                                    125 ;--------------------------------------------------------
-                                    126 ; indirectly addressable internal ram data
-                                    127 ;--------------------------------------------------------
-                                    128 	.area ISEG    (DATA)
-                                    129 ;--------------------------------------------------------
-                                    130 ; absolute internal ram data
+                                     33 	.globl _ET0
+                                     34 	.globl _EA
+                                     35 	.globl _TF0
+                                     36 	.globl _TR0
+                                     37 	.globl _IE
+                                     38 	.globl _AUXR
+                                     39 	.globl _TH0
+                                     40 	.globl _TL0
+                                     41 	.globl _TCON
+                                     42 	.globl _TMOD
+                                     43 	.globl _CLKSEL
+                                     44 	.globl _P_SW2
+                                     45 	.globl _P5M0
+                                     46 	.globl _P5M1
+                                     47 	.globl _P5
+                                     48 	.globl _P4
+                                     49 	.globl _P3M0
+                                     50 	.globl _P3M1
+                                     51 	.globl _P3
+                                     52 	.globl _P2
+                                     53 	.globl _P1M0
+                                     54 	.globl _P1M1
+                                     55 	.globl _P1
+                                     56 	.globl _P0
+                                     57 	.globl _timer0_overflows
+                                     58 	.globl _SSD1306_DisplayResult_PARM_4
+                                     59 	.globl _SSD1306_DisplayResult_PARM_3
+                                     60 	.globl _SSD1306_DisplayResult_PARM_2
+                                     61 	.globl _SSD1306_PrintString_PARM_3
+                                     62 	.globl _SSD1306_PrintString_PARM_2
+                                     63 	.globl _SSD1306_WriteChar_PARM_3
+                                     64 	.globl _SSD1306_WriteChar_PARM_2
+                                     65 	.globl _SSD1306_SetCursor_PARM_2
+                                     66 ;--------------------------------------------------------
+                                     67 ; special function registers
+                                     68 ;--------------------------------------------------------
+                                     69 	.area RSEG    (ABS,DATA)
+      000000                         70 	.org 0x0000
+                           000080    71 _P0	=	0x0080
+                           000090    72 _P1	=	0x0090
+                           000093    73 _P1M1	=	0x0093
+                           000094    74 _P1M0	=	0x0094
+                           0000A0    75 _P2	=	0x00a0
+                           0000B0    76 _P3	=	0x00b0
+                           0000B1    77 _P3M1	=	0x00b1
+                           0000B2    78 _P3M0	=	0x00b2
+                           0000C0    79 _P4	=	0x00c0
+                           0000C8    80 _P5	=	0x00c8
+                           0000C9    81 _P5M1	=	0x00c9
+                           0000CA    82 _P5M0	=	0x00ca
+                           00008E    83 _P_SW2	=	0x008e
+                           00009D    84 _CLKSEL	=	0x009d
+                           000089    85 _TMOD	=	0x0089
+                           000088    86 _TCON	=	0x0088
+                           00008A    87 _TL0	=	0x008a
+                           00008C    88 _TH0	=	0x008c
+                           00008E    89 _AUXR	=	0x008e
+                           0000A8    90 _IE	=	0x00a8
+                                     91 ;--------------------------------------------------------
+                                     92 ; special function bits
+                                     93 ;--------------------------------------------------------
+                                     94 	.area RSEG    (ABS,DATA)
+      000000                         95 	.org 0x0000
+                           00008C    96 _TR0	=	0x008c
+                           00008D    97 _TF0	=	0x008d
+                           0000AF    98 _EA	=	0x00af
+                           0000A9    99 _ET0	=	0x00a9
+                           0000B1   100 _PIN_R1_10K	=	0x00b1
+                           0000B0   101 _PIN_BUTTON	=	0x00b0
+                                    102 ;--------------------------------------------------------
+                                    103 ; overlayable register banks
+                                    104 ;--------------------------------------------------------
+                                    105 	.area REG_BANK_0	(REL,OVR,DATA)
+      000000                        106 	.ds 8
+                                    107 ;--------------------------------------------------------
+                                    108 ; internal ram data
+                                    109 ;--------------------------------------------------------
+                                    110 	.area DSEG    (DATA)
+      000008                        111 _SSD1306_DisplayResult_sloc0_1_0:
+      000008                        112 	.ds 1
+      000009                        113 _SSD1306_DisplayResult_sloc1_1_0:
+      000009                        114 	.ds 4
+      00000D                        115 _SSD1306_DisplayResult_sloc2_1_0:
+      00000D                        116 	.ds 4
+      000011                        117 _main_sloc0_1_0:
+      000011                        118 	.ds 4
+      000015                        119 _main_sloc1_1_0:
+      000015                        120 	.ds 4
+                                    121 ;--------------------------------------------------------
+                                    122 ; overlayable items in internal ram
+                                    123 ;--------------------------------------------------------
+                                    124 ;--------------------------------------------------------
+                                    125 ; Stack segment in internal ram
+                                    126 ;--------------------------------------------------------
+                                    127 	.area SSEG
+      00001D                        128 __start__stack:
+      00001D                        129 	.ds	1
+                                    130 
                                     131 ;--------------------------------------------------------
-                                    132 	.area IABS    (ABS,DATA)
-                                    133 	.area IABS    (ABS,DATA)
-                                    134 ;--------------------------------------------------------
-                                    135 ; bit data
-                                    136 ;--------------------------------------------------------
-                                    137 	.area BSEG    (BIT)
-      000000                        138 _main_sloc2_1_0:
-      000000                        139 	.ds 1
+                                    132 ; indirectly addressable internal ram data
+                                    133 ;--------------------------------------------------------
+                                    134 	.area ISEG    (DATA)
+                                    135 ;--------------------------------------------------------
+                                    136 ; absolute internal ram data
+                                    137 ;--------------------------------------------------------
+                                    138 	.area IABS    (ABS,DATA)
+                                    139 	.area IABS    (ABS,DATA)
                                     140 ;--------------------------------------------------------
-                                    141 ; paged external ram data
+                                    141 ; bit data
                                     142 ;--------------------------------------------------------
-                                    143 	.area PSEG    (PAG,XDATA)
+                                    143 	.area BSEG    (BIT)
                                     144 ;--------------------------------------------------------
-                                    145 ; uninitialized external ram data
+                                    145 ; paged external ram data
                                     146 ;--------------------------------------------------------
-                                    147 	.area XSEG    (XDATA)
-      000001                        148 _Delay_ms_ms_10000_1:
-      000001                        149 	.ds 2
-      000003                        150 _Delay_ms_i_10000_2:
-      000003                        151 	.ds 2
-      000005                        152 _I2C_Delay_i_10000_5:
-      000005                        153 	.ds 1
-      000006                        154 _I2C_Write_Byte_dat_10000_18:
-      000006                        155 	.ds 1
-      000007                        156 _SSD1306_Command_cmd_10000_24:
-      000007                        157 	.ds 1
-      000008                        158 _SSD1306_SetCursor_PARM_2:
-      000008                        159 	.ds 1
-      000009                        160 _SSD1306_SetCursor_page_10000_34:
-      000009                        161 	.ds 1
-      00000A                        162 _SSD1306_WriteChar_PARM_2:
-      00000A                        163 	.ds 1
-      00000B                        164 _SSD1306_WriteChar_PARM_3:
-      00000B                        165 	.ds 1
-      00000C                        166 _SSD1306_WriteChar_page_10000_36:
-      00000C                        167 	.ds 1
-      00000D                        168 _SSD1306_WriteChar_idx_10000_37:
-      00000D                        169 	.ds 1
-      00000E                        170 _SSD1306_PrintString_PARM_2:
-      00000E                        171 	.ds 1
-      00000F                        172 _SSD1306_PrintString_PARM_3:
-      00000F                        173 	.ds 3
-      000012                        174 _SSD1306_PrintString_page_10000_42:
-      000012                        175 	.ds 1
-      000013                        176 _SSD1306_DisplayResult_PARM_2:
-      000013                        177 	.ds 1
-      000014                        178 _SSD1306_DisplayResult_PARM_3:
-      000014                        179 	.ds 4
-      000018                        180 _SSD1306_DisplayResult_PARM_4:
-      000018                        181 	.ds 1
-      000019                        182 _SSD1306_DisplayResult_page_10000_45:
-      000019                        183 	.ds 1
-      00001A                        184 _Measure_Single_use_1k_10000_50:
-      00001A                        185 	.ds 1
-      00001B                        186 _Measure_Single_discharge_10000_51:
-      00001B                        187 	.ds 2
-      00001D                        188 _main_final_calc_10000_59:
-      00001D                        189 	.ds 4
-      000021                        190 _main_last_display_val_10000_59:
-      000021                        191 	.ds 4
-      000025                        192 _main_filtered_ticks_10000_59:
-      000025                        193 	.ds 4
-      000029                        194 _main_mode_uf_10000_59:
-      000029                        195 	.ds 1
-      00002A                        196 _main_is_first_run_10000_59:
-      00002A                        197 	.ds 1
-      00002B                        198 _main_is_sleeping_10000_59:
-      00002B                        199 	.ds 1
-                                    200 ;--------------------------------------------------------
-                                    201 ; absolute external ram data
-                                    202 ;--------------------------------------------------------
-                                    203 	.area XABS    (ABS,XDATA)
+                                    147 	.area PSEG    (PAG,XDATA)
+                                    148 ;--------------------------------------------------------
+                                    149 ; uninitialized external ram data
+                                    150 ;--------------------------------------------------------
+                                    151 	.area XSEG    (XDATA)
+      000001                        152 _Delay_ms_ms_10000_1:
+      000001                        153 	.ds 2
+      000003                        154 _Delay_ms_i_10000_2:
+      000003                        155 	.ds 2
+      000005                        156 _I2C_Delay_i_10000_5:
+      000005                        157 	.ds 1
+      000006                        158 _I2C_Write_Byte_dat_10000_18:
+      000006                        159 	.ds 1
+      000007                        160 _SSD1306_Command_cmd_10000_24:
+      000007                        161 	.ds 1
+      000008                        162 _SSD1306_SetCursor_PARM_2:
+      000008                        163 	.ds 1
+      000009                        164 _SSD1306_SetCursor_page_10000_34:
+      000009                        165 	.ds 1
+      00000A                        166 _SSD1306_WriteChar_PARM_2:
+      00000A                        167 	.ds 1
+      00000B                        168 _SSD1306_WriteChar_PARM_3:
+      00000B                        169 	.ds 1
+      00000C                        170 _SSD1306_WriteChar_page_10000_36:
+      00000C                        171 	.ds 1
+      00000D                        172 _SSD1306_WriteChar_idx_10000_37:
+      00000D                        173 	.ds 1
+      00000E                        174 _SSD1306_PrintString_PARM_2:
+      00000E                        175 	.ds 1
+      00000F                        176 _SSD1306_PrintString_PARM_3:
+      00000F                        177 	.ds 3
+      000012                        178 _SSD1306_PrintString_page_10000_42:
+      000012                        179 	.ds 1
+      000013                        180 _SSD1306_DisplayResult_PARM_2:
+      000013                        181 	.ds 1
+      000014                        182 _SSD1306_DisplayResult_PARM_3:
+      000014                        183 	.ds 4
+      000018                        184 _SSD1306_DisplayResult_PARM_4:
+      000018                        185 	.ds 1
+      000019                        186 _SSD1306_DisplayResult_page_10000_45:
+      000019                        187 	.ds 1
+      00001A                        188 _Measure_Single_stable_counter_10000_53:
+      00001A                        189 	.ds 1
+      00001B                        190 _main_final_calc_10000_60:
+      00001B                        191 	.ds 4
+      00001F                        192 _main_last_display_val_10000_60:
+      00001F                        193 	.ds 4
+      000023                        194 _main_filtered_ticks_10000_60:
+      000023                        195 	.ds 4
+      000027                        196 _main_mode_uf_10000_60:
+      000027                        197 	.ds 1
+      000028                        198 _main_is_first_run_10000_60:
+      000028                        199 	.ds 1
+      000029                        200 _main_is_sleeping_10000_60:
+      000029                        201 	.ds 1
+      00002A                        202 _main_discharge_10000_60:
+      00002A                        203 	.ds 2
                                     204 ;--------------------------------------------------------
-                                    205 ; initialized external ram data
+                                    205 ; absolute external ram data
                                     206 ;--------------------------------------------------------
-                                    207 	.area XISEG   (XDATA)
-                                    208 	.area HOME    (CODE)
-                                    209 	.area GSINIT0 (CODE)
-                                    210 	.area GSINIT1 (CODE)
-                                    211 	.area GSINIT2 (CODE)
-                                    212 	.area GSINIT3 (CODE)
-                                    213 	.area GSINIT4 (CODE)
-                                    214 	.area GSINIT5 (CODE)
-                                    215 	.area GSINIT  (CODE)
-                                    216 	.area GSFINAL (CODE)
-                                    217 	.area CSEG    (CODE)
-                                    218 ;--------------------------------------------------------
-                                    219 ; interrupt vector
-                                    220 ;--------------------------------------------------------
-                                    221 	.area HOME    (CODE)
-      000000                        222 __interrupt_vect:
-      000000 02 00 06         [24]  223 	ljmp	__sdcc_gsinit_startup
+                                    207 	.area XABS    (ABS,XDATA)
+                                    208 ;--------------------------------------------------------
+                                    209 ; initialized external ram data
+                                    210 ;--------------------------------------------------------
+                                    211 	.area XISEG   (XDATA)
+      000046                        212 _timer0_overflows::
+      000046                        213 	.ds 2
+                                    214 	.area HOME    (CODE)
+                                    215 	.area GSINIT0 (CODE)
+                                    216 	.area GSINIT1 (CODE)
+                                    217 	.area GSINIT2 (CODE)
+                                    218 	.area GSINIT3 (CODE)
+                                    219 	.area GSINIT4 (CODE)
+                                    220 	.area GSINIT5 (CODE)
+                                    221 	.area GSINIT  (CODE)
+                                    222 	.area GSFINAL (CODE)
+                                    223 	.area CSEG    (CODE)
                                     224 ;--------------------------------------------------------
-                                    225 ; global & static initialisations
+                                    225 ; interrupt vector
                                     226 ;--------------------------------------------------------
                                     227 	.area HOME    (CODE)
-                                    228 	.area GSINIT  (CODE)
-                                    229 	.area GSFINAL (CODE)
-                                    230 	.area GSINIT  (CODE)
-                                    231 	.globl __sdcc_gsinit_startup
-                                    232 	.globl __sdcc_program_startup
-                                    233 	.globl __start__stack
-                                    234 	.globl __mcs51_genXINIT
-                                    235 	.globl __mcs51_genXRAMCLEAR
-                                    236 	.globl __mcs51_genRAMCLEAR
-                                    237 	.area GSFINAL (CODE)
-      00005F 02 00 03         [24]  238 	ljmp	__sdcc_program_startup
-                                    239 ;--------------------------------------------------------
-                                    240 ; Home
-                                    241 ;--------------------------------------------------------
-                                    242 	.area HOME    (CODE)
-                                    243 	.area HOME    (CODE)
-      000003                        244 __sdcc_program_startup:
-      000003 02 08 FE         [24]  245 	ljmp	_main
-                                    246 ;	return from main will return to caller
-                                    247 ;--------------------------------------------------------
-                                    248 ; code
-                                    249 ;--------------------------------------------------------
-                                    250 	.area CSEG    (CODE)
-                                    251 ;------------------------------------------------------------
-                                    252 ;Allocation info for local variables in function 'Delay_ms'
-                                    253 ;------------------------------------------------------------
-                                    254 ;ms                        Allocated with name '_Delay_ms_ms_10000_1'
-                                    255 ;i                         Allocated with name '_Delay_ms_i_10000_2'
-                                    256 ;------------------------------------------------------------
-                                    257 ;	main.c:72: void Delay_ms(unsigned int ms) { volatile unsigned int i; while(ms--) { i = 600; while(i--); } }
-                                    258 ;	-----------------------------------------
-                                    259 ;	 function Delay_ms
-                                    260 ;	-----------------------------------------
-      000062                        261 _Delay_ms:
-                           000007   262 	ar7 = 0x07
-                           000006   263 	ar6 = 0x06
-                           000005   264 	ar5 = 0x05
-                           000004   265 	ar4 = 0x04
-                           000003   266 	ar3 = 0x03
-                           000002   267 	ar2 = 0x02
-                           000001   268 	ar1 = 0x01
-                           000000   269 	ar0 = 0x00
-      000062 AF 83            [24]  270 	mov	r7,dph
-      000064 E5 82            [12]  271 	mov	a,dpl
-      000066 90 00 01         [24]  272 	mov	dptr,#_Delay_ms_ms_10000_1
-      000069 F0               [24]  273 	movx	@dptr,a
-      00006A EF               [12]  274 	mov	a,r7
-      00006B A3               [24]  275 	inc	dptr
-      00006C F0               [24]  276 	movx	@dptr,a
-      00006D 90 00 01         [24]  277 	mov	dptr,#_Delay_ms_ms_10000_1
-      000070 E0               [24]  278 	movx	a,@dptr
-      000071 FE               [12]  279 	mov	r6,a
-      000072 A3               [24]  280 	inc	dptr
-      000073 E0               [24]  281 	movx	a,@dptr
-      000074 FF               [12]  282 	mov	r7,a
-      000075                        283 00104$:
-      000075 8E 04            [24]  284 	mov	ar4,r6
-      000077 8F 05            [24]  285 	mov	ar5,r7
-      000079 1E               [12]  286 	dec	r6
-      00007A BE FF 01         [24]  287 	cjne	r6,#0xff,00134$
-      00007D 1F               [12]  288 	dec	r7
-      00007E                        289 00134$:
-      00007E 90 00 01         [24]  290 	mov	dptr,#_Delay_ms_ms_10000_1
-      000081 EE               [12]  291 	mov	a,r6
-      000082 F0               [24]  292 	movx	@dptr,a
-      000083 EF               [12]  293 	mov	a,r7
-      000084 A3               [24]  294 	inc	dptr
-      000085 F0               [24]  295 	movx	@dptr,a
-      000086 EC               [12]  296 	mov	a,r4
-      000087 4D               [12]  297 	orl	a,r5
-      000088 60 28            [24]  298 	jz	00113$
-      00008A 90 00 03         [24]  299 	mov	dptr,#_Delay_ms_i_10000_2
-      00008D 74 58            [12]  300 	mov	a,#0x58
-      00008F F0               [24]  301 	movx	@dptr,a
-      000090 74 02            [12]  302 	mov	a,#0x02
-      000092 A3               [24]  303 	inc	dptr
-      000093 F0               [24]  304 	movx	@dptr,a
-      000094                        305 00101$:
-      000094 90 00 03         [24]  306 	mov	dptr,#_Delay_ms_i_10000_2
-      000097 E0               [24]  307 	movx	a,@dptr
-      000098 FC               [12]  308 	mov	r4,a
-      000099 A3               [24]  309 	inc	dptr
-      00009A E0               [24]  310 	movx	a,@dptr
-      00009B FD               [12]  311 	mov	r5,a
-      00009C EC               [12]  312 	mov	a,r4
-      00009D 24 FF            [12]  313 	add	a,#0xff
-      00009F FA               [12]  314 	mov	r2,a
-      0000A0 ED               [12]  315 	mov	a,r5
-      0000A1 34 FF            [12]  316 	addc	a,#0xff
-      0000A3 FB               [12]  317 	mov	r3,a
-      0000A4 90 00 03         [24]  318 	mov	dptr,#_Delay_ms_i_10000_2
-      0000A7 EA               [12]  319 	mov	a,r2
-      0000A8 F0               [24]  320 	movx	@dptr,a
-      0000A9 EB               [12]  321 	mov	a,r3
-      0000AA A3               [24]  322 	inc	dptr
-      0000AB F0               [24]  323 	movx	@dptr,a
-      0000AC EC               [12]  324 	mov	a,r4
-      0000AD 4D               [12]  325 	orl	a,r5
-      0000AE 60 C5            [24]  326 	jz	00104$
-      0000B0 80 E2            [24]  327 	sjmp	00101$
-      0000B2                        328 00113$:
-      0000B2 90 00 01         [24]  329 	mov	dptr,#_Delay_ms_ms_10000_1
-      0000B5 EE               [12]  330 	mov	a,r6
-      0000B6 F0               [24]  331 	movx	@dptr,a
-      0000B7 EF               [12]  332 	mov	a,r7
-      0000B8 A3               [24]  333 	inc	dptr
-      0000B9 F0               [24]  334 	movx	@dptr,a
-      0000BA 22               [24]  335 	ret
-                                    336 ;------------------------------------------------------------
-                                    337 ;Allocation info for local variables in function 'I2C_Delay'
-                                    338 ;------------------------------------------------------------
-                                    339 ;i                         Allocated with name '_I2C_Delay_i_10000_5'
-                                    340 ;------------------------------------------------------------
-                                    341 ;	main.c:73: void I2C_Delay(void) { volatile unsigned char i = 25; while(i--); }
-                                    342 ;	-----------------------------------------
-                                    343 ;	 function I2C_Delay
-                                    344 ;	-----------------------------------------
-      0000BB                        345 _I2C_Delay:
-      0000BB 90 00 05         [24]  346 	mov	dptr,#_I2C_Delay_i_10000_5
-      0000BE 74 19            [12]  347 	mov	a,#0x19
-      0000C0 F0               [24]  348 	movx	@dptr,a
-      0000C1                        349 00101$:
-      0000C1 90 00 05         [24]  350 	mov	dptr,#_I2C_Delay_i_10000_5
-      0000C4 E0               [24]  351 	movx	a,@dptr
-      0000C5 FF               [12]  352 	mov	r7,a
-      0000C6 14               [12]  353 	dec	a
-      0000C7 F0               [24]  354 	movx	@dptr,a
-      0000C8 EF               [12]  355 	mov	a,r7
-      0000C9 70 F6            [24]  356 	jnz	00101$
-      0000CB 22               [24]  357 	ret
-                                    358 ;------------------------------------------------------------
-                                    359 ;Allocation info for local variables in function 'SCL_HIGH'
-                                    360 ;------------------------------------------------------------
-                                    361 ;	main.c:76: void SCL_HIGH(void) { P3M1 &= ~(1 << SCL_BIT); P3M0 &= ~(1 << SCL_BIT); P3 |= (1 << SCL_BIT); }
-                                    362 ;	-----------------------------------------
-                                    363 ;	 function SCL_HIGH
-                                    364 ;	-----------------------------------------
-      0000CC                        365 _SCL_HIGH:
-      0000CC 53 B1 FB         [24]  366 	anl	_P3M1,#0xfb
-      0000CF 53 B2 FB         [24]  367 	anl	_P3M0,#0xfb
-      0000D2 43 B0 04         [24]  368 	orl	_P3,#0x04
-      0000D5 22               [24]  369 	ret
-                                    370 ;------------------------------------------------------------
-                                    371 ;Allocation info for local variables in function 'SCL_LOW'
-                                    372 ;------------------------------------------------------------
-                                    373 ;	main.c:77: void SCL_LOW(void)  { P3M1 |= (1 << SCL_BIT);  P3M0 |= (1 << SCL_BIT);  P3 &= ~(1 << SCL_BIT); }
-                                    374 ;	-----------------------------------------
-                                    375 ;	 function SCL_LOW
-                                    376 ;	-----------------------------------------
-      0000D6                        377 _SCL_LOW:
-      0000D6 43 B1 04         [24]  378 	orl	_P3M1,#0x04
-      0000D9 43 B2 04         [24]  379 	orl	_P3M0,#0x04
-      0000DC 53 B0 FB         [24]  380 	anl	_P3,#0xfb
-      0000DF 22               [24]  381 	ret
-                                    382 ;------------------------------------------------------------
-                                    383 ;Allocation info for local variables in function 'SDA_HIGH'
-                                    384 ;------------------------------------------------------------
-                                    385 ;	main.c:78: void SDA_HIGH(void) { P3M1 &= ~(1 << SDA_BIT); P3M0 &= ~(1 << SDA_BIT); P3 |= (1 << SDA_BIT); }
-                                    386 ;	-----------------------------------------
-                                    387 ;	 function SDA_HIGH
-                                    388 ;	-----------------------------------------
-      0000E0                        389 _SDA_HIGH:
-      0000E0 53 B1 F7         [24]  390 	anl	_P3M1,#0xf7
-      0000E3 53 B2 F7         [24]  391 	anl	_P3M0,#0xf7
-      0000E6 43 B0 08         [24]  392 	orl	_P3,#0x08
-      0000E9 22               [24]  393 	ret
-                                    394 ;------------------------------------------------------------
-                                    395 ;Allocation info for local variables in function 'SDA_LOW'
-                                    396 ;------------------------------------------------------------
-                                    397 ;	main.c:79: void SDA_LOW(void)  { P3M1 |= (1 << SDA_BIT);  P3M0 |= (1 << SDA_BIT);  P3 &= ~(1 << SDA_BIT); }
-                                    398 ;	-----------------------------------------
-                                    399 ;	 function SDA_LOW
-                                    400 ;	-----------------------------------------
-      0000EA                        401 _SDA_LOW:
-      0000EA 43 B1 08         [24]  402 	orl	_P3M1,#0x08
-      0000ED 43 B2 08         [24]  403 	orl	_P3M0,#0x08
-      0000F0 53 B0 F7         [24]  404 	anl	_P3,#0xf7
-      0000F3 22               [24]  405 	ret
-                                    406 ;------------------------------------------------------------
-                                    407 ;Allocation info for local variables in function 'I2C_Start'
-                                    408 ;------------------------------------------------------------
-                                    409 ;	main.c:82: void I2C_Start(void) { SDA_HIGH(); SCL_HIGH(); I2C_Delay(); SDA_LOW(); I2C_Delay(); SCL_LOW(); I2C_Delay(); }
-                                    410 ;	-----------------------------------------
-                                    411 ;	 function I2C_Start
-                                    412 ;	-----------------------------------------
-      0000F4                        413 _I2C_Start:
-      0000F4 12 00 E0         [24]  414 	lcall	_SDA_HIGH
-      0000F7 12 00 CC         [24]  415 	lcall	_SCL_HIGH
-      0000FA 12 00 BB         [24]  416 	lcall	_I2C_Delay
-      0000FD 12 00 EA         [24]  417 	lcall	_SDA_LOW
-      000100 12 00 BB         [24]  418 	lcall	_I2C_Delay
-      000103 12 00 D6         [24]  419 	lcall	_SCL_LOW
-      000106 02 00 BB         [24]  420 	ljmp	_I2C_Delay
-                                    421 ;------------------------------------------------------------
-                                    422 ;Allocation info for local variables in function 'I2C_Stop'
-                                    423 ;------------------------------------------------------------
-                                    424 ;	main.c:83: void I2C_Stop(void)  { SDA_LOW(); SCL_HIGH(); I2C_Delay(); SDA_HIGH(); I2C_Delay(); }
-                                    425 ;	-----------------------------------------
-                                    426 ;	 function I2C_Stop
-                                    427 ;	-----------------------------------------
-      000109                        428 _I2C_Stop:
-      000109 12 00 EA         [24]  429 	lcall	_SDA_LOW
-      00010C 12 00 CC         [24]  430 	lcall	_SCL_HIGH
-      00010F 12 00 BB         [24]  431 	lcall	_I2C_Delay
-      000112 12 00 E0         [24]  432 	lcall	_SDA_HIGH
-      000115 02 00 BB         [24]  433 	ljmp	_I2C_Delay
-                                    434 ;------------------------------------------------------------
-                                    435 ;Allocation info for local variables in function 'I2C_Write_Byte'
-                                    436 ;------------------------------------------------------------
-                                    437 ;dat                       Allocated with name '_I2C_Write_Byte_dat_10000_18'
-                                    438 ;i                         Allocated with name '_I2C_Write_Byte_i_10000_19'
+      000000                        228 __interrupt_vect:
+      000000 02 00 54         [24]  229 	ljmp	__sdcc_gsinit_startup
+      000003 32               [24]  230 	reti
+      000004                        231 	.ds	7
+      00000B 02 08 71         [24]  232 	ljmp	_Timer0_ISR
+                                    233 ; restartable atomic support routines
+      00000E                        234 	.ds	2
+      000010                        235 sdcc_atomic_exchange_rollback_start::
+      000010 00               [12]  236 	nop
+      000011 00               [12]  237 	nop
+      000012                        238 sdcc_atomic_exchange_pdata_impl:
+      000012 E2               [24]  239 	movx	a, @r0
+      000013 FB               [12]  240 	mov	r3, a
+      000014 EA               [12]  241 	mov	a, r2
+      000015 F2               [24]  242 	movx	@r0, a
+      000016 80 2C            [24]  243 	sjmp	sdcc_atomic_exchange_exit
+      000018 00               [12]  244 	nop
+      000019 00               [12]  245 	nop
+      00001A                        246 sdcc_atomic_exchange_xdata_impl:
+      00001A E0               [24]  247 	movx	a, @dptr
+      00001B FB               [12]  248 	mov	r3, a
+      00001C EA               [12]  249 	mov	a, r2
+      00001D F0               [24]  250 	movx	@dptr, a
+      00001E 80 24            [24]  251 	sjmp	sdcc_atomic_exchange_exit
+      000020                        252 sdcc_atomic_compare_exchange_idata_impl:
+      000020 E6               [12]  253 	mov	a, @r0
+      000021 B5 02 02         [24]  254 	cjne	a, ar2, .+#5
+      000024 EB               [12]  255 	mov	a, r3
+      000025 F6               [12]  256 	mov	@r0, a
+      000026 22               [24]  257 	ret
+      000027 00               [12]  258 	nop
+      000028                        259 sdcc_atomic_compare_exchange_pdata_impl:
+      000028 E2               [24]  260 	movx	a, @r0
+      000029 B5 02 02         [24]  261 	cjne	a, ar2, .+#5
+      00002C EB               [12]  262 	mov	a, r3
+      00002D F2               [24]  263 	movx	@r0, a
+      00002E 22               [24]  264 	ret
+      00002F 00               [12]  265 	nop
+      000030                        266 sdcc_atomic_compare_exchange_xdata_impl:
+      000030 E0               [24]  267 	movx	a, @dptr
+      000031 B5 02 02         [24]  268 	cjne	a, ar2, .+#5
+      000034 EB               [12]  269 	mov	a, r3
+      000035 F0               [24]  270 	movx	@dptr, a
+      000036 22               [24]  271 	ret
+      000037                        272 sdcc_atomic_exchange_rollback_end::
+                                    273 
+      000037                        274 sdcc_atomic_exchange_gptr_impl::
+      000037 30 F6 E0         [24]  275 	jnb	b.6, sdcc_atomic_exchange_xdata_impl
+      00003A A8 82            [24]  276 	mov	r0, dpl
+      00003C 20 F5 D3         [24]  277 	jb	b.5, sdcc_atomic_exchange_pdata_impl
+      00003F                        278 sdcc_atomic_exchange_idata_impl:
+      00003F EA               [12]  279 	mov	a, r2
+      000040 C6               [12]  280 	xch	a, @r0
+      000041 F5 82            [12]  281 	mov	dpl, a
+      000043 22               [24]  282 	ret
+      000044                        283 sdcc_atomic_exchange_exit:
+      000044 8B 82            [24]  284 	mov	dpl, r3
+      000046 22               [24]  285 	ret
+      000047                        286 sdcc_atomic_compare_exchange_gptr_impl::
+      000047 30 F6 E6         [24]  287 	jnb	b.6, sdcc_atomic_compare_exchange_xdata_impl
+      00004A A8 82            [24]  288 	mov	r0, dpl
+      00004C 20 F5 D9         [24]  289 	jb	b.5, sdcc_atomic_compare_exchange_pdata_impl
+      00004F 80 CF            [24]  290 	sjmp	sdcc_atomic_compare_exchange_idata_impl
+                                    291 ;--------------------------------------------------------
+                                    292 ; global & static initialisations
+                                    293 ;--------------------------------------------------------
+                                    294 	.area HOME    (CODE)
+                                    295 	.area GSINIT  (CODE)
+                                    296 	.area GSFINAL (CODE)
+                                    297 	.area GSINIT  (CODE)
+                                    298 	.globl __sdcc_gsinit_startup
+                                    299 	.globl __sdcc_program_startup
+                                    300 	.globl __start__stack
+                                    301 	.globl __mcs51_genXINIT
+                                    302 	.globl __mcs51_genXRAMCLEAR
+                                    303 	.globl __mcs51_genRAMCLEAR
+                                    304 	.area GSFINAL (CODE)
+      0000AD 02 00 51         [24]  305 	ljmp	__sdcc_program_startup
+                                    306 ;--------------------------------------------------------
+                                    307 ; Home
+                                    308 ;--------------------------------------------------------
+                                    309 	.area HOME    (CODE)
+                                    310 	.area HOME    (CODE)
+      000051                        311 __sdcc_program_startup:
+      000051 02 09 29         [24]  312 	ljmp	_main
+                                    313 ;	return from main will return to caller
+                                    314 ;--------------------------------------------------------
+                                    315 ; code
+                                    316 ;--------------------------------------------------------
+                                    317 	.area CSEG    (CODE)
+                                    318 ;------------------------------------------------------------
+                                    319 ;Allocation info for local variables in function 'Delay_ms'
+                                    320 ;------------------------------------------------------------
+                                    321 ;ms            Allocated with name '_Delay_ms_ms_10000_1'
+                                    322 ;i             Allocated with name '_Delay_ms_i_10000_2'
+                                    323 ;------------------------------------------------------------
+                                    324 ;	main.c:78: void Delay_ms(unsigned int ms) { volatile unsigned int i; while(ms--) { i = 600; while(i--); } }
+                                    325 ;	-----------------------------------------
+                                    326 ;	 function Delay_ms
+                                    327 ;	-----------------------------------------
+      0000B0                        328 _Delay_ms:
+                           000007   329 	ar7 = 0x07
+                           000006   330 	ar6 = 0x06
+                           000005   331 	ar5 = 0x05
+                           000004   332 	ar4 = 0x04
+                           000003   333 	ar3 = 0x03
+                           000002   334 	ar2 = 0x02
+                           000001   335 	ar1 = 0x01
+                           000000   336 	ar0 = 0x00
+      0000B0 AF 83            [24]  337 	mov	r7,dph
+      0000B2 E5 82            [12]  338 	mov	a,dpl
+      0000B4 90 00 01         [24]  339 	mov	dptr,#_Delay_ms_ms_10000_1
+      0000B7 F0               [24]  340 	movx	@dptr,a
+      0000B8 EF               [12]  341 	mov	a,r7
+      0000B9 A3               [24]  342 	inc	dptr
+      0000BA F0               [24]  343 	movx	@dptr,a
+      0000BB 90 00 01         [24]  344 	mov	dptr,#_Delay_ms_ms_10000_1
+      0000BE E0               [24]  345 	movx	a,@dptr
+      0000BF FE               [12]  346 	mov	r6,a
+      0000C0 A3               [24]  347 	inc	dptr
+      0000C1 E0               [24]  348 	movx	a,@dptr
+      0000C2 FF               [12]  349 	mov	r7,a
+      0000C3                        350 00104$:
+      0000C3 8E 04            [24]  351 	mov	ar4,r6
+      0000C5 8F 05            [24]  352 	mov	ar5,r7
+      0000C7 1E               [12]  353 	dec	r6
+      0000C8 BE FF 01         [24]  354 	cjne	r6,#0xff,00134$
+      0000CB 1F               [12]  355 	dec	r7
+      0000CC                        356 00134$:
+      0000CC 90 00 01         [24]  357 	mov	dptr,#_Delay_ms_ms_10000_1
+      0000CF EE               [12]  358 	mov	a,r6
+      0000D0 F0               [24]  359 	movx	@dptr,a
+      0000D1 EF               [12]  360 	mov	a,r7
+      0000D2 A3               [24]  361 	inc	dptr
+      0000D3 F0               [24]  362 	movx	@dptr,a
+      0000D4 EC               [12]  363 	mov	a,r4
+      0000D5 4D               [12]  364 	orl	a,r5
+      0000D6 60 28            [24]  365 	jz	00113$
+      0000D8 90 00 03         [24]  366 	mov	dptr,#_Delay_ms_i_10000_2
+      0000DB 74 58            [12]  367 	mov	a,#0x58
+      0000DD F0               [24]  368 	movx	@dptr,a
+      0000DE 74 02            [12]  369 	mov	a,#0x02
+      0000E0 A3               [24]  370 	inc	dptr
+      0000E1 F0               [24]  371 	movx	@dptr,a
+      0000E2                        372 00101$:
+      0000E2 90 00 03         [24]  373 	mov	dptr,#_Delay_ms_i_10000_2
+      0000E5 E0               [24]  374 	movx	a,@dptr
+      0000E6 FC               [12]  375 	mov	r4,a
+      0000E7 A3               [24]  376 	inc	dptr
+      0000E8 E0               [24]  377 	movx	a,@dptr
+      0000E9 FD               [12]  378 	mov	r5,a
+      0000EA EC               [12]  379 	mov	a,r4
+      0000EB 24 FF            [12]  380 	add	a,#0xff
+      0000ED FA               [12]  381 	mov	r2,a
+      0000EE ED               [12]  382 	mov	a,r5
+      0000EF 34 FF            [12]  383 	addc	a,#0xff
+      0000F1 FB               [12]  384 	mov	r3,a
+      0000F2 90 00 03         [24]  385 	mov	dptr,#_Delay_ms_i_10000_2
+      0000F5 EA               [12]  386 	mov	a,r2
+      0000F6 F0               [24]  387 	movx	@dptr,a
+      0000F7 EB               [12]  388 	mov	a,r3
+      0000F8 A3               [24]  389 	inc	dptr
+      0000F9 F0               [24]  390 	movx	@dptr,a
+      0000FA EC               [12]  391 	mov	a,r4
+      0000FB 4D               [12]  392 	orl	a,r5
+      0000FC 60 C5            [24]  393 	jz	00104$
+      0000FE 80 E2            [24]  394 	sjmp	00101$
+      000100                        395 00113$:
+      000100 90 00 01         [24]  396 	mov	dptr,#_Delay_ms_ms_10000_1
+      000103 EE               [12]  397 	mov	a,r6
+      000104 F0               [24]  398 	movx	@dptr,a
+      000105 EF               [12]  399 	mov	a,r7
+      000106 A3               [24]  400 	inc	dptr
+      000107 F0               [24]  401 	movx	@dptr,a
+      000108 22               [24]  402 	ret
+                                    403 ;------------------------------------------------------------
+                                    404 ;Allocation info for local variables in function 'I2C_Delay'
+                                    405 ;------------------------------------------------------------
+                                    406 ;i             Allocated with name '_I2C_Delay_i_10000_5'
+                                    407 ;------------------------------------------------------------
+                                    408 ;	main.c:79: void I2C_Delay(void) { volatile unsigned char i = 25; while(i--); }
+                                    409 ;	-----------------------------------------
+                                    410 ;	 function I2C_Delay
+                                    411 ;	-----------------------------------------
+      000109                        412 _I2C_Delay:
+      000109 90 00 05         [24]  413 	mov	dptr,#_I2C_Delay_i_10000_5
+      00010C 74 19            [12]  414 	mov	a,#0x19
+      00010E F0               [24]  415 	movx	@dptr,a
+      00010F                        416 00101$:
+      00010F 90 00 05         [24]  417 	mov	dptr,#_I2C_Delay_i_10000_5
+      000112 E0               [24]  418 	movx	a,@dptr
+      000113 FF               [12]  419 	mov	r7,a
+      000114 14               [12]  420 	dec	a
+      000115 F0               [24]  421 	movx	@dptr,a
+      000116 EF               [12]  422 	mov	a,r7
+      000117 70 F6            [24]  423 	jnz	00101$
+      000119 22               [24]  424 	ret
+                                    425 ;------------------------------------------------------------
+                                    426 ;Allocation info for local variables in function 'SCL_HIGH'
+                                    427 ;------------------------------------------------------------
+                                    428 ;	main.c:82: void SCL_HIGH(void) { P3M1 &= ~(1 << SCL_BIT); P3M0 &= ~(1 << SCL_BIT); P3 |= (1 << SCL_BIT); }
+                                    429 ;	-----------------------------------------
+                                    430 ;	 function SCL_HIGH
+                                    431 ;	-----------------------------------------
+      00011A                        432 _SCL_HIGH:
+      00011A 53 B1 FB         [24]  433 	anl	_P3M1,#0xfb
+      00011D 53 B2 FB         [24]  434 	anl	_P3M0,#0xfb
+      000120 43 B0 04         [24]  435 	orl	_P3,#0x04
+      000123 22               [24]  436 	ret
+                                    437 ;------------------------------------------------------------
+                                    438 ;Allocation info for local variables in function 'SCL_LOW'
                                     439 ;------------------------------------------------------------
-                                    440 ;	main.c:85: void I2C_Write_Byte(unsigned char dat) {
+                                    440 ;	main.c:83: void SCL_LOW(void)  { P3M1 |= (1 << SCL_BIT);  P3M0 |= (1 << SCL_BIT);  P3 &= ~(1 << SCL_BIT); }
                                     441 ;	-----------------------------------------
-                                    442 ;	 function I2C_Write_Byte
+                                    442 ;	 function SCL_LOW
                                     443 ;	-----------------------------------------
-      000118                        444 _I2C_Write_Byte:
-      000118 E5 82            [12]  445 	mov	a,dpl
-      00011A 90 00 06         [24]  446 	mov	dptr,#_I2C_Write_Byte_dat_10000_18
-      00011D F0               [24]  447 	movx	@dptr,a
-                                    448 ;	main.c:87: for(i = 0; i < 8; i++) {
-      00011E 7F 00            [12]  449 	mov	r7,#0x00
-      000120                        450 00105$:
-                                    451 ;	main.c:88: if(dat & 0x80) { SDA_HIGH(); } else { SDA_LOW(); }
-      000120 90 00 06         [24]  452 	mov	dptr,#_I2C_Write_Byte_dat_10000_18
-      000123 E0               [24]  453 	movx	a,@dptr
-      000124 30 E7 09         [24]  454 	jnb	acc.7,00102$
-      000127 C0 07            [24]  455 	push	ar7
-      000129 12 00 E0         [24]  456 	lcall	_SDA_HIGH
-      00012C D0 07            [24]  457 	pop	ar7
-      00012E 80 07            [24]  458 	sjmp	00103$
-      000130                        459 00102$:
-      000130 C0 07            [24]  460 	push	ar7
-      000132 12 00 EA         [24]  461 	lcall	_SDA_LOW
-      000135 D0 07            [24]  462 	pop	ar7
-      000137                        463 00103$:
-                                    464 ;	main.c:89: I2C_Delay(); SCL_HIGH(); I2C_Delay(); SCL_LOW();
-      000137 C0 07            [24]  465 	push	ar7
-      000139 12 00 BB         [24]  466 	lcall	_I2C_Delay
-      00013C 12 00 CC         [24]  467 	lcall	_SCL_HIGH
-      00013F 12 00 BB         [24]  468 	lcall	_I2C_Delay
-      000142 12 00 D6         [24]  469 	lcall	_SCL_LOW
-      000145 D0 07            [24]  470 	pop	ar7
-                                    471 ;	main.c:90: dat <<= 1;
-      000147 90 00 06         [24]  472 	mov	dptr,#_I2C_Write_Byte_dat_10000_18
-      00014A E0               [24]  473 	movx	a,@dptr
-      00014B 25 E0            [12]  474 	add	a,acc
-      00014D F0               [24]  475 	movx	@dptr,a
-                                    476 ;	main.c:87: for(i = 0; i < 8; i++) {
-      00014E 0F               [12]  477 	inc	r7
-      00014F BF 08 00         [24]  478 	cjne	r7,#0x08,00129$
-      000152                        479 00129$:
-      000152 40 CC            [24]  480 	jc	00105$
-                                    481 ;	main.c:92: SDA_HIGH(); I2C_Delay(); SCL_HIGH(); I2C_Delay(); SCL_LOW(); I2C_Delay();
-      000154 12 00 E0         [24]  482 	lcall	_SDA_HIGH
-      000157 12 00 BB         [24]  483 	lcall	_I2C_Delay
-      00015A 12 00 CC         [24]  484 	lcall	_SCL_HIGH
-      00015D 12 00 BB         [24]  485 	lcall	_I2C_Delay
-      000160 12 00 D6         [24]  486 	lcall	_SCL_LOW
-                                    487 ;	main.c:93: }
-      000163 02 00 BB         [24]  488 	ljmp	_I2C_Delay
-                                    489 ;------------------------------------------------------------
-                                    490 ;Allocation info for local variables in function 'SSD1306_Command'
-                                    491 ;------------------------------------------------------------
-                                    492 ;cmd                       Allocated with name '_SSD1306_Command_cmd_10000_24'
-                                    493 ;------------------------------------------------------------
-                                    494 ;	main.c:95: void SSD1306_Command(unsigned char cmd) { I2C_Start(); I2C_Write_Byte(SSD1306_ADDR); I2C_Write_Byte(0x00); I2C_Write_Byte(cmd); I2C_Stop(); }
-                                    495 ;	-----------------------------------------
-                                    496 ;	 function SSD1306_Command
-                                    497 ;	-----------------------------------------
-      000166                        498 _SSD1306_Command:
-      000166 E5 82            [12]  499 	mov	a,dpl
-      000168 90 00 07         [24]  500 	mov	dptr,#_SSD1306_Command_cmd_10000_24
-      00016B F0               [24]  501 	movx	@dptr,a
-      00016C 12 00 F4         [24]  502 	lcall	_I2C_Start
-      00016F 75 82 78         [24]  503 	mov	dpl, #0x78
-      000172 12 01 18         [24]  504 	lcall	_I2C_Write_Byte
-      000175 75 82 00         [24]  505 	mov	dpl, #0x00
-      000178 12 01 18         [24]  506 	lcall	_I2C_Write_Byte
-      00017B 90 00 07         [24]  507 	mov	dptr,#_SSD1306_Command_cmd_10000_24
-      00017E E0               [24]  508 	movx	a,@dptr
-      00017F F5 82            [12]  509 	mov	dpl,a
-      000181 12 01 18         [24]  510 	lcall	_I2C_Write_Byte
-      000184 02 01 09         [24]  511 	ljmp	_I2C_Stop
-                                    512 ;------------------------------------------------------------
-                                    513 ;Allocation info for local variables in function 'SSD1306_Init'
-                                    514 ;------------------------------------------------------------
-                                    515 ;	main.c:97: void SSD1306_Init(void) {
-                                    516 ;	-----------------------------------------
-                                    517 ;	 function SSD1306_Init
-                                    518 ;	-----------------------------------------
-      000187                        519 _SSD1306_Init:
-                                    520 ;	main.c:98: Delay_ms(250);
-      000187 90 00 FA         [24]  521 	mov	dptr,#0x00fa
-      00018A 12 00 62         [24]  522 	lcall	_Delay_ms
-                                    523 ;	main.c:99: SSD1306_Command(0xAE); SSD1306_Command(0x20); SSD1306_Command(0x02);
-      00018D 75 82 AE         [24]  524 	mov	dpl, #0xae
-      000190 12 01 66         [24]  525 	lcall	_SSD1306_Command
-      000193 75 82 20         [24]  526 	mov	dpl, #0x20
-      000196 12 01 66         [24]  527 	lcall	_SSD1306_Command
-      000199 75 82 02         [24]  528 	mov	dpl, #0x02
-      00019C 12 01 66         [24]  529 	lcall	_SSD1306_Command
-                                    530 ;	main.c:100: SSD1306_Command(0xB0); SSD1306_Command(0x00); SSD1306_Command(0x10);
-      00019F 75 82 B0         [24]  531 	mov	dpl, #0xb0
-      0001A2 12 01 66         [24]  532 	lcall	_SSD1306_Command
-      0001A5 75 82 00         [24]  533 	mov	dpl, #0x00
-      0001A8 12 01 66         [24]  534 	lcall	_SSD1306_Command
-      0001AB 75 82 10         [24]  535 	mov	dpl, #0x10
-      0001AE 12 01 66         [24]  536 	lcall	_SSD1306_Command
-                                    537 ;	main.c:101: SSD1306_Command(0x40); SSD1306_Command(0x81); SSD1306_Command(0x7F);
-      0001B1 75 82 40         [24]  538 	mov	dpl, #0x40
-      0001B4 12 01 66         [24]  539 	lcall	_SSD1306_Command
-      0001B7 75 82 81         [24]  540 	mov	dpl, #0x81
-      0001BA 12 01 66         [24]  541 	lcall	_SSD1306_Command
-      0001BD 75 82 7F         [24]  542 	mov	dpl, #0x7f
-      0001C0 12 01 66         [24]  543 	lcall	_SSD1306_Command
-                                    544 ;	main.c:102: SSD1306_Command(0xA1); SSD1306_Command(0xC8); SSD1306_Command(0xA6);
-      0001C3 75 82 A1         [24]  545 	mov	dpl, #0xa1
-      0001C6 12 01 66         [24]  546 	lcall	_SSD1306_Command
-      0001C9 75 82 C8         [24]  547 	mov	dpl, #0xc8
-      0001CC 12 01 66         [24]  548 	lcall	_SSD1306_Command
-      0001CF 75 82 A6         [24]  549 	mov	dpl, #0xa6
-      0001D2 12 01 66         [24]  550 	lcall	_SSD1306_Command
-                                    551 ;	main.c:103: SSD1306_Command(0xA8); SSD1306_Command(0x3F); SSD1306_Command(0xD3); SSD1306_Command(0x00);
-      0001D5 75 82 A8         [24]  552 	mov	dpl, #0xa8
-      0001D8 12 01 66         [24]  553 	lcall	_SSD1306_Command
-      0001DB 75 82 3F         [24]  554 	mov	dpl, #0x3f
-      0001DE 12 01 66         [24]  555 	lcall	_SSD1306_Command
-      0001E1 75 82 D3         [24]  556 	mov	dpl, #0xd3
-      0001E4 12 01 66         [24]  557 	lcall	_SSD1306_Command
-      0001E7 75 82 00         [24]  558 	mov	dpl, #0x00
-      0001EA 12 01 66         [24]  559 	lcall	_SSD1306_Command
-                                    560 ;	main.c:104: SSD1306_Command(0xD5); SSD1306_Command(0x80); SSD1306_Command(0xD9); SSD1306_Command(0x22);
-      0001ED 75 82 D5         [24]  561 	mov	dpl, #0xd5
-      0001F0 12 01 66         [24]  562 	lcall	_SSD1306_Command
-      0001F3 75 82 80         [24]  563 	mov	dpl, #0x80
-      0001F6 12 01 66         [24]  564 	lcall	_SSD1306_Command
-      0001F9 75 82 D9         [24]  565 	mov	dpl, #0xd9
-      0001FC 12 01 66         [24]  566 	lcall	_SSD1306_Command
-      0001FF 75 82 22         [24]  567 	mov	dpl, #0x22
-      000202 12 01 66         [24]  568 	lcall	_SSD1306_Command
-                                    569 ;	main.c:105: SSD1306_Command(0xDA); SSD1306_Command(0x12); SSD1306_Command(0xDB); SSD1306_Command(0x20);
-      000205 75 82 DA         [24]  570 	mov	dpl, #0xda
-      000208 12 01 66         [24]  571 	lcall	_SSD1306_Command
-      00020B 75 82 12         [24]  572 	mov	dpl, #0x12
-      00020E 12 01 66         [24]  573 	lcall	_SSD1306_Command
-      000211 75 82 DB         [24]  574 	mov	dpl, #0xdb
-      000214 12 01 66         [24]  575 	lcall	_SSD1306_Command
-      000217 75 82 20         [24]  576 	mov	dpl, #0x20
-      00021A 12 01 66         [24]  577 	lcall	_SSD1306_Command
-                                    578 ;	main.c:106: SSD1306_Command(0x8D); SSD1306_Command(0x14); SSD1306_Command(0xA4); SSD1306_Command(0xAF);
-      00021D 75 82 8D         [24]  579 	mov	dpl, #0x8d
-      000220 12 01 66         [24]  580 	lcall	_SSD1306_Command
-      000223 75 82 14         [24]  581 	mov	dpl, #0x14
-      000226 12 01 66         [24]  582 	lcall	_SSD1306_Command
-      000229 75 82 A4         [24]  583 	mov	dpl, #0xa4
-      00022C 12 01 66         [24]  584 	lcall	_SSD1306_Command
-      00022F 75 82 AF         [24]  585 	mov	dpl, #0xaf
-      000232 12 01 66         [24]  586 	lcall	_SSD1306_Command
-                                    587 ;	main.c:107: Delay_ms(150);
-      000235 90 00 96         [24]  588 	mov	dptr,#0x0096
-                                    589 ;	main.c:108: }
-      000238 02 00 62         [24]  590 	ljmp	_Delay_ms
-                                    591 ;------------------------------------------------------------
-                                    592 ;Allocation info for local variables in function 'SSD1306_Clear'
-                                    593 ;------------------------------------------------------------
-                                    594 ;m                         Allocated with name '_SSD1306_Clear_m_10000_29'
-                                    595 ;n                         Allocated with name '_SSD1306_Clear_n_10000_29'
-                                    596 ;------------------------------------------------------------
-                                    597 ;	main.c:110: void SSD1306_Clear(void) {
-                                    598 ;	-----------------------------------------
-                                    599 ;	 function SSD1306_Clear
-                                    600 ;	-----------------------------------------
-      00023B                        601 _SSD1306_Clear:
-                                    602 ;	main.c:112: for(m = 0; m < 8; m++) {
-      00023B 7F 00            [12]  603 	mov	r7,#0x00
-      00023D                        604 00105$:
-                                    605 ;	main.c:113: SSD1306_Command(0xB0 + m); SSD1306_Command(0x00); SSD1306_Command(0x10);
-      00023D 8F 06            [24]  606 	mov	ar6,r7
-      00023F 74 B0            [12]  607 	mov	a,#0xb0
-      000241 2E               [12]  608 	add	a, r6
-      000242 F5 82            [12]  609 	mov	dpl,a
-      000244 C0 07            [24]  610 	push	ar7
-      000246 12 01 66         [24]  611 	lcall	_SSD1306_Command
-      000249 75 82 00         [24]  612 	mov	dpl, #0x00
-      00024C 12 01 66         [24]  613 	lcall	_SSD1306_Command
-      00024F 75 82 10         [24]  614 	mov	dpl, #0x10
-      000252 12 01 66         [24]  615 	lcall	_SSD1306_Command
-                                    616 ;	main.c:114: I2C_Start(); I2C_Write_Byte(SSD1306_ADDR); I2C_Write_Byte(0x40);
-      000255 12 00 F4         [24]  617 	lcall	_I2C_Start
-      000258 75 82 78         [24]  618 	mov	dpl, #0x78
-      00025B 12 01 18         [24]  619 	lcall	_I2C_Write_Byte
-      00025E 75 82 40         [24]  620 	mov	dpl, #0x40
-      000261 12 01 18         [24]  621 	lcall	_I2C_Write_Byte
-      000264 D0 07            [24]  622 	pop	ar7
-                                    623 ;	main.c:115: for(n = 0; n < 128; n++) { I2C_Write_Byte(0x00); }
-      000266 7E 00            [12]  624 	mov	r6,#0x00
-      000268                        625 00103$:
-      000268 75 82 00         [24]  626 	mov	dpl, #0x00
-      00026B C0 07            [24]  627 	push	ar7
-      00026D C0 06            [24]  628 	push	ar6
-      00026F 12 01 18         [24]  629 	lcall	_I2C_Write_Byte
-      000272 D0 06            [24]  630 	pop	ar6
-      000274 D0 07            [24]  631 	pop	ar7
-      000276 0E               [12]  632 	inc	r6
-      000277 BE 80 00         [24]  633 	cjne	r6,#0x80,00129$
-      00027A                        634 00129$:
-      00027A 40 EC            [24]  635 	jc	00103$
-                                    636 ;	main.c:116: I2C_Stop();
-      00027C C0 07            [24]  637 	push	ar7
-      00027E 12 01 09         [24]  638 	lcall	_I2C_Stop
-      000281 D0 07            [24]  639 	pop	ar7
-                                    640 ;	main.c:112: for(m = 0; m < 8; m++) {
-      000283 0F               [12]  641 	inc	r7
-      000284 BF 08 00         [24]  642 	cjne	r7,#0x08,00131$
-      000287                        643 00131$:
-      000287 40 B4            [24]  644 	jc	00105$
-                                    645 ;	main.c:118: }
-      000289 22               [24]  646 	ret
-                                    647 ;------------------------------------------------------------
-                                    648 ;Allocation info for local variables in function 'SSD1306_SetCursor'
-                                    649 ;------------------------------------------------------------
-                                    650 ;x                         Allocated with name '_SSD1306_SetCursor_PARM_2'
-                                    651 ;page                      Allocated with name '_SSD1306_SetCursor_page_10000_34'
-                                    652 ;------------------------------------------------------------
-                                    653 ;	main.c:120: void SSD1306_SetCursor(uint8_t page, uint8_t x) {
-                                    654 ;	-----------------------------------------
-                                    655 ;	 function SSD1306_SetCursor
-                                    656 ;	-----------------------------------------
-      00028A                        657 _SSD1306_SetCursor:
-      00028A E5 82            [12]  658 	mov	a,dpl
-      00028C 90 00 09         [24]  659 	mov	dptr,#_SSD1306_SetCursor_page_10000_34
-      00028F F0               [24]  660 	movx	@dptr,a
-                                    661 ;	main.c:121: SSD1306_Command(0xB0 + page);
-      000290 E0               [24]  662 	movx	a,@dptr
-      000291 24 B0            [12]  663 	add	a,#0xb0
-      000293 F5 82            [12]  664 	mov	dpl,a
-      000295 12 01 66         [24]  665 	lcall	_SSD1306_Command
-                                    666 ;	main.c:122: SSD1306_Command(((x & 0xF0) >> 4) | 0x10);
-      000298 90 00 08         [24]  667 	mov	dptr,#_SSD1306_SetCursor_PARM_2
-      00029B E0               [24]  668 	movx	a,@dptr
-      00029C FF               [12]  669 	mov	r7,a
-      00029D FD               [12]  670 	mov	r5,a
-      00029E 53 05 F0         [24]  671 	anl	ar5,#0xf0
-      0002A1 E4               [12]  672 	clr	a
-      0002A2 C4               [12]  673 	swap	a
-      0002A3 CD               [12]  674 	xch	a,r5
-      0002A4 C4               [12]  675 	swap	a
-      0002A5 54 0F            [12]  676 	anl	a,#0x0f
-      0002A7 6D               [12]  677 	xrl	a,r5
-      0002A8 CD               [12]  678 	xch	a,r5
-      0002A9 54 0F            [12]  679 	anl	a,#0x0f
-      0002AB CD               [12]  680 	xch	a,r5
-      0002AC 6D               [12]  681 	xrl	a,r5
-      0002AD CD               [12]  682 	xch	a,r5
-      0002AE 30 E3 02         [24]  683 	jnb	acc.3,00103$
-      0002B1 44 F0            [12]  684 	orl	a,#0xfffffff0
-      0002B3                        685 00103$:
-      0002B3 43 05 10         [24]  686 	orl	ar5,#0x10
-      0002B6 8D 82            [24]  687 	mov	dpl, r5
-      0002B8 C0 07            [24]  688 	push	ar7
-      0002BA 12 01 66         [24]  689 	lcall	_SSD1306_Command
-      0002BD D0 07            [24]  690 	pop	ar7
-                                    691 ;	main.c:123: SSD1306_Command(x & 0x0F);
-      0002BF 53 07 0F         [24]  692 	anl	ar7,#0x0f
-      0002C2 8F 82            [24]  693 	mov	dpl, r7
-                                    694 ;	main.c:124: }
-      0002C4 02 01 66         [24]  695 	ljmp	_SSD1306_Command
-                                    696 ;------------------------------------------------------------
-                                    697 ;Allocation info for local variables in function 'SSD1306_WriteChar'
-                                    698 ;------------------------------------------------------------
-                                    699 ;x                         Allocated with name '_SSD1306_WriteChar_PARM_2'
-                                    700 ;c                         Allocated with name '_SSD1306_WriteChar_PARM_3'
-                                    701 ;page                      Allocated with name '_SSD1306_WriteChar_page_10000_36'
-                                    702 ;i                         Allocated with name '_SSD1306_WriteChar_i_10000_37'
-                                    703 ;idx                       Allocated with name '_SSD1306_WriteChar_idx_10000_37'
-                                    704 ;------------------------------------------------------------
-                                    705 ;	main.c:126: void SSD1306_WriteChar(uint8_t page, uint8_t x, unsigned char c) {
-                                    706 ;	-----------------------------------------
-                                    707 ;	 function SSD1306_WriteChar
-                                    708 ;	-----------------------------------------
-      0002C7                        709 _SSD1306_WriteChar:
-      0002C7 E5 82            [12]  710 	mov	a,dpl
-      0002C9 90 00 0C         [24]  711 	mov	dptr,#_SSD1306_WriteChar_page_10000_36
-      0002CC F0               [24]  712 	movx	@dptr,a
-                                    713 ;	main.c:128: if (c >= '0' && c <= '9') idx = c - '0';
-      0002CD 90 00 0B         [24]  714 	mov	dptr,#_SSD1306_WriteChar_PARM_3
-      0002D0 E0               [24]  715 	movx	a,@dptr
-      0002D1 FF               [12]  716 	mov	r7,a
-      0002D2 BF 30 00         [24]  717 	cjne	r7,#0x30,00221$
-      0002D5                        718 00221$:
-      0002D5 40 11            [24]  719 	jc	00128$
-      0002D7 EF               [12]  720 	mov	a,r7
-      0002D8 24 C6            [12]  721 	add	a,#0xff - 0x39
-      0002DA 40 0C            [24]  722 	jc	00128$
-      0002DC 8F 06            [24]  723 	mov	ar6,r7
-      0002DE EE               [12]  724 	mov	a,r6
-      0002DF 24 D0            [12]  725 	add	a,#0xd0
-      0002E1 90 00 0D         [24]  726 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
-      0002E4 F0               [24]  727 	movx	@dptr,a
-      0002E5 02 03 5A         [24]  728 	ljmp	00129$
-      0002E8                        729 00128$:
-                                    730 ;	main.c:129: else if (c == '-') idx = 10;
-      0002E8 BF 2D 09         [24]  731 	cjne	r7,#0x2d,00125$
-      0002EB 90 00 0D         [24]  732 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
-      0002EE 74 0A            [12]  733 	mov	a,#0x0a
-      0002F0 F0               [24]  734 	movx	@dptr,a
-      0002F1 02 03 5A         [24]  735 	ljmp	00129$
-      0002F4                        736 00125$:
-                                    737 ;	main.c:130: else if (c == ' ') idx = 11;
-      0002F4 BF 20 09         [24]  738 	cjne	r7,#0x20,00122$
-      0002F7 90 00 0D         [24]  739 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
-      0002FA 74 0B            [12]  740 	mov	a,#0x0b
-      0002FC F0               [24]  741 	movx	@dptr,a
-      0002FD 02 03 5A         [24]  742 	ljmp	00129$
-      000300                        743 00122$:
-                                    744 ;	main.c:131: else if (c == '.') idx = 12;
-      000300 BF 2E 08         [24]  745 	cjne	r7,#0x2e,00119$
-      000303 90 00 0D         [24]  746 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
-      000306 74 0C            [12]  747 	mov	a,#0x0c
-      000308 F0               [24]  748 	movx	@dptr,a
-      000309 80 4F            [24]  749 	sjmp	00129$
-      00030B                        750 00119$:
-                                    751 ;	main.c:132: else if (c == ':') idx = 13;
-      00030B BF 3A 08         [24]  752 	cjne	r7,#0x3a,00116$
-      00030E 90 00 0D         [24]  753 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
-      000311 74 0D            [12]  754 	mov	a,#0x0d
-      000313 F0               [24]  755 	movx	@dptr,a
-      000314 80 44            [24]  756 	sjmp	00129$
-      000316                        757 00116$:
-                                    758 ;	main.c:133: else if (c == '*') idx = 14;
-      000316 BF 2A 08         [24]  759 	cjne	r7,#0x2a,00113$
-      000319 90 00 0D         [24]  760 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
-      00031C 74 0E            [12]  761 	mov	a,#0x0e
-      00031E F0               [24]  762 	movx	@dptr,a
-      00031F 80 39            [24]  763 	sjmp	00129$
-      000321                        764 00113$:
-                                    765 ;	main.c:134: else if (c == '=') idx = 15;
-      000321 BF 3D 08         [24]  766 	cjne	r7,#0x3d,00110$
-      000324 90 00 0D         [24]  767 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
-      000327 74 0F            [12]  768 	mov	a,#0x0f
-      000329 F0               [24]  769 	movx	@dptr,a
-      00032A 80 2E            [24]  770 	sjmp	00129$
-      00032C                        771 00110$:
-                                    772 ;	main.c:135: else if (c >= 'A' && c <= 'Z') { idx = c - 'A' + 16; }
-      00032C BF 41 00         [24]  773 	cjne	r7,#0x41,00236$
-      00032F                        774 00236$:
-      00032F 40 10            [24]  775 	jc	00106$
-      000331 EF               [12]  776 	mov	a,r7
-      000332 24 A5            [12]  777 	add	a,#0xff - 0x5a
-      000334 40 0B            [24]  778 	jc	00106$
-      000336 8F 06            [24]  779 	mov	ar6,r7
-      000338 90 00 0D         [24]  780 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
-      00033B 74 CF            [12]  781 	mov	a,#0xcf
-      00033D 2E               [12]  782 	add	a, r6
-      00033E F0               [24]  783 	movx	@dptr,a
-      00033F 80 19            [24]  784 	sjmp	00129$
-      000341                        785 00106$:
-                                    786 ;	main.c:136: else if (c >= 'a' && c <= 'z') { idx = c - 'a' + 16; }
-      000341 BF 61 00         [24]  787 	cjne	r7,#0x61,00239$
-      000344                        788 00239$:
-      000344 40 0E            [24]  789 	jc	00102$
-      000346 EF               [12]  790 	mov	a,r7
-      000347 24 85            [12]  791 	add	a,#0xff - 0x7a
-      000349 40 09            [24]  792 	jc	00102$
-      00034B 90 00 0D         [24]  793 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
-      00034E 74 AF            [12]  794 	mov	a,#0xaf
-      000350 2F               [12]  795 	add	a, r7
-      000351 F0               [24]  796 	movx	@dptr,a
-      000352 80 06            [24]  797 	sjmp	00129$
-      000354                        798 00102$:
-                                    799 ;	main.c:137: else idx = 11;
-      000354 90 00 0D         [24]  800 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
-      000357 74 0B            [12]  801 	mov	a,#0x0b
-      000359 F0               [24]  802 	movx	@dptr,a
-      00035A                        803 00129$:
-                                    804 ;	main.c:139: SSD1306_SetCursor(page, x);
-      00035A 90 00 0C         [24]  805 	mov	dptr,#_SSD1306_WriteChar_page_10000_36
-      00035D E0               [24]  806 	movx	a,@dptr
-      00035E FF               [12]  807 	mov	r7,a
-      00035F 90 00 0A         [24]  808 	mov	dptr,#_SSD1306_WriteChar_PARM_2
-      000362 E0               [24]  809 	movx	a,@dptr
-      000363 90 00 08         [24]  810 	mov	dptr,#_SSD1306_SetCursor_PARM_2
-      000366 F0               [24]  811 	movx	@dptr,a
-      000367 8F 82            [24]  812 	mov	dpl, r7
-      000369 12 02 8A         [24]  813 	lcall	_SSD1306_SetCursor
-                                    814 ;	main.c:140: I2C_Start(); I2C_Write_Byte(SSD1306_ADDR); I2C_Write_Byte(0x40);
-      00036C 12 00 F4         [24]  815 	lcall	_I2C_Start
-      00036F 75 82 78         [24]  816 	mov	dpl, #0x78
-      000372 12 01 18         [24]  817 	lcall	_I2C_Write_Byte
-      000375 75 82 40         [24]  818 	mov	dpl, #0x40
-      000378 12 01 18         [24]  819 	lcall	_I2C_Write_Byte
-                                    820 ;	main.c:141: for(i = 0; i < 8; i++) { I2C_Write_Byte(Font_8x8[idx][i]); }
-      00037B 90 00 0D         [24]  821 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
-      00037E E0               [24]  822 	movx	a,@dptr
-      00037F 75 F0 08         [24]  823 	mov	b,#0x08
-      000382 A4               [48]  824 	mul	ab
-      000383 24 77            [12]  825 	add	a, #_Font_8x8
-      000385 FE               [12]  826 	mov	r6,a
-      000386 74 13            [12]  827 	mov	a,#(_Font_8x8 >> 8)
-      000388 35 F0            [12]  828 	addc	a, b
-      00038A FF               [12]  829 	mov	r7,a
-      00038B 7D 00            [12]  830 	mov	r5,#0x00
-      00038D                        831 00132$:
-      00038D ED               [12]  832 	mov	a,r5
-      00038E 2E               [12]  833 	add	a, r6
-      00038F F5 82            [12]  834 	mov	dpl,a
-      000391 E4               [12]  835 	clr	a
-      000392 3F               [12]  836 	addc	a, r7
-      000393 F5 83            [12]  837 	mov	dph,a
-      000395 E4               [12]  838 	clr	a
-      000396 93               [24]  839 	movc	a,@a+dptr
-      000397 F5 82            [12]  840 	mov	dpl,a
-      000399 C0 07            [24]  841 	push	ar7
-      00039B C0 06            [24]  842 	push	ar6
-      00039D C0 05            [24]  843 	push	ar5
-      00039F 12 01 18         [24]  844 	lcall	_I2C_Write_Byte
-      0003A2 D0 05            [24]  845 	pop	ar5
-      0003A4 D0 06            [24]  846 	pop	ar6
-      0003A6 D0 07            [24]  847 	pop	ar7
-      0003A8 0D               [12]  848 	inc	r5
-      0003A9 BD 08 00         [24]  849 	cjne	r5,#0x08,00242$
-      0003AC                        850 00242$:
-      0003AC 40 DF            [24]  851 	jc	00132$
-                                    852 ;	main.c:142: I2C_Stop();
-                                    853 ;	main.c:143: }
-      0003AE 02 01 09         [24]  854 	ljmp	_I2C_Stop
-                                    855 ;------------------------------------------------------------
-                                    856 ;Allocation info for local variables in function 'SSD1306_PrintString'
-                                    857 ;------------------------------------------------------------
-                                    858 ;x                         Allocated with name '_SSD1306_PrintString_PARM_2'
-                                    859 ;str                       Allocated with name '_SSD1306_PrintString_PARM_3'
-                                    860 ;page                      Allocated with name '_SSD1306_PrintString_page_10000_42'
-                                    861 ;------------------------------------------------------------
-                                    862 ;	main.c:145: void SSD1306_PrintString(uint8_t page, uint8_t x, char *str) {
-                                    863 ;	-----------------------------------------
-                                    864 ;	 function SSD1306_PrintString
-                                    865 ;	-----------------------------------------
-      0003B1                        866 _SSD1306_PrintString:
-      0003B1 E5 82            [12]  867 	mov	a,dpl
-      0003B3 90 00 12         [24]  868 	mov	dptr,#_SSD1306_PrintString_page_10000_42
-      0003B6 F0               [24]  869 	movx	@dptr,a
-                                    870 ;	main.c:146: while (*str) { SSD1306_WriteChar(page, x, (unsigned char)*str); x += 8; str++; }
-      0003B7 E0               [24]  871 	movx	a,@dptr
-      0003B8 FF               [12]  872 	mov	r7,a
-      0003B9 90 00 0F         [24]  873 	mov	dptr,#_SSD1306_PrintString_PARM_3
-      0003BC E0               [24]  874 	movx	a,@dptr
-      0003BD FC               [12]  875 	mov	r4,a
-      0003BE A3               [24]  876 	inc	dptr
-      0003BF E0               [24]  877 	movx	a,@dptr
-      0003C0 FD               [12]  878 	mov	r5,a
-      0003C1 A3               [24]  879 	inc	dptr
-      0003C2 E0               [24]  880 	movx	a,@dptr
-      0003C3 FE               [12]  881 	mov	r6,a
-      0003C4                        882 00101$:
-      0003C4 8C 82            [24]  883 	mov	dpl,r4
-      0003C6 8D 83            [24]  884 	mov	dph,r5
-      0003C8 8E F0            [24]  885 	mov	b,r6
-      0003CA 12 13 14         [24]  886 	lcall	__gptrget
-      0003CD FB               [12]  887 	mov	r3,a
-      0003CE 60 35            [24]  888 	jz	00104$
-      0003D0 90 00 0E         [24]  889 	mov	dptr,#_SSD1306_PrintString_PARM_2
-      0003D3 E0               [24]  890 	movx	a,@dptr
-      0003D4 FA               [12]  891 	mov	r2,a
-      0003D5 90 00 0A         [24]  892 	mov	dptr,#_SSD1306_WriteChar_PARM_2
-      0003D8 F0               [24]  893 	movx	@dptr,a
-      0003D9 90 00 0B         [24]  894 	mov	dptr,#_SSD1306_WriteChar_PARM_3
-      0003DC EB               [12]  895 	mov	a,r3
-      0003DD F0               [24]  896 	movx	@dptr,a
-      0003DE 8F 82            [24]  897 	mov	dpl, r7
-      0003E0 C0 07            [24]  898 	push	ar7
-      0003E2 C0 06            [24]  899 	push	ar6
-      0003E4 C0 05            [24]  900 	push	ar5
-      0003E6 C0 04            [24]  901 	push	ar4
-      0003E8 C0 02            [24]  902 	push	ar2
-      0003EA 12 02 C7         [24]  903 	lcall	_SSD1306_WriteChar
-      0003ED D0 02            [24]  904 	pop	ar2
-      0003EF D0 04            [24]  905 	pop	ar4
-      0003F1 D0 05            [24]  906 	pop	ar5
-      0003F3 D0 06            [24]  907 	pop	ar6
-      0003F5 D0 07            [24]  908 	pop	ar7
-      0003F7 90 00 0E         [24]  909 	mov	dptr,#_SSD1306_PrintString_PARM_2
-      0003FA 74 08            [12]  910 	mov	a,#0x08
-      0003FC 2A               [12]  911 	add	a, r2
-      0003FD F0               [24]  912 	movx	@dptr,a
-      0003FE 0C               [12]  913 	inc	r4
-      0003FF BC 00 C2         [24]  914 	cjne	r4,#0x00,00101$
-      000402 0D               [12]  915 	inc	r5
-      000403 80 BF            [24]  916 	sjmp	00101$
-      000405                        917 00104$:
-                                    918 ;	main.c:147: }
-      000405 22               [24]  919 	ret
-                                    920 ;------------------------------------------------------------
-                                    921 ;Allocation info for local variables in function 'SSD1306_DisplayResult'
-                                    922 ;------------------------------------------------------------
-                                    923 ;sloc0                     Allocated with name '_SSD1306_DisplayResult_sloc0_1_0'
-                                    924 ;sloc1                     Allocated with name '_SSD1306_DisplayResult_sloc1_1_0'
-                                    925 ;sloc2                     Allocated with name '_SSD1306_DisplayResult_sloc2_1_0'
-                                    926 ;x                         Allocated with name '_SSD1306_DisplayResult_PARM_2'
-                                    927 ;val                       Allocated with name '_SSD1306_DisplayResult_PARM_3'
-                                    928 ;is_microfarads            Allocated with name '_SSD1306_DisplayResult_PARM_4'
-                                    929 ;page                      Allocated with name '_SSD1306_DisplayResult_page_10000_45'
-                                    930 ;------------------------------------------------------------
-                                    931 ;	main.c:149: void SSD1306_DisplayResult(uint8_t page, uint8_t x, uint32_t val, uint8_t is_microfarads) {
-                                    932 ;	-----------------------------------------
-                                    933 ;	 function SSD1306_DisplayResult
-                                    934 ;	-----------------------------------------
-      000406                        935 _SSD1306_DisplayResult:
-      000406 E5 82            [12]  936 	mov	a,dpl
-      000408 90 00 19         [24]  937 	mov	dptr,#_SSD1306_DisplayResult_page_10000_45
-      00040B F0               [24]  938 	movx	@dptr,a
-                                    939 ;	main.c:150: SSD1306_PrintString(page, x, "CX: ");
-      00040C E0               [24]  940 	movx	a,@dptr
-      00040D FF               [12]  941 	mov	r7,a
-      00040E 90 00 13         [24]  942 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      000411 E0               [24]  943 	movx	a,@dptr
-      000412 FE               [12]  944 	mov	r6,a
-      000413 90 00 0E         [24]  945 	mov	dptr,#_SSD1306_PrintString_PARM_2
-      000416 F0               [24]  946 	movx	@dptr,a
-      000417 90 00 0F         [24]  947 	mov	dptr,#_SSD1306_PrintString_PARM_3
-      00041A 74 C7            [12]  948 	mov	a,#___str_0
-      00041C F0               [24]  949 	movx	@dptr,a
-      00041D 74 14            [12]  950 	mov	a,#(___str_0 >> 8)
-      00041F A3               [24]  951 	inc	dptr
-      000420 F0               [24]  952 	movx	@dptr,a
-      000421 74 80            [12]  953 	mov	a,#0x80
-      000423 A3               [24]  954 	inc	dptr
-      000424 F0               [24]  955 	movx	@dptr,a
-      000425 8F 82            [24]  956 	mov	dpl, r7
-      000427 C0 07            [24]  957 	push	ar7
-      000429 C0 06            [24]  958 	push	ar6
-      00042B 12 03 B1         [24]  959 	lcall	_SSD1306_PrintString
-      00042E D0 06            [24]  960 	pop	ar6
-      000430 D0 07            [24]  961 	pop	ar7
-                                    962 ;	main.c:151: x += 32;
-      000432 90 00 13         [24]  963 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      000435 74 20            [12]  964 	mov	a,#0x20
-      000437 2E               [12]  965 	add	a, r6
-      000438 F0               [24]  966 	movx	@dptr,a
-                                    967 ;	main.c:153: if (!is_microfarads) {
-      000439 90 00 18         [24]  968 	mov	dptr,#_SSD1306_DisplayResult_PARM_4
-      00043C E0               [24]  969 	movx	a,@dptr
-      00043D 60 03            [24]  970 	jz	00120$
-      00043F 02 06 5E         [24]  971 	ljmp	00104$
-      000442                        972 00120$:
-                                    973 ;	main.c:154: if (val <= 139) {
-      000442 90 00 14         [24]  974 	mov	dptr,#_SSD1306_DisplayResult_PARM_3
-      000445 E0               [24]  975 	movx	a,@dptr
-      000446 FB               [12]  976 	mov	r3,a
-      000447 A3               [24]  977 	inc	dptr
-      000448 E0               [24]  978 	movx	a,@dptr
-      000449 FC               [12]  979 	mov	r4,a
-      00044A A3               [24]  980 	inc	dptr
-      00044B E0               [24]  981 	movx	a,@dptr
-      00044C FD               [12]  982 	mov	r5,a
-      00044D A3               [24]  983 	inc	dptr
-      00044E E0               [24]  984 	movx	a,@dptr
-      00044F FE               [12]  985 	mov	r6,a
-      000450 C3               [12]  986 	clr	c
-      000451 74 8B            [12]  987 	mov	a,#0x8b
-      000453 9B               [12]  988 	subb	a,r3
-      000454 E4               [12]  989 	clr	a
-      000455 9C               [12]  990 	subb	a,r4
-      000456 E4               [12]  991 	clr	a
-      000457 9D               [12]  992 	subb	a,r5
-      000458 E4               [12]  993 	clr	a
-      000459 9E               [12]  994 	subb	a,r6
-      00045A 40 1B            [24]  995 	jc	00102$
-                                    996 ;	main.c:155: SSD1306_PrintString(page, x, "  0.0 NF");
-      00045C 90 00 13         [24]  997 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      00045F E0               [24]  998 	movx	a,@dptr
-      000460 90 00 0E         [24]  999 	mov	dptr,#_SSD1306_PrintString_PARM_2
-      000463 F0               [24] 1000 	movx	@dptr,a
-      000464 90 00 0F         [24] 1001 	mov	dptr,#_SSD1306_PrintString_PARM_3
-      000467 74 CC            [12] 1002 	mov	a,#___str_1
-      000469 F0               [24] 1003 	movx	@dptr,a
-      00046A 74 14            [12] 1004 	mov	a,#(___str_1 >> 8)
-      00046C A3               [24] 1005 	inc	dptr
-      00046D F0               [24] 1006 	movx	@dptr,a
-      00046E 74 80            [12] 1007 	mov	a,#0x80
-      000470 A3               [24] 1008 	inc	dptr
-      000471 F0               [24] 1009 	movx	@dptr,a
-      000472 8F 82            [24] 1010 	mov	dpl, r7
-                                   1011 ;	main.c:156: return;
-      000474 02 03 B1         [24] 1012 	ljmp	_SSD1306_PrintString
-      000477                       1013 00102$:
-                                   1014 ;	main.c:158: val -= 139;
-      000477 EB               [12] 1015 	mov	a,r3
-      000478 24 75            [12] 1016 	add	a,#0x75
-      00047A FB               [12] 1017 	mov	r3,a
-      00047B EC               [12] 1018 	mov	a,r4
-      00047C 34 FF            [12] 1019 	addc	a,#0xff
-      00047E FC               [12] 1020 	mov	r4,a
-      00047F ED               [12] 1021 	mov	a,r5
-      000480 34 FF            [12] 1022 	addc	a,#0xff
-      000482 FD               [12] 1023 	mov	r5,a
-      000483 EE               [12] 1024 	mov	a,r6
-      000484 34 FF            [12] 1025 	addc	a,#0xff
-      000486 FE               [12] 1026 	mov	r6,a
-      000487 90 00 14         [24] 1027 	mov	dptr,#_SSD1306_DisplayResult_PARM_3
-      00048A EB               [12] 1028 	mov	a,r3
-      00048B F0               [24] 1029 	movx	@dptr,a
-      00048C EC               [12] 1030 	mov	a,r4
-      00048D A3               [24] 1031 	inc	dptr
-      00048E F0               [24] 1032 	movx	@dptr,a
-      00048F ED               [12] 1033 	mov	a,r5
-      000490 A3               [24] 1034 	inc	dptr
-      000491 F0               [24] 1035 	movx	@dptr,a
-      000492 EE               [12] 1036 	mov	a,r6
-      000493 A3               [24] 1037 	inc	dptr
-      000494 F0               [24] 1038 	movx	@dptr,a
-                                   1039 ;	main.c:160: SSD1306_WriteChar(page, x, ((val / 1000) % 10) + '0'); x += 8;
-      000495 90 00 13         [24] 1040 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      000498 E0               [24] 1041 	movx	a,@dptr
-      000499 F5 08            [12] 1042 	mov	_SSD1306_DisplayResult_sloc0_1_0,a
-      00049B 90 00 14         [24] 1043 	mov	dptr,#_SSD1306_DisplayResult_PARM_3
-      00049E E0               [24] 1044 	movx	a,@dptr
-      00049F F5 09            [12] 1045 	mov	_SSD1306_DisplayResult_sloc1_1_0,a
-      0004A1 A3               [24] 1046 	inc	dptr
-      0004A2 E0               [24] 1047 	movx	a,@dptr
-      0004A3 F5 0A            [12] 1048 	mov	(_SSD1306_DisplayResult_sloc1_1_0 + 1),a
-      0004A5 A3               [24] 1049 	inc	dptr
-      0004A6 E0               [24] 1050 	movx	a,@dptr
-      0004A7 F5 0B            [12] 1051 	mov	(_SSD1306_DisplayResult_sloc1_1_0 + 2),a
-      0004A9 A3               [24] 1052 	inc	dptr
-      0004AA E0               [24] 1053 	movx	a,@dptr
-      0004AB F5 0C            [12] 1054 	mov	(_SSD1306_DisplayResult_sloc1_1_0 + 3),a
-      0004AD 90 00 35         [24] 1055 	mov	dptr,#__divulong_PARM_2
-      0004B0 74 E8            [12] 1056 	mov	a,#0xe8
-      0004B2 F0               [24] 1057 	movx	@dptr,a
-      0004B3 74 03            [12] 1058 	mov	a,#0x03
-      0004B5 A3               [24] 1059 	inc	dptr
-      0004B6 F0               [24] 1060 	movx	@dptr,a
-      0004B7 E4               [12] 1061 	clr	a
-      0004B8 A3               [24] 1062 	inc	dptr
-      0004B9 F0               [24] 1063 	movx	@dptr,a
-      0004BA A3               [24] 1064 	inc	dptr
-      0004BB F0               [24] 1065 	movx	@dptr,a
-      0004BC 85 09 82         [24] 1066 	mov	dpl, _SSD1306_DisplayResult_sloc1_1_0
-      0004BF 85 0A 83         [24] 1067 	mov	dph, (_SSD1306_DisplayResult_sloc1_1_0 + 1)
-      0004C2 85 0B F0         [24] 1068 	mov	b, (_SSD1306_DisplayResult_sloc1_1_0 + 2)
-      0004C5 E5 0C            [12] 1069 	mov	a, (_SSD1306_DisplayResult_sloc1_1_0 + 3)
-      0004C7 C0 07            [24] 1070 	push	ar7
-      0004C9 12 10 66         [24] 1071 	lcall	__divulong
-      0004CC A8 82            [24] 1072 	mov	r0, dpl
-      0004CE A9 83            [24] 1073 	mov	r1, dph
-      0004D0 AD F0            [24] 1074 	mov	r5, b
-      0004D2 FE               [12] 1075 	mov	r6, a
-      0004D3 90 00 2C         [24] 1076 	mov	dptr,#__modulong_PARM_2
-      0004D6 74 0A            [12] 1077 	mov	a,#0x0a
-      0004D8 F0               [24] 1078 	movx	@dptr,a
-      0004D9 E4               [12] 1079 	clr	a
-      0004DA A3               [24] 1080 	inc	dptr
-      0004DB F0               [24] 1081 	movx	@dptr,a
-      0004DC A3               [24] 1082 	inc	dptr
-      0004DD F0               [24] 1083 	movx	@dptr,a
-      0004DE A3               [24] 1084 	inc	dptr
-      0004DF F0               [24] 1085 	movx	@dptr,a
-      0004E0 88 82            [24] 1086 	mov	dpl, r0
-      0004E2 89 83            [24] 1087 	mov	dph, r1
-      0004E4 8D F0            [24] 1088 	mov	b, r5
-      0004E6 EE               [12] 1089 	mov	a, r6
-      0004E7 12 0E 56         [24] 1090 	lcall	__modulong
-      0004EA AB 82            [24] 1091 	mov	r3, dpl
-      0004EC D0 07            [24] 1092 	pop	ar7
-      0004EE 74 30            [12] 1093 	mov	a,#0x30
-      0004F0 2B               [12] 1094 	add	a, r3
-      0004F1 FB               [12] 1095 	mov	r3,a
-      0004F2 90 00 0A         [24] 1096 	mov	dptr,#_SSD1306_WriteChar_PARM_2
-      0004F5 E5 08            [12] 1097 	mov	a,_SSD1306_DisplayResult_sloc0_1_0
-      0004F7 F0               [24] 1098 	movx	@dptr,a
-      0004F8 90 00 0B         [24] 1099 	mov	dptr,#_SSD1306_WriteChar_PARM_3
-      0004FB EB               [12] 1100 	mov	a,r3
-      0004FC F0               [24] 1101 	movx	@dptr,a
-      0004FD 8F 82            [24] 1102 	mov	dpl, r7
-      0004FF C0 07            [24] 1103 	push	ar7
-      000501 12 02 C7         [24] 1104 	lcall	_SSD1306_WriteChar
-      000504 D0 07            [24] 1105 	pop	ar7
-      000506 AE 08            [24] 1106 	mov	r6,_SSD1306_DisplayResult_sloc0_1_0
-      000508 90 00 13         [24] 1107 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      00050B 74 08            [12] 1108 	mov	a,#0x08
-      00050D 2E               [12] 1109 	add	a, r6
-      00050E F0               [24] 1110 	movx	@dptr,a
-                                   1111 ;	main.c:161: SSD1306_WriteChar(page, x, ((val / 100) % 10) + '0');  x += 8;
-      00050F E0               [24] 1112 	movx	a,@dptr
-      000510 FE               [12] 1113 	mov	r6,a
-      000511 90 00 35         [24] 1114 	mov	dptr,#__divulong_PARM_2
-      000514 74 64            [12] 1115 	mov	a,#0x64
-      000516 F0               [24] 1116 	movx	@dptr,a
-      000517 E4               [12] 1117 	clr	a
-      000518 A3               [24] 1118 	inc	dptr
-      000519 F0               [24] 1119 	movx	@dptr,a
-      00051A A3               [24] 1120 	inc	dptr
-      00051B F0               [24] 1121 	movx	@dptr,a
-      00051C A3               [24] 1122 	inc	dptr
-      00051D F0               [24] 1123 	movx	@dptr,a
-      00051E 85 09 82         [24] 1124 	mov	dpl, _SSD1306_DisplayResult_sloc1_1_0
-      000521 85 0A 83         [24] 1125 	mov	dph, (_SSD1306_DisplayResult_sloc1_1_0 + 1)
-      000524 85 0B F0         [24] 1126 	mov	b, (_SSD1306_DisplayResult_sloc1_1_0 + 2)
-      000527 E5 0C            [12] 1127 	mov	a, (_SSD1306_DisplayResult_sloc1_1_0 + 3)
-      000529 C0 07            [24] 1128 	push	ar7
-      00052B C0 06            [24] 1129 	push	ar6
-      00052D 12 10 66         [24] 1130 	lcall	__divulong
-      000530 AA 82            [24] 1131 	mov	r2, dpl
-      000532 AB 83            [24] 1132 	mov	r3, dph
-      000534 AC F0            [24] 1133 	mov	r4, b
-      000536 FD               [12] 1134 	mov	r5, a
-      000537 90 00 2C         [24] 1135 	mov	dptr,#__modulong_PARM_2
-      00053A 74 0A            [12] 1136 	mov	a,#0x0a
-      00053C F0               [24] 1137 	movx	@dptr,a
-      00053D E4               [12] 1138 	clr	a
-      00053E A3               [24] 1139 	inc	dptr
-      00053F F0               [24] 1140 	movx	@dptr,a
-      000540 A3               [24] 1141 	inc	dptr
-      000541 F0               [24] 1142 	movx	@dptr,a
-      000542 A3               [24] 1143 	inc	dptr
-      000543 F0               [24] 1144 	movx	@dptr,a
-      000544 8A 82            [24] 1145 	mov	dpl, r2
-      000546 8B 83            [24] 1146 	mov	dph, r3
-      000548 8C F0            [24] 1147 	mov	b, r4
-      00054A ED               [12] 1148 	mov	a, r5
-      00054B 12 0E 56         [24] 1149 	lcall	__modulong
-      00054E AA 82            [24] 1150 	mov	r2, dpl
-      000550 D0 06            [24] 1151 	pop	ar6
-      000552 D0 07            [24] 1152 	pop	ar7
-      000554 74 30            [12] 1153 	mov	a,#0x30
-      000556 2A               [12] 1154 	add	a, r2
-      000557 FA               [12] 1155 	mov	r2,a
-      000558 90 00 0A         [24] 1156 	mov	dptr,#_SSD1306_WriteChar_PARM_2
-      00055B EE               [12] 1157 	mov	a,r6
-      00055C F0               [24] 1158 	movx	@dptr,a
-      00055D 90 00 0B         [24] 1159 	mov	dptr,#_SSD1306_WriteChar_PARM_3
-      000560 EA               [12] 1160 	mov	a,r2
-      000561 F0               [24] 1161 	movx	@dptr,a
-      000562 8F 82            [24] 1162 	mov	dpl, r7
-      000564 C0 07            [24] 1163 	push	ar7
-      000566 C0 06            [24] 1164 	push	ar6
-      000568 12 02 C7         [24] 1165 	lcall	_SSD1306_WriteChar
-      00056B D0 06            [24] 1166 	pop	ar6
-      00056D D0 07            [24] 1167 	pop	ar7
-      00056F 90 00 13         [24] 1168 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      000572 74 08            [12] 1169 	mov	a,#0x08
-      000574 2E               [12] 1170 	add	a, r6
-      000575 F0               [24] 1171 	movx	@dptr,a
-                                   1172 ;	main.c:162: SSD1306_WriteChar(page, x, ((val / 10) % 10) + '0');   x += 8;
-      000576 E0               [24] 1173 	movx	a,@dptr
-      000577 FE               [12] 1174 	mov	r6,a
-      000578 90 00 35         [24] 1175 	mov	dptr,#__divulong_PARM_2
-      00057B 74 0A            [12] 1176 	mov	a,#0x0a
-      00057D F0               [24] 1177 	movx	@dptr,a
-      00057E E4               [12] 1178 	clr	a
-      00057F A3               [24] 1179 	inc	dptr
-      000580 F0               [24] 1180 	movx	@dptr,a
-      000581 A3               [24] 1181 	inc	dptr
-      000582 F0               [24] 1182 	movx	@dptr,a
-      000583 A3               [24] 1183 	inc	dptr
-      000584 F0               [24] 1184 	movx	@dptr,a
-      000585 85 09 82         [24] 1185 	mov	dpl, _SSD1306_DisplayResult_sloc1_1_0
-      000588 85 0A 83         [24] 1186 	mov	dph, (_SSD1306_DisplayResult_sloc1_1_0 + 1)
-      00058B 85 0B F0         [24] 1187 	mov	b, (_SSD1306_DisplayResult_sloc1_1_0 + 2)
-      00058E E5 0C            [12] 1188 	mov	a, (_SSD1306_DisplayResult_sloc1_1_0 + 3)
-      000590 C0 07            [24] 1189 	push	ar7
-      000592 C0 06            [24] 1190 	push	ar6
-      000594 12 10 66         [24] 1191 	lcall	__divulong
-      000597 AA 82            [24] 1192 	mov	r2, dpl
-      000599 AB 83            [24] 1193 	mov	r3, dph
-      00059B AC F0            [24] 1194 	mov	r4, b
-      00059D FD               [12] 1195 	mov	r5, a
-      00059E 90 00 2C         [24] 1196 	mov	dptr,#__modulong_PARM_2
-      0005A1 74 0A            [12] 1197 	mov	a,#0x0a
-      0005A3 F0               [24] 1198 	movx	@dptr,a
-      0005A4 E4               [12] 1199 	clr	a
-      0005A5 A3               [24] 1200 	inc	dptr
-      0005A6 F0               [24] 1201 	movx	@dptr,a
-      0005A7 A3               [24] 1202 	inc	dptr
-      0005A8 F0               [24] 1203 	movx	@dptr,a
-      0005A9 A3               [24] 1204 	inc	dptr
-      0005AA F0               [24] 1205 	movx	@dptr,a
-      0005AB 8A 82            [24] 1206 	mov	dpl, r2
-      0005AD 8B 83            [24] 1207 	mov	dph, r3
-      0005AF 8C F0            [24] 1208 	mov	b, r4
-      0005B1 ED               [12] 1209 	mov	a, r5
-      0005B2 12 0E 56         [24] 1210 	lcall	__modulong
-      0005B5 AA 82            [24] 1211 	mov	r2, dpl
-      0005B7 D0 06            [24] 1212 	pop	ar6
-      0005B9 D0 07            [24] 1213 	pop	ar7
-      0005BB 74 30            [12] 1214 	mov	a,#0x30
-      0005BD 2A               [12] 1215 	add	a, r2
-      0005BE FA               [12] 1216 	mov	r2,a
-      0005BF 90 00 0A         [24] 1217 	mov	dptr,#_SSD1306_WriteChar_PARM_2
-      0005C2 EE               [12] 1218 	mov	a,r6
-      0005C3 F0               [24] 1219 	movx	@dptr,a
-      0005C4 90 00 0B         [24] 1220 	mov	dptr,#_SSD1306_WriteChar_PARM_3
-      0005C7 EA               [12] 1221 	mov	a,r2
-      0005C8 F0               [24] 1222 	movx	@dptr,a
-      0005C9 8F 82            [24] 1223 	mov	dpl, r7
-      0005CB C0 07            [24] 1224 	push	ar7
-      0005CD C0 06            [24] 1225 	push	ar6
-      0005CF 12 02 C7         [24] 1226 	lcall	_SSD1306_WriteChar
-      0005D2 D0 06            [24] 1227 	pop	ar6
-      0005D4 D0 07            [24] 1228 	pop	ar7
-      0005D6 90 00 13         [24] 1229 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      0005D9 74 08            [12] 1230 	mov	a,#0x08
-      0005DB 2E               [12] 1231 	add	a, r6
-      0005DC F0               [24] 1232 	movx	@dptr,a
-                                   1233 ;	main.c:163: SSD1306_WriteChar(page, x, '.');                       x += 8;
-      0005DD E0               [24] 1234 	movx	a,@dptr
-      0005DE FE               [12] 1235 	mov	r6,a
-      0005DF 90 00 0A         [24] 1236 	mov	dptr,#_SSD1306_WriteChar_PARM_2
-      0005E2 F0               [24] 1237 	movx	@dptr,a
-      0005E3 90 00 0B         [24] 1238 	mov	dptr,#_SSD1306_WriteChar_PARM_3
-      0005E6 74 2E            [12] 1239 	mov	a,#0x2e
-      0005E8 F0               [24] 1240 	movx	@dptr,a
-      0005E9 8F 82            [24] 1241 	mov	dpl, r7
-      0005EB C0 07            [24] 1242 	push	ar7
-      0005ED C0 06            [24] 1243 	push	ar6
-      0005EF 12 02 C7         [24] 1244 	lcall	_SSD1306_WriteChar
-      0005F2 D0 06            [24] 1245 	pop	ar6
-      0005F4 D0 07            [24] 1246 	pop	ar7
-      0005F6 90 00 13         [24] 1247 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      0005F9 74 08            [12] 1248 	mov	a,#0x08
-      0005FB 2E               [12] 1249 	add	a, r6
-      0005FC F0               [24] 1250 	movx	@dptr,a
-                                   1251 ;	main.c:164: SSD1306_WriteChar(page, x, (val % 10) + '0');          x += 8;
-      0005FD E0               [24] 1252 	movx	a,@dptr
-      0005FE FE               [12] 1253 	mov	r6,a
-      0005FF 90 00 2C         [24] 1254 	mov	dptr,#__modulong_PARM_2
-      000602 74 0A            [12] 1255 	mov	a,#0x0a
-      000604 F0               [24] 1256 	movx	@dptr,a
-      000605 E4               [12] 1257 	clr	a
-      000606 A3               [24] 1258 	inc	dptr
-      000607 F0               [24] 1259 	movx	@dptr,a
-      000608 A3               [24] 1260 	inc	dptr
-      000609 F0               [24] 1261 	movx	@dptr,a
-      00060A A3               [24] 1262 	inc	dptr
-      00060B F0               [24] 1263 	movx	@dptr,a
-      00060C 85 09 82         [24] 1264 	mov	dpl, _SSD1306_DisplayResult_sloc1_1_0
-      00060F 85 0A 83         [24] 1265 	mov	dph, (_SSD1306_DisplayResult_sloc1_1_0 + 1)
-      000612 85 0B F0         [24] 1266 	mov	b, (_SSD1306_DisplayResult_sloc1_1_0 + 2)
-      000615 E5 0C            [12] 1267 	mov	a, (_SSD1306_DisplayResult_sloc1_1_0 + 3)
-      000617 C0 07            [24] 1268 	push	ar7
-      000619 C0 06            [24] 1269 	push	ar6
-      00061B 12 0E 56         [24] 1270 	lcall	__modulong
-      00061E AA 82            [24] 1271 	mov	r2, dpl
-      000620 D0 06            [24] 1272 	pop	ar6
-      000622 D0 07            [24] 1273 	pop	ar7
-      000624 74 30            [12] 1274 	mov	a,#0x30
-      000626 2A               [12] 1275 	add	a, r2
-      000627 FA               [12] 1276 	mov	r2,a
-      000628 90 00 0A         [24] 1277 	mov	dptr,#_SSD1306_WriteChar_PARM_2
-      00062B EE               [12] 1278 	mov	a,r6
-      00062C F0               [24] 1279 	movx	@dptr,a
-      00062D 90 00 0B         [24] 1280 	mov	dptr,#_SSD1306_WriteChar_PARM_3
-      000630 EA               [12] 1281 	mov	a,r2
-      000631 F0               [24] 1282 	movx	@dptr,a
-      000632 8F 82            [24] 1283 	mov	dpl, r7
-      000634 C0 07            [24] 1284 	push	ar7
-      000636 C0 06            [24] 1285 	push	ar6
-      000638 12 02 C7         [24] 1286 	lcall	_SSD1306_WriteChar
-      00063B D0 06            [24] 1287 	pop	ar6
-      00063D D0 07            [24] 1288 	pop	ar7
-      00063F 90 00 13         [24] 1289 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      000642 74 08            [12] 1290 	mov	a,#0x08
-      000644 2E               [12] 1291 	add	a, r6
-      000645 F0               [24] 1292 	movx	@dptr,a
-                                   1293 ;	main.c:165: SSD1306_PrintString(page, x, " NF");
-      000646 E0               [24] 1294 	movx	a,@dptr
-      000647 90 00 0E         [24] 1295 	mov	dptr,#_SSD1306_PrintString_PARM_2
-      00064A F0               [24] 1296 	movx	@dptr,a
-      00064B 90 00 0F         [24] 1297 	mov	dptr,#_SSD1306_PrintString_PARM_3
-      00064E 74 D5            [12] 1298 	mov	a,#___str_2
-      000650 F0               [24] 1299 	movx	@dptr,a
-      000651 74 14            [12] 1300 	mov	a,#(___str_2 >> 8)
-      000653 A3               [24] 1301 	inc	dptr
-      000654 F0               [24] 1302 	movx	@dptr,a
-      000655 74 80            [12] 1303 	mov	a,#0x80
-      000657 A3               [24] 1304 	inc	dptr
-      000658 F0               [24] 1305 	movx	@dptr,a
-      000659 8F 82            [24] 1306 	mov	dpl, r7
-      00065B 02 03 B1         [24] 1307 	ljmp	_SSD1306_PrintString
-      00065E                       1308 00104$:
-                                   1309 ;	main.c:168: SSD1306_WriteChar(page, x, ((val / 1000) % 10) + '0'); x += 8;
-      00065E 90 00 13         [24] 1310 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      000661 E0               [24] 1311 	movx	a,@dptr
-      000662 F5 09            [12] 1312 	mov	_SSD1306_DisplayResult_sloc1_1_0,a
-      000664 90 00 14         [24] 1313 	mov	dptr,#_SSD1306_DisplayResult_PARM_3
-      000667 E0               [24] 1314 	movx	a,@dptr
-      000668 F5 0D            [12] 1315 	mov	_SSD1306_DisplayResult_sloc2_1_0,a
-      00066A A3               [24] 1316 	inc	dptr
-      00066B E0               [24] 1317 	movx	a,@dptr
-      00066C F5 0E            [12] 1318 	mov	(_SSD1306_DisplayResult_sloc2_1_0 + 1),a
-      00066E A3               [24] 1319 	inc	dptr
-      00066F E0               [24] 1320 	movx	a,@dptr
-      000670 F5 0F            [12] 1321 	mov	(_SSD1306_DisplayResult_sloc2_1_0 + 2),a
-      000672 A3               [24] 1322 	inc	dptr
-      000673 E0               [24] 1323 	movx	a,@dptr
-      000674 F5 10            [12] 1324 	mov	(_SSD1306_DisplayResult_sloc2_1_0 + 3),a
-      000676 90 00 35         [24] 1325 	mov	dptr,#__divulong_PARM_2
-      000679 74 E8            [12] 1326 	mov	a,#0xe8
-      00067B F0               [24] 1327 	movx	@dptr,a
-      00067C 74 03            [12] 1328 	mov	a,#0x03
-      00067E A3               [24] 1329 	inc	dptr
-      00067F F0               [24] 1330 	movx	@dptr,a
-      000680 E4               [12] 1331 	clr	a
-      000681 A3               [24] 1332 	inc	dptr
-      000682 F0               [24] 1333 	movx	@dptr,a
-      000683 A3               [24] 1334 	inc	dptr
-      000684 F0               [24] 1335 	movx	@dptr,a
-      000685 85 0D 82         [24] 1336 	mov	dpl, _SSD1306_DisplayResult_sloc2_1_0
-      000688 85 0E 83         [24] 1337 	mov	dph, (_SSD1306_DisplayResult_sloc2_1_0 + 1)
-      00068B 85 0F F0         [24] 1338 	mov	b, (_SSD1306_DisplayResult_sloc2_1_0 + 2)
-      00068E E5 10            [12] 1339 	mov	a, (_SSD1306_DisplayResult_sloc2_1_0 + 3)
-      000690 C0 07            [24] 1340 	push	ar7
-      000692 12 10 66         [24] 1341 	lcall	__divulong
-      000695 A8 82            [24] 1342 	mov	r0, dpl
-      000697 A9 83            [24] 1343 	mov	r1, dph
-      000699 AD F0            [24] 1344 	mov	r5, b
-      00069B FE               [12] 1345 	mov	r6, a
-      00069C 90 00 2C         [24] 1346 	mov	dptr,#__modulong_PARM_2
-      00069F 74 0A            [12] 1347 	mov	a,#0x0a
-      0006A1 F0               [24] 1348 	movx	@dptr,a
-      0006A2 E4               [12] 1349 	clr	a
-      0006A3 A3               [24] 1350 	inc	dptr
-      0006A4 F0               [24] 1351 	movx	@dptr,a
-      0006A5 A3               [24] 1352 	inc	dptr
-      0006A6 F0               [24] 1353 	movx	@dptr,a
-      0006A7 A3               [24] 1354 	inc	dptr
-      0006A8 F0               [24] 1355 	movx	@dptr,a
-      0006A9 88 82            [24] 1356 	mov	dpl, r0
-      0006AB 89 83            [24] 1357 	mov	dph, r1
-      0006AD 8D F0            [24] 1358 	mov	b, r5
-      0006AF EE               [12] 1359 	mov	a, r6
-      0006B0 12 0E 56         [24] 1360 	lcall	__modulong
-      0006B3 AB 82            [24] 1361 	mov	r3, dpl
-      0006B5 D0 07            [24] 1362 	pop	ar7
-      0006B7 74 30            [12] 1363 	mov	a,#0x30
-      0006B9 2B               [12] 1364 	add	a, r3
-      0006BA FB               [12] 1365 	mov	r3,a
-      0006BB 90 00 0A         [24] 1366 	mov	dptr,#_SSD1306_WriteChar_PARM_2
-      0006BE E5 09            [12] 1367 	mov	a,_SSD1306_DisplayResult_sloc1_1_0
-      0006C0 F0               [24] 1368 	movx	@dptr,a
-      0006C1 90 00 0B         [24] 1369 	mov	dptr,#_SSD1306_WriteChar_PARM_3
-      0006C4 EB               [12] 1370 	mov	a,r3
-      0006C5 F0               [24] 1371 	movx	@dptr,a
-      0006C6 8F 82            [24] 1372 	mov	dpl, r7
-      0006C8 C0 07            [24] 1373 	push	ar7
-      0006CA 12 02 C7         [24] 1374 	lcall	_SSD1306_WriteChar
-      0006CD D0 07            [24] 1375 	pop	ar7
-      0006CF AE 09            [24] 1376 	mov	r6,_SSD1306_DisplayResult_sloc1_1_0
-      0006D1 90 00 13         [24] 1377 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      0006D4 74 08            [12] 1378 	mov	a,#0x08
-      0006D6 2E               [12] 1379 	add	a, r6
-      0006D7 F0               [24] 1380 	movx	@dptr,a
-                                   1381 ;	main.c:169: SSD1306_WriteChar(page, x, ((val / 100) % 10) + '0');  x += 8;
-      0006D8 E0               [24] 1382 	movx	a,@dptr
-      0006D9 FE               [12] 1383 	mov	r6,a
-      0006DA 90 00 35         [24] 1384 	mov	dptr,#__divulong_PARM_2
-      0006DD 74 64            [12] 1385 	mov	a,#0x64
-      0006DF F0               [24] 1386 	movx	@dptr,a
-      0006E0 E4               [12] 1387 	clr	a
-      0006E1 A3               [24] 1388 	inc	dptr
-      0006E2 F0               [24] 1389 	movx	@dptr,a
-      0006E3 A3               [24] 1390 	inc	dptr
-      0006E4 F0               [24] 1391 	movx	@dptr,a
-      0006E5 A3               [24] 1392 	inc	dptr
-      0006E6 F0               [24] 1393 	movx	@dptr,a
-      0006E7 85 0D 82         [24] 1394 	mov	dpl, _SSD1306_DisplayResult_sloc2_1_0
-      0006EA 85 0E 83         [24] 1395 	mov	dph, (_SSD1306_DisplayResult_sloc2_1_0 + 1)
-      0006ED 85 0F F0         [24] 1396 	mov	b, (_SSD1306_DisplayResult_sloc2_1_0 + 2)
-      0006F0 E5 10            [12] 1397 	mov	a, (_SSD1306_DisplayResult_sloc2_1_0 + 3)
-      0006F2 C0 07            [24] 1398 	push	ar7
-      0006F4 C0 06            [24] 1399 	push	ar6
-      0006F6 12 10 66         [24] 1400 	lcall	__divulong
-      0006F9 AA 82            [24] 1401 	mov	r2, dpl
-      0006FB AB 83            [24] 1402 	mov	r3, dph
-      0006FD AC F0            [24] 1403 	mov	r4, b
-      0006FF FD               [12] 1404 	mov	r5, a
-      000700 90 00 2C         [24] 1405 	mov	dptr,#__modulong_PARM_2
-      000703 74 0A            [12] 1406 	mov	a,#0x0a
-      000705 F0               [24] 1407 	movx	@dptr,a
-      000706 E4               [12] 1408 	clr	a
-      000707 A3               [24] 1409 	inc	dptr
-      000708 F0               [24] 1410 	movx	@dptr,a
-      000709 A3               [24] 1411 	inc	dptr
-      00070A F0               [24] 1412 	movx	@dptr,a
-      00070B A3               [24] 1413 	inc	dptr
-      00070C F0               [24] 1414 	movx	@dptr,a
-      00070D 8A 82            [24] 1415 	mov	dpl, r2
-      00070F 8B 83            [24] 1416 	mov	dph, r3
-      000711 8C F0            [24] 1417 	mov	b, r4
-      000713 ED               [12] 1418 	mov	a, r5
-      000714 12 0E 56         [24] 1419 	lcall	__modulong
-      000717 AA 82            [24] 1420 	mov	r2, dpl
-      000719 D0 06            [24] 1421 	pop	ar6
-      00071B D0 07            [24] 1422 	pop	ar7
-      00071D 74 30            [12] 1423 	mov	a,#0x30
-      00071F 2A               [12] 1424 	add	a, r2
-      000720 FA               [12] 1425 	mov	r2,a
-      000721 90 00 0A         [24] 1426 	mov	dptr,#_SSD1306_WriteChar_PARM_2
-      000724 EE               [12] 1427 	mov	a,r6
-      000725 F0               [24] 1428 	movx	@dptr,a
-      000726 90 00 0B         [24] 1429 	mov	dptr,#_SSD1306_WriteChar_PARM_3
-      000729 EA               [12] 1430 	mov	a,r2
-      00072A F0               [24] 1431 	movx	@dptr,a
-      00072B 8F 82            [24] 1432 	mov	dpl, r7
-      00072D C0 07            [24] 1433 	push	ar7
-      00072F C0 06            [24] 1434 	push	ar6
-      000731 12 02 C7         [24] 1435 	lcall	_SSD1306_WriteChar
-      000734 D0 06            [24] 1436 	pop	ar6
-      000736 D0 07            [24] 1437 	pop	ar7
-      000738 90 00 13         [24] 1438 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      00073B 74 08            [12] 1439 	mov	a,#0x08
-      00073D 2E               [12] 1440 	add	a, r6
-      00073E F0               [24] 1441 	movx	@dptr,a
-                                   1442 ;	main.c:170: SSD1306_WriteChar(page, x, ((val / 10) % 10) + '0');   x += 8;
-      00073F E0               [24] 1443 	movx	a,@dptr
-      000740 FE               [12] 1444 	mov	r6,a
-      000741 90 00 35         [24] 1445 	mov	dptr,#__divulong_PARM_2
-      000744 74 0A            [12] 1446 	mov	a,#0x0a
-      000746 F0               [24] 1447 	movx	@dptr,a
-      000747 E4               [12] 1448 	clr	a
-      000748 A3               [24] 1449 	inc	dptr
-      000749 F0               [24] 1450 	movx	@dptr,a
-      00074A A3               [24] 1451 	inc	dptr
-      00074B F0               [24] 1452 	movx	@dptr,a
-      00074C A3               [24] 1453 	inc	dptr
-      00074D F0               [24] 1454 	movx	@dptr,a
-      00074E 85 0D 82         [24] 1455 	mov	dpl, _SSD1306_DisplayResult_sloc2_1_0
-      000751 85 0E 83         [24] 1456 	mov	dph, (_SSD1306_DisplayResult_sloc2_1_0 + 1)
-      000754 85 0F F0         [24] 1457 	mov	b, (_SSD1306_DisplayResult_sloc2_1_0 + 2)
-      000757 E5 10            [12] 1458 	mov	a, (_SSD1306_DisplayResult_sloc2_1_0 + 3)
-      000759 C0 07            [24] 1459 	push	ar7
-      00075B C0 06            [24] 1460 	push	ar6
-      00075D 12 10 66         [24] 1461 	lcall	__divulong
-      000760 AA 82            [24] 1462 	mov	r2, dpl
-      000762 AB 83            [24] 1463 	mov	r3, dph
-      000764 AC F0            [24] 1464 	mov	r4, b
-      000766 FD               [12] 1465 	mov	r5, a
-      000767 90 00 2C         [24] 1466 	mov	dptr,#__modulong_PARM_2
-      00076A 74 0A            [12] 1467 	mov	a,#0x0a
-      00076C F0               [24] 1468 	movx	@dptr,a
-      00076D E4               [12] 1469 	clr	a
-      00076E A3               [24] 1470 	inc	dptr
-      00076F F0               [24] 1471 	movx	@dptr,a
-      000770 A3               [24] 1472 	inc	dptr
-      000771 F0               [24] 1473 	movx	@dptr,a
-      000772 A3               [24] 1474 	inc	dptr
-      000773 F0               [24] 1475 	movx	@dptr,a
-      000774 8A 82            [24] 1476 	mov	dpl, r2
-      000776 8B 83            [24] 1477 	mov	dph, r3
-      000778 8C F0            [24] 1478 	mov	b, r4
-      00077A ED               [12] 1479 	mov	a, r5
-      00077B 12 0E 56         [24] 1480 	lcall	__modulong
-      00077E AA 82            [24] 1481 	mov	r2, dpl
-      000780 D0 06            [24] 1482 	pop	ar6
-      000782 D0 07            [24] 1483 	pop	ar7
-      000784 74 30            [12] 1484 	mov	a,#0x30
-      000786 2A               [12] 1485 	add	a, r2
-      000787 FA               [12] 1486 	mov	r2,a
-      000788 90 00 0A         [24] 1487 	mov	dptr,#_SSD1306_WriteChar_PARM_2
-      00078B EE               [12] 1488 	mov	a,r6
-      00078C F0               [24] 1489 	movx	@dptr,a
-      00078D 90 00 0B         [24] 1490 	mov	dptr,#_SSD1306_WriteChar_PARM_3
-      000790 EA               [12] 1491 	mov	a,r2
-      000791 F0               [24] 1492 	movx	@dptr,a
-      000792 8F 82            [24] 1493 	mov	dpl, r7
-      000794 C0 07            [24] 1494 	push	ar7
-      000796 C0 06            [24] 1495 	push	ar6
-      000798 12 02 C7         [24] 1496 	lcall	_SSD1306_WriteChar
-      00079B D0 06            [24] 1497 	pop	ar6
-      00079D D0 07            [24] 1498 	pop	ar7
-      00079F 90 00 13         [24] 1499 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      0007A2 74 08            [12] 1500 	mov	a,#0x08
-      0007A4 2E               [12] 1501 	add	a, r6
-      0007A5 F0               [24] 1502 	movx	@dptr,a
-                                   1503 ;	main.c:171: SSD1306_WriteChar(page, x, '.');                       x += 8;
-      0007A6 E0               [24] 1504 	movx	a,@dptr
-      0007A7 FE               [12] 1505 	mov	r6,a
-      0007A8 90 00 0A         [24] 1506 	mov	dptr,#_SSD1306_WriteChar_PARM_2
-      0007AB F0               [24] 1507 	movx	@dptr,a
-      0007AC 90 00 0B         [24] 1508 	mov	dptr,#_SSD1306_WriteChar_PARM_3
-      0007AF 74 2E            [12] 1509 	mov	a,#0x2e
-      0007B1 F0               [24] 1510 	movx	@dptr,a
-      0007B2 8F 82            [24] 1511 	mov	dpl, r7
-      0007B4 C0 07            [24] 1512 	push	ar7
-      0007B6 C0 06            [24] 1513 	push	ar6
-      0007B8 12 02 C7         [24] 1514 	lcall	_SSD1306_WriteChar
-      0007BB D0 06            [24] 1515 	pop	ar6
-      0007BD D0 07            [24] 1516 	pop	ar7
-      0007BF 90 00 13         [24] 1517 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      0007C2 74 08            [12] 1518 	mov	a,#0x08
-      0007C4 2E               [12] 1519 	add	a, r6
-      0007C5 F0               [24] 1520 	movx	@dptr,a
-                                   1521 ;	main.c:172: SSD1306_WriteChar(page, x, (val % 10) + '0');          x += 8;
-      0007C6 E0               [24] 1522 	movx	a,@dptr
-      0007C7 FE               [12] 1523 	mov	r6,a
-      0007C8 90 00 2C         [24] 1524 	mov	dptr,#__modulong_PARM_2
-      0007CB 74 0A            [12] 1525 	mov	a,#0x0a
-      0007CD F0               [24] 1526 	movx	@dptr,a
-      0007CE E4               [12] 1527 	clr	a
-      0007CF A3               [24] 1528 	inc	dptr
-      0007D0 F0               [24] 1529 	movx	@dptr,a
-      0007D1 A3               [24] 1530 	inc	dptr
-      0007D2 F0               [24] 1531 	movx	@dptr,a
-      0007D3 A3               [24] 1532 	inc	dptr
-      0007D4 F0               [24] 1533 	movx	@dptr,a
-      0007D5 85 0D 82         [24] 1534 	mov	dpl, _SSD1306_DisplayResult_sloc2_1_0
-      0007D8 85 0E 83         [24] 1535 	mov	dph, (_SSD1306_DisplayResult_sloc2_1_0 + 1)
-      0007DB 85 0F F0         [24] 1536 	mov	b, (_SSD1306_DisplayResult_sloc2_1_0 + 2)
-      0007DE E5 10            [12] 1537 	mov	a, (_SSD1306_DisplayResult_sloc2_1_0 + 3)
-      0007E0 C0 07            [24] 1538 	push	ar7
-      0007E2 C0 06            [24] 1539 	push	ar6
-      0007E4 12 0E 56         [24] 1540 	lcall	__modulong
-      0007E7 AA 82            [24] 1541 	mov	r2, dpl
-      0007E9 D0 06            [24] 1542 	pop	ar6
-      0007EB D0 07            [24] 1543 	pop	ar7
-      0007ED 74 30            [12] 1544 	mov	a,#0x30
-      0007EF 2A               [12] 1545 	add	a, r2
-      0007F0 FA               [12] 1546 	mov	r2,a
-      0007F1 90 00 0A         [24] 1547 	mov	dptr,#_SSD1306_WriteChar_PARM_2
-      0007F4 EE               [12] 1548 	mov	a,r6
-      0007F5 F0               [24] 1549 	movx	@dptr,a
-      0007F6 90 00 0B         [24] 1550 	mov	dptr,#_SSD1306_WriteChar_PARM_3
-      0007F9 EA               [12] 1551 	mov	a,r2
-      0007FA F0               [24] 1552 	movx	@dptr,a
-      0007FB 8F 82            [24] 1553 	mov	dpl, r7
-      0007FD C0 07            [24] 1554 	push	ar7
-      0007FF C0 06            [24] 1555 	push	ar6
-      000801 12 02 C7         [24] 1556 	lcall	_SSD1306_WriteChar
-      000804 D0 06            [24] 1557 	pop	ar6
-      000806 D0 07            [24] 1558 	pop	ar7
-      000808 90 00 13         [24] 1559 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      00080B 74 08            [12] 1560 	mov	a,#0x08
-      00080D 2E               [12] 1561 	add	a, r6
-      00080E F0               [24] 1562 	movx	@dptr,a
-                                   1563 ;	main.c:173: SSD1306_PrintString(page, x, " UF");
-      00080F E0               [24] 1564 	movx	a,@dptr
-      000810 90 00 0E         [24] 1565 	mov	dptr,#_SSD1306_PrintString_PARM_2
-      000813 F0               [24] 1566 	movx	@dptr,a
-      000814 90 00 0F         [24] 1567 	mov	dptr,#_SSD1306_PrintString_PARM_3
-      000817 74 D9            [12] 1568 	mov	a,#___str_3
-      000819 F0               [24] 1569 	movx	@dptr,a
-      00081A 74 14            [12] 1570 	mov	a,#(___str_3 >> 8)
-      00081C A3               [24] 1571 	inc	dptr
-      00081D F0               [24] 1572 	movx	@dptr,a
-      00081E 74 80            [12] 1573 	mov	a,#0x80
-      000820 A3               [24] 1574 	inc	dptr
-      000821 F0               [24] 1575 	movx	@dptr,a
-      000822 8F 82            [24] 1576 	mov	dpl, r7
-                                   1577 ;	main.c:175: }
-      000824 02 03 B1         [24] 1578 	ljmp	_SSD1306_PrintString
-                                   1579 ;------------------------------------------------------------
-                                   1580 ;Allocation info for local variables in function 'Measure_Single'
-                                   1581 ;------------------------------------------------------------
-                                   1582 ;use_1k                    Allocated with name '_Measure_Single_use_1k_10000_50'
-                                   1583 ;cycles                    Allocated with name '_Measure_Single_cycles_10000_51'
-                                   1584 ;max_limit                 Allocated with name '_Measure_Single_max_limit_10000_51'
-                                   1585 ;discharge                 Allocated with name '_Measure_Single_discharge_10000_51'
-                                   1586 ;------------------------------------------------------------
-                                   1587 ;	main.c:177: uint32_t Measure_Single(uint8_t use_1k) {
-                                   1588 ;	-----------------------------------------
-                                   1589 ;	 function Measure_Single
-                                   1590 ;	-----------------------------------------
-      000827                       1591 _Measure_Single:
-      000827 E5 82            [12] 1592 	mov	a,dpl
-      000829 90 00 1A         [24] 1593 	mov	dptr,#_Measure_Single_use_1k_10000_50
-      00082C F0               [24] 1594 	movx	@dptr,a
-                                   1595 ;	main.c:179: uint32_t max_limit = use_1k ? 80000000 : 3000000;
-      00082D E0               [24] 1596 	movx	a,@dptr
-      00082E FF               [12] 1597 	mov	r7,a
-      00082F E0               [24] 1598 	movx	a,@dptr
-      000830 60 0A            [24] 1599 	jz	00117$
-      000832 7B 00            [12] 1600 	mov	r3,#0x00
-      000834 7C B4            [12] 1601 	mov	r4,#0xb4
-      000836 7D C4            [12] 1602 	mov	r5,#0xc4
-      000838 7E 04            [12] 1603 	mov	r6,#0x04
-      00083A 80 08            [24] 1604 	sjmp	00118$
-      00083C                       1605 00117$:
-      00083C 7B C0            [12] 1606 	mov	r3,#0xc0
-      00083E 7C C6            [12] 1607 	mov	r4,#0xc6
-      000840 7D 2D            [12] 1608 	mov	r5,#0x2d
-      000842 7E 00            [12] 1609 	mov	r6,#0x00
-      000844                       1610 00118$:
-                                   1611 ;	main.c:182: P3M1 &= ~0x02; P3M0 |= 0x02; PIN_R1_10K = 0;
-      000844 53 B1 FD         [24] 1612 	anl	_P3M1,#0xfd
-      000847 43 B2 02         [24] 1613 	orl	_P3M0,#0x02
-                                   1614 ;	assignBit
-      00084A C2 B1            [12] 1615 	clr	_PIN_R1_10K
-                                   1616 ;	main.c:183: P5M1 &= ~MASK_R3_1K; P5M0 |= MASK_R3_1K; PIN_R3_1K = 0;
-      00084C 53 C9 EF         [24] 1617 	anl	_P5M1,#0xef
-      00084F 43 CA 10         [24] 1618 	orl	_P5M0,#0x10
-                                   1619 ;	assignBit
-      000852 C2 C4            [12] 1620 	clr	_PIN_R3_1K
-                                   1621 ;	main.c:185: for(discharge = 0; discharge < 30000; discharge++) { __asm__("nop"); }
-      000854 90 00 1B         [24] 1622 	mov	dptr,#_Measure_Single_discharge_10000_51
-      000857 E4               [12] 1623 	clr	a
-      000858 F0               [24] 1624 	movx	@dptr,a
-      000859 A3               [24] 1625 	inc	dptr
-      00085A F0               [24] 1626 	movx	@dptr,a
-      00085B                       1627 00113$:
-      00085B 90 00 1B         [24] 1628 	mov	dptr,#_Measure_Single_discharge_10000_51
-      00085E E0               [24] 1629 	movx	a,@dptr
-      00085F F9               [12] 1630 	mov	r1,a
-      000860 A3               [24] 1631 	inc	dptr
-      000861 E0               [24] 1632 	movx	a,@dptr
-      000862 FA               [12] 1633 	mov	r2,a
-      000863 C3               [12] 1634 	clr	c
-      000864 E9               [12] 1635 	mov	a,r1
-      000865 94 30            [12] 1636 	subb	a,#0x30
-      000867 EA               [12] 1637 	mov	a,r2
-      000868 94 75            [12] 1638 	subb	a,#0x75
-      00086A 50 16            [24] 1639 	jnc	00101$
-      00086C 00               [12] 1640 	nop
-      00086D 90 00 1B         [24] 1641 	mov	dptr,#_Measure_Single_discharge_10000_51
-      000870 E0               [24] 1642 	movx	a,@dptr
-      000871 F9               [12] 1643 	mov	r1,a
-      000872 A3               [24] 1644 	inc	dptr
-      000873 E0               [24] 1645 	movx	a,@dptr
-      000874 FA               [12] 1646 	mov	r2,a
-      000875 90 00 1B         [24] 1647 	mov	dptr,#_Measure_Single_discharge_10000_51
-      000878 74 01            [12] 1648 	mov	a,#0x01
-      00087A 29               [12] 1649 	add	a, r1
-      00087B F0               [24] 1650 	movx	@dptr,a
-      00087C E4               [12] 1651 	clr	a
-      00087D 3A               [12] 1652 	addc	a, r2
-      00087E A3               [24] 1653 	inc	dptr
-      00087F F0               [24] 1654 	movx	@dptr,a
-      000880 80 D9            [24] 1655 	sjmp	00113$
-      000882                       1656 00101$:
-                                   1657 ;	main.c:187: TH0 = 0x00; TL0 = 0x00; TF0 = 0;
-      000882 75 8C 00         [24] 1658 	mov	_TH0,#0x00
-      000885 75 8A 00         [24] 1659 	mov	_TL0,#0x00
-                                   1660 ;	assignBit
-      000888 C2 8D            [12] 1661 	clr	_TF0
-                                   1662 ;	main.c:189: if (use_1k) {
-      00088A EF               [12] 1663 	mov	a,r7
-      00088B 60 10            [24] 1664 	jz	00103$
-                                   1665 ;	main.c:190: P3M1 |= 0x02; P3M0 &= ~0x02;
-      00088D 43 B1 02         [24] 1666 	orl	_P3M1,#0x02
-      000890 53 B2 FD         [24] 1667 	anl	_P3M0,#0xfd
-                                   1668 ;	main.c:191: P5M1 &= ~MASK_R3_1K; P5M0 |= MASK_R3_1K; PIN_R3_1K = 1;
-      000893 53 C9 EF         [24] 1669 	anl	_P5M1,#0xef
-      000896 43 CA 10         [24] 1670 	orl	_P5M0,#0x10
-                                   1671 ;	assignBit
-      000899 D2 C4            [12] 1672 	setb	_PIN_R3_1K
-      00089B 80 0E            [24] 1673 	sjmp	00104$
-      00089D                       1674 00103$:
-                                   1675 ;	main.c:193: P5M1 |= MASK_R3_1K; P5M0 &= ~MASK_R3_1K;
-      00089D 43 C9 10         [24] 1676 	orl	_P5M1,#0x10
-      0008A0 53 CA EF         [24] 1677 	anl	_P5M0,#0xef
-                                   1678 ;	main.c:194: P3M1 &= ~0x02; P3M0 |= 0x02; PIN_R1_10K = 1;
-      0008A3 53 B1 FD         [24] 1679 	anl	_P3M1,#0xfd
-      0008A6 43 B2 02         [24] 1680 	orl	_P3M0,#0x02
-                                   1681 ;	assignBit
-      0008A9 D2 B1            [12] 1682 	setb	_PIN_R1_10K
-      0008AB                       1683 00104$:
-                                   1684 ;	main.c:197: TR0 = 1;
-                                   1685 ;	assignBit
-      0008AB D2 8C            [12] 1686 	setb	_TR0
-                                   1687 ;	main.c:198: while (!(P5 & MASK_DET_55)) {
-      0008AD 8B 07            [24] 1688 	mov	ar7,r3
-      0008AF 78 00            [12] 1689 	mov	r0,#0x00
-      0008B1 79 00            [12] 1690 	mov	r1,#0x00
-      0008B3 7A 00            [12] 1691 	mov	r2,#0x00
-      0008B5 7B 00            [12] 1692 	mov	r3,#0x00
-      0008B7                       1693 00109$:
-      0008B7 E5 C8            [12] 1694 	mov	a,_P5
-      0008B9 20 E5 17         [24] 1695 	jb	acc.5,00111$
-                                   1696 ;	main.c:199: if (TF0) {
-                                   1697 ;	main.c:200: TF0 = 0;
-                                   1698 ;	assignBit
-      0008BC 10 8D 02         [24] 1699 	jbc	_TF0,00166$
-      0008BF 80 F6            [24] 1700 	sjmp	00109$
-      0008C1                       1701 00166$:
-                                   1702 ;	main.c:201: cycles += 65536;
-      0008C1 74 01            [12] 1703 	mov	a,#0x01
-      0008C3 2A               [12] 1704 	add	a, r2
-      0008C4 FA               [12] 1705 	mov	r2,a
-      0008C5 E4               [12] 1706 	clr	a
-      0008C6 3B               [12] 1707 	addc	a, r3
-      0008C7 FB               [12] 1708 	mov	r3,a
-                                   1709 ;	main.c:202: if (cycles > max_limit) break;
-      0008C8 C3               [12] 1710 	clr	c
-      0008C9 EF               [12] 1711 	mov	a,r7
-      0008CA 98               [12] 1712 	subb	a,r0
-      0008CB EC               [12] 1713 	mov	a,r4
-      0008CC 99               [12] 1714 	subb	a,r1
-      0008CD ED               [12] 1715 	mov	a,r5
-      0008CE 9A               [12] 1716 	subb	a,r2
-      0008CF EE               [12] 1717 	mov	a,r6
-      0008D0 9B               [12] 1718 	subb	a,r3
-      0008D1 50 E4            [24] 1719 	jnc	00109$
-      0008D3                       1720 00111$:
-                                   1721 ;	main.c:205: TR0 = 0;
+      000124                        444 _SCL_LOW:
+      000124 43 B1 04         [24]  445 	orl	_P3M1,#0x04
+      000127 43 B2 04         [24]  446 	orl	_P3M0,#0x04
+      00012A 53 B0 FB         [24]  447 	anl	_P3,#0xfb
+      00012D 22               [24]  448 	ret
+                                    449 ;------------------------------------------------------------
+                                    450 ;Allocation info for local variables in function 'SDA_HIGH'
+                                    451 ;------------------------------------------------------------
+                                    452 ;	main.c:84: void SDA_HIGH(void) { P3M1 &= ~(1 << SDA_BIT); P3M0 &= ~(1 << SDA_BIT); P3 |= (1 << SDA_BIT); }
+                                    453 ;	-----------------------------------------
+                                    454 ;	 function SDA_HIGH
+                                    455 ;	-----------------------------------------
+      00012E                        456 _SDA_HIGH:
+      00012E 53 B1 F7         [24]  457 	anl	_P3M1,#0xf7
+      000131 53 B2 F7         [24]  458 	anl	_P3M0,#0xf7
+      000134 43 B0 08         [24]  459 	orl	_P3,#0x08
+      000137 22               [24]  460 	ret
+                                    461 ;------------------------------------------------------------
+                                    462 ;Allocation info for local variables in function 'SDA_LOW'
+                                    463 ;------------------------------------------------------------
+                                    464 ;	main.c:85: void SDA_LOW(void)  { P3M1 |= (1 << SDA_BIT);  P3M0 |= (1 << SDA_BIT);  P3 &= ~(1 << SDA_BIT); }
+                                    465 ;	-----------------------------------------
+                                    466 ;	 function SDA_LOW
+                                    467 ;	-----------------------------------------
+      000138                        468 _SDA_LOW:
+      000138 43 B1 08         [24]  469 	orl	_P3M1,#0x08
+      00013B 43 B2 08         [24]  470 	orl	_P3M0,#0x08
+      00013E 53 B0 F7         [24]  471 	anl	_P3,#0xf7
+      000141 22               [24]  472 	ret
+                                    473 ;------------------------------------------------------------
+                                    474 ;Allocation info for local variables in function 'I2C_Start'
+                                    475 ;------------------------------------------------------------
+                                    476 ;	main.c:88: void I2C_Start(void) { SDA_HIGH(); SCL_HIGH(); I2C_Delay(); SDA_LOW(); I2C_Delay(); SCL_LOW(); I2C_Delay(); }
+                                    477 ;	-----------------------------------------
+                                    478 ;	 function I2C_Start
+                                    479 ;	-----------------------------------------
+      000142                        480 _I2C_Start:
+      000142 12 01 2E         [24]  481 	lcall	_SDA_HIGH
+      000145 12 01 1A         [24]  482 	lcall	_SCL_HIGH
+      000148 12 01 09         [24]  483 	lcall	_I2C_Delay
+      00014B 12 01 38         [24]  484 	lcall	_SDA_LOW
+      00014E 12 01 09         [24]  485 	lcall	_I2C_Delay
+      000151 12 01 24         [24]  486 	lcall	_SCL_LOW
+      000154 02 01 09         [24]  487 	ljmp	_I2C_Delay
+                                    488 ;------------------------------------------------------------
+                                    489 ;Allocation info for local variables in function 'I2C_Stop'
+                                    490 ;------------------------------------------------------------
+                                    491 ;	main.c:89: void I2C_Stop(void)  { SDA_LOW(); SCL_HIGH(); I2C_Delay(); SDA_HIGH(); I2C_Delay(); }
+                                    492 ;	-----------------------------------------
+                                    493 ;	 function I2C_Stop
+                                    494 ;	-----------------------------------------
+      000157                        495 _I2C_Stop:
+      000157 12 01 38         [24]  496 	lcall	_SDA_LOW
+      00015A 12 01 1A         [24]  497 	lcall	_SCL_HIGH
+      00015D 12 01 09         [24]  498 	lcall	_I2C_Delay
+      000160 12 01 2E         [24]  499 	lcall	_SDA_HIGH
+      000163 02 01 09         [24]  500 	ljmp	_I2C_Delay
+                                    501 ;------------------------------------------------------------
+                                    502 ;Allocation info for local variables in function 'I2C_Write_Byte'
+                                    503 ;------------------------------------------------------------
+                                    504 ;dat           Allocated with name '_I2C_Write_Byte_dat_10000_18'
+                                    505 ;i             Allocated with name '_I2C_Write_Byte_i_10000_19'
+                                    506 ;------------------------------------------------------------
+                                    507 ;	main.c:91: void I2C_Write_Byte(unsigned char dat) {
+                                    508 ;	-----------------------------------------
+                                    509 ;	 function I2C_Write_Byte
+                                    510 ;	-----------------------------------------
+      000166                        511 _I2C_Write_Byte:
+      000166 E5 82            [12]  512 	mov	a,dpl
+      000168 90 00 06         [24]  513 	mov	dptr,#_I2C_Write_Byte_dat_10000_18
+      00016B F0               [24]  514 	movx	@dptr,a
+                                    515 ;	main.c:93: for(i = 0; i < 8; i++) {
+      00016C 7F 00            [12]  516 	mov	r7,#0x00
+      00016E                        517 00105$:
+                                    518 ;	main.c:94: if(dat & 0x80) { SDA_HIGH(); } else { SDA_LOW(); }
+      00016E 90 00 06         [24]  519 	mov	dptr,#_I2C_Write_Byte_dat_10000_18
+      000171 E0               [24]  520 	movx	a,@dptr
+      000172 30 E7 09         [24]  521 	jnb	acc.7,00102$
+      000175 C0 07            [24]  522 	push	ar7
+      000177 12 01 2E         [24]  523 	lcall	_SDA_HIGH
+      00017A D0 07            [24]  524 	pop	ar7
+      00017C 80 07            [24]  525 	sjmp	00103$
+      00017E                        526 00102$:
+      00017E C0 07            [24]  527 	push	ar7
+      000180 12 01 38         [24]  528 	lcall	_SDA_LOW
+      000183 D0 07            [24]  529 	pop	ar7
+      000185                        530 00103$:
+                                    531 ;	main.c:95: I2C_Delay(); SCL_HIGH(); I2C_Delay(); SCL_LOW();
+      000185 C0 07            [24]  532 	push	ar7
+      000187 12 01 09         [24]  533 	lcall	_I2C_Delay
+      00018A 12 01 1A         [24]  534 	lcall	_SCL_HIGH
+      00018D 12 01 09         [24]  535 	lcall	_I2C_Delay
+      000190 12 01 24         [24]  536 	lcall	_SCL_LOW
+      000193 D0 07            [24]  537 	pop	ar7
+                                    538 ;	main.c:96: dat <<= 1;
+      000195 90 00 06         [24]  539 	mov	dptr,#_I2C_Write_Byte_dat_10000_18
+      000198 E0               [24]  540 	movx	a,@dptr
+      000199 25 E0            [12]  541 	add	a,acc
+      00019B F0               [24]  542 	movx	@dptr,a
+                                    543 ;	main.c:93: for(i = 0; i < 8; i++) {
+      00019C 0F               [12]  544 	inc	r7
+      00019D BF 08 00         [24]  545 	cjne	r7,#0x08,00129$
+      0001A0                        546 00129$:
+      0001A0 40 CC            [24]  547 	jc	00105$
+                                    548 ;	main.c:98: SDA_HIGH(); I2C_Delay(); SCL_HIGH(); I2C_Delay(); SCL_LOW(); I2C_Delay();
+      0001A2 12 01 2E         [24]  549 	lcall	_SDA_HIGH
+      0001A5 12 01 09         [24]  550 	lcall	_I2C_Delay
+      0001A8 12 01 1A         [24]  551 	lcall	_SCL_HIGH
+      0001AB 12 01 09         [24]  552 	lcall	_I2C_Delay
+      0001AE 12 01 24         [24]  553 	lcall	_SCL_LOW
+                                    554 ;	main.c:99: }
+      0001B1 02 01 09         [24]  555 	ljmp	_I2C_Delay
+                                    556 ;------------------------------------------------------------
+                                    557 ;Allocation info for local variables in function 'SSD1306_Command'
+                                    558 ;------------------------------------------------------------
+                                    559 ;cmd           Allocated with name '_SSD1306_Command_cmd_10000_24'
+                                    560 ;------------------------------------------------------------
+                                    561 ;	main.c:101: void SSD1306_Command(unsigned char cmd) { I2C_Start(); I2C_Write_Byte(SSD1306_ADDR); I2C_Write_Byte(0x00); I2C_Write_Byte(cmd); I2C_Stop(); }
+                                    562 ;	-----------------------------------------
+                                    563 ;	 function SSD1306_Command
+                                    564 ;	-----------------------------------------
+      0001B4                        565 _SSD1306_Command:
+      0001B4 E5 82            [12]  566 	mov	a,dpl
+      0001B6 90 00 07         [24]  567 	mov	dptr,#_SSD1306_Command_cmd_10000_24
+      0001B9 F0               [24]  568 	movx	@dptr,a
+      0001BA 12 01 42         [24]  569 	lcall	_I2C_Start
+      0001BD 75 82 78         [24]  570 	mov	dpl, #0x78
+      0001C0 12 01 66         [24]  571 	lcall	_I2C_Write_Byte
+      0001C3 75 82 00         [24]  572 	mov	dpl, #0x00
+      0001C6 12 01 66         [24]  573 	lcall	_I2C_Write_Byte
+      0001C9 90 00 07         [24]  574 	mov	dptr,#_SSD1306_Command_cmd_10000_24
+      0001CC E0               [24]  575 	movx	a,@dptr
+      0001CD F5 82            [12]  576 	mov	dpl,a
+      0001CF 12 01 66         [24]  577 	lcall	_I2C_Write_Byte
+      0001D2 02 01 57         [24]  578 	ljmp	_I2C_Stop
+                                    579 ;------------------------------------------------------------
+                                    580 ;Allocation info for local variables in function 'SSD1306_Init'
+                                    581 ;------------------------------------------------------------
+                                    582 ;	main.c:103: void SSD1306_Init(void) {
+                                    583 ;	-----------------------------------------
+                                    584 ;	 function SSD1306_Init
+                                    585 ;	-----------------------------------------
+      0001D5                        586 _SSD1306_Init:
+                                    587 ;	main.c:104: Delay_ms(250);
+      0001D5 90 00 FA         [24]  588 	mov	dptr,#0x00fa
+      0001D8 12 00 B0         [24]  589 	lcall	_Delay_ms
+                                    590 ;	main.c:105: SSD1306_Command(0xAE); SSD1306_Command(0x20); SSD1306_Command(0x02);
+      0001DB 75 82 AE         [24]  591 	mov	dpl, #0xae
+      0001DE 12 01 B4         [24]  592 	lcall	_SSD1306_Command
+      0001E1 75 82 20         [24]  593 	mov	dpl, #0x20
+      0001E4 12 01 B4         [24]  594 	lcall	_SSD1306_Command
+      0001E7 75 82 02         [24]  595 	mov	dpl, #0x02
+      0001EA 12 01 B4         [24]  596 	lcall	_SSD1306_Command
+                                    597 ;	main.c:106: SSD1306_Command(0xB0); SSD1306_Command(0x00); SSD1306_Command(0x10);
+      0001ED 75 82 B0         [24]  598 	mov	dpl, #0xb0
+      0001F0 12 01 B4         [24]  599 	lcall	_SSD1306_Command
+      0001F3 75 82 00         [24]  600 	mov	dpl, #0x00
+      0001F6 12 01 B4         [24]  601 	lcall	_SSD1306_Command
+      0001F9 75 82 10         [24]  602 	mov	dpl, #0x10
+      0001FC 12 01 B4         [24]  603 	lcall	_SSD1306_Command
+                                    604 ;	main.c:107: SSD1306_Command(0x40); SSD1306_Command(0x81); SSD1306_Command(0x7F);
+      0001FF 75 82 40         [24]  605 	mov	dpl, #0x40
+      000202 12 01 B4         [24]  606 	lcall	_SSD1306_Command
+      000205 75 82 81         [24]  607 	mov	dpl, #0x81
+      000208 12 01 B4         [24]  608 	lcall	_SSD1306_Command
+      00020B 75 82 7F         [24]  609 	mov	dpl, #0x7f
+      00020E 12 01 B4         [24]  610 	lcall	_SSD1306_Command
+                                    611 ;	main.c:108: SSD1306_Command(0xA1); SSD1306_Command(0xC8); SSD1306_Command(0xA6);
+      000211 75 82 A1         [24]  612 	mov	dpl, #0xa1
+      000214 12 01 B4         [24]  613 	lcall	_SSD1306_Command
+      000217 75 82 C8         [24]  614 	mov	dpl, #0xc8
+      00021A 12 01 B4         [24]  615 	lcall	_SSD1306_Command
+      00021D 75 82 A6         [24]  616 	mov	dpl, #0xa6
+      000220 12 01 B4         [24]  617 	lcall	_SSD1306_Command
+                                    618 ;	main.c:109: SSD1306_Command(0xA8); SSD1306_Command(0x3F); SSD1306_Command(0xD3); SSD1306_Command(0x00);
+      000223 75 82 A8         [24]  619 	mov	dpl, #0xa8
+      000226 12 01 B4         [24]  620 	lcall	_SSD1306_Command
+      000229 75 82 3F         [24]  621 	mov	dpl, #0x3f
+      00022C 12 01 B4         [24]  622 	lcall	_SSD1306_Command
+      00022F 75 82 D3         [24]  623 	mov	dpl, #0xd3
+      000232 12 01 B4         [24]  624 	lcall	_SSD1306_Command
+      000235 75 82 00         [24]  625 	mov	dpl, #0x00
+      000238 12 01 B4         [24]  626 	lcall	_SSD1306_Command
+                                    627 ;	main.c:110: SSD1306_Command(0xD5); SSD1306_Command(0x80); SSD1306_Command(0xD9); SSD1306_Command(0x22);
+      00023B 75 82 D5         [24]  628 	mov	dpl, #0xd5
+      00023E 12 01 B4         [24]  629 	lcall	_SSD1306_Command
+      000241 75 82 80         [24]  630 	mov	dpl, #0x80
+      000244 12 01 B4         [24]  631 	lcall	_SSD1306_Command
+      000247 75 82 D9         [24]  632 	mov	dpl, #0xd9
+      00024A 12 01 B4         [24]  633 	lcall	_SSD1306_Command
+      00024D 75 82 22         [24]  634 	mov	dpl, #0x22
+      000250 12 01 B4         [24]  635 	lcall	_SSD1306_Command
+                                    636 ;	main.c:111: SSD1306_Command(0xDA); SSD1306_Command(0x12); SSD1306_Command(0xDB); SSD1306_Command(0x20);
+      000253 75 82 DA         [24]  637 	mov	dpl, #0xda
+      000256 12 01 B4         [24]  638 	lcall	_SSD1306_Command
+      000259 75 82 12         [24]  639 	mov	dpl, #0x12
+      00025C 12 01 B4         [24]  640 	lcall	_SSD1306_Command
+      00025F 75 82 DB         [24]  641 	mov	dpl, #0xdb
+      000262 12 01 B4         [24]  642 	lcall	_SSD1306_Command
+      000265 75 82 20         [24]  643 	mov	dpl, #0x20
+      000268 12 01 B4         [24]  644 	lcall	_SSD1306_Command
+                                    645 ;	main.c:112: SSD1306_Command(0x8D); SSD1306_Command(0x14); SSD1306_Command(0xA4); SSD1306_Command(0xAF);
+      00026B 75 82 8D         [24]  646 	mov	dpl, #0x8d
+      00026E 12 01 B4         [24]  647 	lcall	_SSD1306_Command
+      000271 75 82 14         [24]  648 	mov	dpl, #0x14
+      000274 12 01 B4         [24]  649 	lcall	_SSD1306_Command
+      000277 75 82 A4         [24]  650 	mov	dpl, #0xa4
+      00027A 12 01 B4         [24]  651 	lcall	_SSD1306_Command
+      00027D 75 82 AF         [24]  652 	mov	dpl, #0xaf
+      000280 12 01 B4         [24]  653 	lcall	_SSD1306_Command
+                                    654 ;	main.c:113: Delay_ms(150);
+      000283 90 00 96         [24]  655 	mov	dptr,#0x0096
+                                    656 ;	main.c:114: }
+      000286 02 00 B0         [24]  657 	ljmp	_Delay_ms
+                                    658 ;------------------------------------------------------------
+                                    659 ;Allocation info for local variables in function 'SSD1306_Clear'
+                                    660 ;------------------------------------------------------------
+                                    661 ;m             Allocated with name '_SSD1306_Clear_m_10000_29'
+                                    662 ;n             Allocated with name '_SSD1306_Clear_n_10000_29'
+                                    663 ;------------------------------------------------------------
+                                    664 ;	main.c:116: void SSD1306_Clear(void) {
+                                    665 ;	-----------------------------------------
+                                    666 ;	 function SSD1306_Clear
+                                    667 ;	-----------------------------------------
+      000289                        668 _SSD1306_Clear:
+                                    669 ;	main.c:118: for(m = 0; m < 8; m++) {
+      000289 7F 00            [12]  670 	mov	r7,#0x00
+      00028B                        671 00105$:
+                                    672 ;	main.c:119: SSD1306_Command(0xB0 + m); SSD1306_Command(0x00); SSD1306_Command(0x10);
+      00028B 8F 06            [24]  673 	mov	ar6,r7
+      00028D 74 B0            [12]  674 	mov	a,#0xb0
+      00028F 2E               [12]  675 	add	a, r6
+      000290 F5 82            [12]  676 	mov	dpl,a
+      000292 C0 07            [24]  677 	push	ar7
+      000294 12 01 B4         [24]  678 	lcall	_SSD1306_Command
+      000297 75 82 00         [24]  679 	mov	dpl, #0x00
+      00029A 12 01 B4         [24]  680 	lcall	_SSD1306_Command
+      00029D 75 82 10         [24]  681 	mov	dpl, #0x10
+      0002A0 12 01 B4         [24]  682 	lcall	_SSD1306_Command
+                                    683 ;	main.c:120: I2C_Start(); I2C_Write_Byte(SSD1306_ADDR); I2C_Write_Byte(0x40);
+      0002A3 12 01 42         [24]  684 	lcall	_I2C_Start
+      0002A6 75 82 78         [24]  685 	mov	dpl, #0x78
+      0002A9 12 01 66         [24]  686 	lcall	_I2C_Write_Byte
+      0002AC 75 82 40         [24]  687 	mov	dpl, #0x40
+      0002AF 12 01 66         [24]  688 	lcall	_I2C_Write_Byte
+      0002B2 D0 07            [24]  689 	pop	ar7
+                                    690 ;	main.c:121: for(n = 0; n < 128; n++) { I2C_Write_Byte(0x00); }
+      0002B4 7E 00            [12]  691 	mov	r6,#0x00
+      0002B6                        692 00103$:
+      0002B6 75 82 00         [24]  693 	mov	dpl, #0x00
+      0002B9 C0 07            [24]  694 	push	ar7
+      0002BB C0 06            [24]  695 	push	ar6
+      0002BD 12 01 66         [24]  696 	lcall	_I2C_Write_Byte
+      0002C0 D0 06            [24]  697 	pop	ar6
+      0002C2 D0 07            [24]  698 	pop	ar7
+      0002C4 0E               [12]  699 	inc	r6
+      0002C5 BE 80 00         [24]  700 	cjne	r6,#0x80,00129$
+      0002C8                        701 00129$:
+      0002C8 40 EC            [24]  702 	jc	00103$
+                                    703 ;	main.c:122: I2C_Stop();
+      0002CA C0 07            [24]  704 	push	ar7
+      0002CC 12 01 57         [24]  705 	lcall	_I2C_Stop
+      0002CF D0 07            [24]  706 	pop	ar7
+                                    707 ;	main.c:118: for(m = 0; m < 8; m++) {
+      0002D1 0F               [12]  708 	inc	r7
+      0002D2 BF 08 00         [24]  709 	cjne	r7,#0x08,00131$
+      0002D5                        710 00131$:
+      0002D5 40 B4            [24]  711 	jc	00105$
+                                    712 ;	main.c:124: }
+      0002D7 22               [24]  713 	ret
+                                    714 ;------------------------------------------------------------
+                                    715 ;Allocation info for local variables in function 'SSD1306_SetCursor'
+                                    716 ;------------------------------------------------------------
+                                    717 ;x             Allocated with name '_SSD1306_SetCursor_PARM_2'
+                                    718 ;page          Allocated with name '_SSD1306_SetCursor_page_10000_34'
+                                    719 ;------------------------------------------------------------
+                                    720 ;	main.c:126: void SSD1306_SetCursor(uint8_t page, uint8_t x) {
+                                    721 ;	-----------------------------------------
+                                    722 ;	 function SSD1306_SetCursor
+                                    723 ;	-----------------------------------------
+      0002D8                        724 _SSD1306_SetCursor:
+      0002D8 E5 82            [12]  725 	mov	a,dpl
+      0002DA 90 00 09         [24]  726 	mov	dptr,#_SSD1306_SetCursor_page_10000_34
+      0002DD F0               [24]  727 	movx	@dptr,a
+                                    728 ;	main.c:127: SSD1306_Command(0xB0 + page);
+      0002DE E0               [24]  729 	movx	a,@dptr
+      0002DF 24 B0            [12]  730 	add	a,#0xb0
+      0002E1 F5 82            [12]  731 	mov	dpl,a
+      0002E3 12 01 B4         [24]  732 	lcall	_SSD1306_Command
+                                    733 ;	main.c:128: SSD1306_Command(((x & 0xF0) >> 4) | 0x10);
+      0002E6 90 00 08         [24]  734 	mov	dptr,#_SSD1306_SetCursor_PARM_2
+      0002E9 E0               [24]  735 	movx	a,@dptr
+      0002EA FF               [12]  736 	mov	r7,a
+      0002EB FD               [12]  737 	mov	r5,a
+      0002EC 53 05 F0         [24]  738 	anl	ar5,#0xf0
+      0002EF E4               [12]  739 	clr	a
+      0002F0 CD               [12]  740 	xch	a,r5
+      0002F1 C4               [12]  741 	swap	a
+      0002F2 54 0F            [12]  742 	anl	a,#0x0f
+      0002F4 6D               [12]  743 	xrl	a,r5
+      0002F5 CD               [12]  744 	xch	a,r5
+      0002F6 54 0F            [12]  745 	anl	a,#0x0f
+      0002F8 CD               [12]  746 	xch	a,r5
+      0002F9 6D               [12]  747 	xrl	a,r5
+      0002FA CD               [12]  748 	xch	a,r5
+      0002FB 30 E3 02         [24]  749 	jnb	acc.3,00103$
+      0002FE 44 F0            [12]  750 	orl	a,#0xfffffff0
+      000300                        751 00103$:
+      000300 43 05 10         [24]  752 	orl	ar5,#0x10
+      000303 8D 82            [24]  753 	mov	dpl, r5
+      000305 C0 07            [24]  754 	push	ar7
+      000307 12 01 B4         [24]  755 	lcall	_SSD1306_Command
+      00030A D0 07            [24]  756 	pop	ar7
+                                    757 ;	main.c:129: SSD1306_Command(x & 0x0F);
+      00030C 53 07 0F         [24]  758 	anl	ar7,#0x0f
+      00030F 8F 82            [24]  759 	mov	dpl, r7
+                                    760 ;	main.c:130: }
+      000311 02 01 B4         [24]  761 	ljmp	_SSD1306_Command
+                                    762 ;------------------------------------------------------------
+                                    763 ;Allocation info for local variables in function 'SSD1306_WriteChar'
+                                    764 ;------------------------------------------------------------
+                                    765 ;x             Allocated with name '_SSD1306_WriteChar_PARM_2'
+                                    766 ;c             Allocated with name '_SSD1306_WriteChar_PARM_3'
+                                    767 ;page          Allocated with name '_SSD1306_WriteChar_page_10000_36'
+                                    768 ;i             Allocated with name '_SSD1306_WriteChar_i_10000_37'
+                                    769 ;idx           Allocated with name '_SSD1306_WriteChar_idx_10000_37'
+                                    770 ;------------------------------------------------------------
+                                    771 ;	main.c:132: void SSD1306_WriteChar(uint8_t page, uint8_t x, unsigned char c) {
+                                    772 ;	-----------------------------------------
+                                    773 ;	 function SSD1306_WriteChar
+                                    774 ;	-----------------------------------------
+      000314                        775 _SSD1306_WriteChar:
+      000314 E5 82            [12]  776 	mov	a,dpl
+      000316 90 00 0C         [24]  777 	mov	dptr,#_SSD1306_WriteChar_page_10000_36
+      000319 F0               [24]  778 	movx	@dptr,a
+                                    779 ;	main.c:134: if (c >= '0' && c <= '9') idx = c - '0';
+      00031A 90 00 0B         [24]  780 	mov	dptr,#_SSD1306_WriteChar_PARM_3
+      00031D E0               [24]  781 	movx	a,@dptr
+      00031E FF               [12]  782 	mov	r7,a
+      00031F BF 30 00         [24]  783 	cjne	r7,#0x30,00221$
+      000322                        784 00221$:
+      000322 40 10            [24]  785 	jc	00128$
+      000324 EF               [12]  786 	mov	a,r7
+      000325 24 C6            [12]  787 	add	a,#0xff - 0x39
+      000327 40 0B            [24]  788 	jc	00128$
+      000329 8F 06            [24]  789 	mov	ar6,r7
+      00032B EE               [12]  790 	mov	a,r6
+      00032C 24 D0            [12]  791 	add	a,#0xd0
+      00032E 90 00 0D         [24]  792 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
+      000331 F0               [24]  793 	movx	@dptr,a
+      000332 80 70            [24]  794 	sjmp	00129$
+      000334                        795 00128$:
+                                    796 ;	main.c:135: else if (c == '-') idx = 10;
+      000334 BF 2D 08         [24]  797 	cjne	r7,#0x2d,00125$
+      000337 90 00 0D         [24]  798 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
+      00033A 74 0A            [12]  799 	mov	a,#0x0a
+      00033C F0               [24]  800 	movx	@dptr,a
+      00033D 80 65            [24]  801 	sjmp	00129$
+      00033F                        802 00125$:
+                                    803 ;	main.c:136: else if (c == ' ') idx = 11;
+      00033F BF 20 08         [24]  804 	cjne	r7,#0x20,00122$
+      000342 90 00 0D         [24]  805 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
+      000345 74 0B            [12]  806 	mov	a,#0x0b
+      000347 F0               [24]  807 	movx	@dptr,a
+      000348 80 5A            [24]  808 	sjmp	00129$
+      00034A                        809 00122$:
+                                    810 ;	main.c:137: else if (c == '.') idx = 12;
+      00034A BF 2E 08         [24]  811 	cjne	r7,#0x2e,00119$
+      00034D 90 00 0D         [24]  812 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
+      000350 74 0C            [12]  813 	mov	a,#0x0c
+      000352 F0               [24]  814 	movx	@dptr,a
+      000353 80 4F            [24]  815 	sjmp	00129$
+      000355                        816 00119$:
+                                    817 ;	main.c:138: else if (c == ':') idx = 13;
+      000355 BF 3A 08         [24]  818 	cjne	r7,#0x3a,00116$
+      000358 90 00 0D         [24]  819 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
+      00035B 74 0D            [12]  820 	mov	a,#0x0d
+      00035D F0               [24]  821 	movx	@dptr,a
+      00035E 80 44            [24]  822 	sjmp	00129$
+      000360                        823 00116$:
+                                    824 ;	main.c:139: else if (c == '*') idx = 14;
+      000360 BF 2A 08         [24]  825 	cjne	r7,#0x2a,00113$
+      000363 90 00 0D         [24]  826 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
+      000366 74 0E            [12]  827 	mov	a,#0x0e
+      000368 F0               [24]  828 	movx	@dptr,a
+      000369 80 39            [24]  829 	sjmp	00129$
+      00036B                        830 00113$:
+                                    831 ;	main.c:140: else if (c == '=') idx = 15;
+      00036B BF 3D 08         [24]  832 	cjne	r7,#0x3d,00110$
+      00036E 90 00 0D         [24]  833 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
+      000371 74 0F            [12]  834 	mov	a,#0x0f
+      000373 F0               [24]  835 	movx	@dptr,a
+      000374 80 2E            [24]  836 	sjmp	00129$
+      000376                        837 00110$:
+                                    838 ;	main.c:141: else if (c >= 'A' && c <= 'Z') { idx = c - 'A' + 16; }
+      000376 BF 41 00         [24]  839 	cjne	r7,#0x41,00236$
+      000379                        840 00236$:
+      000379 40 10            [24]  841 	jc	00106$
+      00037B EF               [12]  842 	mov	a,r7
+      00037C 24 A5            [12]  843 	add	a,#0xff - 0x5a
+      00037E 40 0B            [24]  844 	jc	00106$
+      000380 8F 06            [24]  845 	mov	ar6,r7
+      000382 90 00 0D         [24]  846 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
+      000385 74 CF            [12]  847 	mov	a,#0xcf
+      000387 2E               [12]  848 	add	a, r6
+      000388 F0               [24]  849 	movx	@dptr,a
+      000389 80 19            [24]  850 	sjmp	00129$
+      00038B                        851 00106$:
+                                    852 ;	main.c:142: else if (c >= 'a' && c <= 'z') { idx = c - 'a' + 16; }
+      00038B BF 61 00         [24]  853 	cjne	r7,#0x61,00239$
+      00038E                        854 00239$:
+      00038E 40 0E            [24]  855 	jc	00102$
+      000390 EF               [12]  856 	mov	a,r7
+      000391 24 85            [12]  857 	add	a,#0xff - 0x7a
+      000393 40 09            [24]  858 	jc	00102$
+      000395 90 00 0D         [24]  859 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
+      000398 74 AF            [12]  860 	mov	a,#0xaf
+      00039A 2F               [12]  861 	add	a, r7
+      00039B F0               [24]  862 	movx	@dptr,a
+      00039C 80 06            [24]  863 	sjmp	00129$
+      00039E                        864 00102$:
+                                    865 ;	main.c:143: else idx = 11;
+      00039E 90 00 0D         [24]  866 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
+      0003A1 74 0B            [12]  867 	mov	a,#0x0b
+      0003A3 F0               [24]  868 	movx	@dptr,a
+      0003A4                        869 00129$:
+                                    870 ;	main.c:145: SSD1306_SetCursor(page, x);
+      0003A4 90 00 0C         [24]  871 	mov	dptr,#_SSD1306_WriteChar_page_10000_36
+      0003A7 E0               [24]  872 	movx	a,@dptr
+      0003A8 FF               [12]  873 	mov	r7,a
+      0003A9 90 00 0A         [24]  874 	mov	dptr,#_SSD1306_WriteChar_PARM_2
+      0003AC E0               [24]  875 	movx	a,@dptr
+      0003AD 90 00 08         [24]  876 	mov	dptr,#_SSD1306_SetCursor_PARM_2
+      0003B0 F0               [24]  877 	movx	@dptr,a
+      0003B1 8F 82            [24]  878 	mov	dpl, r7
+      0003B3 12 02 D8         [24]  879 	lcall	_SSD1306_SetCursor
+                                    880 ;	main.c:146: I2C_Start(); I2C_Write_Byte(SSD1306_ADDR); I2C_Write_Byte(0x40);
+      0003B6 12 01 42         [24]  881 	lcall	_I2C_Start
+      0003B9 75 82 78         [24]  882 	mov	dpl, #0x78
+      0003BC 12 01 66         [24]  883 	lcall	_I2C_Write_Byte
+      0003BF 75 82 40         [24]  884 	mov	dpl, #0x40
+      0003C2 12 01 66         [24]  885 	lcall	_I2C_Write_Byte
+                                    886 ;	main.c:147: for(i = 0; i < 8; i++) { I2C_Write_Byte(Font_8x8[idx][i]); }
+      0003C5 90 00 0D         [24]  887 	mov	dptr,#_SSD1306_WriteChar_idx_10000_37
+      0003C8 E0               [24]  888 	movx	a,@dptr
+      0003C9 75 F0 08         [24]  889 	mov	b,#0x08
+      0003CC A4               [48]  890 	mul	ab
+      0003CD 24 06            [12]  891 	add	a, #_Font_8x8
+      0003CF FE               [12]  892 	mov	r6,a
+      0003D0 74 10            [12]  893 	mov	a,#(_Font_8x8 >> 8)
+      0003D2 35 F0            [12]  894 	addc	a, b
+      0003D4 FF               [12]  895 	mov	r7,a
+      0003D5 7D 00            [12]  896 	mov	r5,#0x00
+      0003D7                        897 00132$:
+      0003D7 ED               [12]  898 	mov	a,r5
+      0003D8 2E               [12]  899 	add	a, r6
+      0003D9 F5 82            [12]  900 	mov	dpl,a
+      0003DB E4               [12]  901 	clr	a
+      0003DC 3F               [12]  902 	addc	a, r7
+      0003DD F5 83            [12]  903 	mov	dph,a
+      0003DF E4               [12]  904 	clr	a
+      0003E0 93               [24]  905 	movc	a,@a+dptr
+      0003E1 F5 82            [12]  906 	mov	dpl,a
+      0003E3 C0 07            [24]  907 	push	ar7
+      0003E5 C0 06            [24]  908 	push	ar6
+      0003E7 C0 05            [24]  909 	push	ar5
+      0003E9 12 01 66         [24]  910 	lcall	_I2C_Write_Byte
+      0003EC D0 05            [24]  911 	pop	ar5
+      0003EE D0 06            [24]  912 	pop	ar6
+      0003F0 D0 07            [24]  913 	pop	ar7
+      0003F2 0D               [12]  914 	inc	r5
+      0003F3 BD 08 00         [24]  915 	cjne	r5,#0x08,00242$
+      0003F6                        916 00242$:
+      0003F6 40 DF            [24]  917 	jc	00132$
+                                    918 ;	main.c:148: I2C_Stop();
+                                    919 ;	main.c:149: }
+      0003F8 02 01 57         [24]  920 	ljmp	_I2C_Stop
+                                    921 ;------------------------------------------------------------
+                                    922 ;Allocation info for local variables in function 'SSD1306_PrintString'
+                                    923 ;------------------------------------------------------------
+                                    924 ;x             Allocated with name '_SSD1306_PrintString_PARM_2'
+                                    925 ;str           Allocated with name '_SSD1306_PrintString_PARM_3'
+                                    926 ;page          Allocated with name '_SSD1306_PrintString_page_10000_42'
+                                    927 ;------------------------------------------------------------
+                                    928 ;	main.c:151: void SSD1306_PrintString(uint8_t page, uint8_t x, char *str) {
+                                    929 ;	-----------------------------------------
+                                    930 ;	 function SSD1306_PrintString
+                                    931 ;	-----------------------------------------
+      0003FB                        932 _SSD1306_PrintString:
+      0003FB E5 82            [12]  933 	mov	a,dpl
+      0003FD 90 00 12         [24]  934 	mov	dptr,#_SSD1306_PrintString_page_10000_42
+      000400 F0               [24]  935 	movx	@dptr,a
+                                    936 ;	main.c:152: while (*str) { SSD1306_WriteChar(page, x, (unsigned char)*str); x += 8; str++; }
+      000401 E0               [24]  937 	movx	a,@dptr
+      000402 FF               [12]  938 	mov	r7,a
+      000403 90 00 0F         [24]  939 	mov	dptr,#_SSD1306_PrintString_PARM_3
+      000406 E0               [24]  940 	movx	a,@dptr
+      000407 FC               [12]  941 	mov	r4,a
+      000408 A3               [24]  942 	inc	dptr
+      000409 E0               [24]  943 	movx	a,@dptr
+      00040A FD               [12]  944 	mov	r5,a
+      00040B A3               [24]  945 	inc	dptr
+      00040C E0               [24]  946 	movx	a,@dptr
+      00040D FE               [12]  947 	mov	r6,a
+      00040E                        948 00101$:
+      00040E 8C 82            [24]  949 	mov	dpl,r4
+      000410 8D 83            [24]  950 	mov	dph,r5
+      000412 8E F0            [24]  951 	mov	b,r6
+      000414 12 0F E6         [24]  952 	lcall	__gptrget
+      000417 FB               [12]  953 	mov	r3,a
+      000418 60 35            [24]  954 	jz	00104$
+      00041A 90 00 0E         [24]  955 	mov	dptr,#_SSD1306_PrintString_PARM_2
+      00041D E0               [24]  956 	movx	a,@dptr
+      00041E FA               [12]  957 	mov	r2,a
+      00041F 90 00 0A         [24]  958 	mov	dptr,#_SSD1306_WriteChar_PARM_2
+      000422 F0               [24]  959 	movx	@dptr,a
+      000423 90 00 0B         [24]  960 	mov	dptr,#_SSD1306_WriteChar_PARM_3
+      000426 EB               [12]  961 	mov	a,r3
+      000427 F0               [24]  962 	movx	@dptr,a
+      000428 8F 82            [24]  963 	mov	dpl, r7
+      00042A C0 07            [24]  964 	push	ar7
+      00042C C0 06            [24]  965 	push	ar6
+      00042E C0 05            [24]  966 	push	ar5
+      000430 C0 04            [24]  967 	push	ar4
+      000432 C0 02            [24]  968 	push	ar2
+      000434 12 03 14         [24]  969 	lcall	_SSD1306_WriteChar
+      000437 D0 02            [24]  970 	pop	ar2
+      000439 D0 04            [24]  971 	pop	ar4
+      00043B D0 05            [24]  972 	pop	ar5
+      00043D D0 06            [24]  973 	pop	ar6
+      00043F D0 07            [24]  974 	pop	ar7
+      000441 90 00 0E         [24]  975 	mov	dptr,#_SSD1306_PrintString_PARM_2
+      000444 74 08            [12]  976 	mov	a,#0x08
+      000446 2A               [12]  977 	add	a, r2
+      000447 F0               [24]  978 	movx	@dptr,a
+      000448 0C               [12]  979 	inc	r4
+      000449 BC 00 C2         [24]  980 	cjne	r4,#0x00,00101$
+      00044C 0D               [12]  981 	inc	r5
+      00044D 80 BF            [24]  982 	sjmp	00101$
+      00044F                        983 00104$:
+                                    984 ;	main.c:153: }
+      00044F 22               [24]  985 	ret
+                                    986 ;------------------------------------------------------------
+                                    987 ;Allocation info for local variables in function 'SSD1306_DisplayResult'
+                                    988 ;------------------------------------------------------------
+                                    989 ;sloc0         Allocated with name '_SSD1306_DisplayResult_sloc0_1_0'
+                                    990 ;sloc1         Allocated with name '_SSD1306_DisplayResult_sloc1_1_0'
+                                    991 ;sloc2         Allocated with name '_SSD1306_DisplayResult_sloc2_1_0'
+                                    992 ;x             Allocated with name '_SSD1306_DisplayResult_PARM_2'
+                                    993 ;val           Allocated with name '_SSD1306_DisplayResult_PARM_3'
+                                    994 ;is_microfarads Allocated with name '_SSD1306_DisplayResult_PARM_4'
+                                    995 ;page          Allocated with name '_SSD1306_DisplayResult_page_10000_45'
+                                    996 ;------------------------------------------------------------
+                                    997 ;	main.c:155: void SSD1306_DisplayResult(uint8_t page, uint8_t x, uint32_t val, uint8_t is_microfarads) {
+                                    998 ;	-----------------------------------------
+                                    999 ;	 function SSD1306_DisplayResult
+                                   1000 ;	-----------------------------------------
+      000450                       1001 _SSD1306_DisplayResult:
+      000450 E5 82            [12] 1002 	mov	a,dpl
+      000452 90 00 19         [24] 1003 	mov	dptr,#_SSD1306_DisplayResult_page_10000_45
+      000455 F0               [24] 1004 	movx	@dptr,a
+                                   1005 ;	main.c:156: SSD1306_PrintString(page, x, "CX: ");
+      000456 E0               [24] 1006 	movx	a,@dptr
+      000457 FF               [12] 1007 	mov	r7,a
+      000458 90 00 13         [24] 1008 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      00045B E0               [24] 1009 	movx	a,@dptr
+      00045C FE               [12] 1010 	mov	r6,a
+      00045D 90 00 0E         [24] 1011 	mov	dptr,#_SSD1306_PrintString_PARM_2
+      000460 F0               [24] 1012 	movx	@dptr,a
+      000461 90 00 0F         [24] 1013 	mov	dptr,#_SSD1306_PrintString_PARM_3
+      000464 74 56            [12] 1014 	mov	a,#___str_0
+      000466 F0               [24] 1015 	movx	@dptr,a
+      000467 74 11            [12] 1016 	mov	a,#(___str_0 >> 8)
+      000469 A3               [24] 1017 	inc	dptr
+      00046A F0               [24] 1018 	movx	@dptr,a
+      00046B 74 80            [12] 1019 	mov	a,#0x80
+      00046D A3               [24] 1020 	inc	dptr
+      00046E F0               [24] 1021 	movx	@dptr,a
+      00046F 8F 82            [24] 1022 	mov	dpl, r7
+      000471 C0 07            [24] 1023 	push	ar7
+      000473 C0 06            [24] 1024 	push	ar6
+      000475 12 03 FB         [24] 1025 	lcall	_SSD1306_PrintString
+      000478 D0 06            [24] 1026 	pop	ar6
+      00047A D0 07            [24] 1027 	pop	ar7
+                                   1028 ;	main.c:157: x += 32;
+      00047C 90 00 13         [24] 1029 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      00047F 74 20            [12] 1030 	mov	a,#0x20
+      000481 2E               [12] 1031 	add	a, r6
+      000482 F0               [24] 1032 	movx	@dptr,a
+                                   1033 ;	main.c:159: if (!is_microfarads) {
+      000483 90 00 18         [24] 1034 	mov	dptr,#_SSD1306_DisplayResult_PARM_4
+      000486 E0               [24] 1035 	movx	a,@dptr
+      000487 60 03            [24] 1036 	jz	00120$
+      000489 02 06 A8         [24] 1037 	ljmp	00104$
+      00048C                       1038 00120$:
+                                   1039 ;	main.c:160: if (val <= 139) {
+      00048C 90 00 14         [24] 1040 	mov	dptr,#_SSD1306_DisplayResult_PARM_3
+      00048F E0               [24] 1041 	movx	a,@dptr
+      000490 FB               [12] 1042 	mov	r3,a
+      000491 A3               [24] 1043 	inc	dptr
+      000492 E0               [24] 1044 	movx	a,@dptr
+      000493 FC               [12] 1045 	mov	r4,a
+      000494 A3               [24] 1046 	inc	dptr
+      000495 E0               [24] 1047 	movx	a,@dptr
+      000496 FD               [12] 1048 	mov	r5,a
+      000497 A3               [24] 1049 	inc	dptr
+      000498 E0               [24] 1050 	movx	a,@dptr
+      000499 FE               [12] 1051 	mov	r6,a
+      00049A C3               [12] 1052 	clr	c
+      00049B 74 8B            [12] 1053 	mov	a,#0x8b
+      00049D 9B               [12] 1054 	subb	a,r3
+      00049E E4               [12] 1055 	clr	a
+      00049F 9C               [12] 1056 	subb	a,r4
+      0004A0 E4               [12] 1057 	clr	a
+      0004A1 9D               [12] 1058 	subb	a,r5
+      0004A2 E4               [12] 1059 	clr	a
+      0004A3 9E               [12] 1060 	subb	a,r6
+      0004A4 40 1B            [24] 1061 	jc	00102$
+                                   1062 ;	main.c:161: SSD1306_PrintString(page, x, "  0.0 NF");
+      0004A6 90 00 13         [24] 1063 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      0004A9 E0               [24] 1064 	movx	a,@dptr
+      0004AA 90 00 0E         [24] 1065 	mov	dptr,#_SSD1306_PrintString_PARM_2
+      0004AD F0               [24] 1066 	movx	@dptr,a
+      0004AE 90 00 0F         [24] 1067 	mov	dptr,#_SSD1306_PrintString_PARM_3
+      0004B1 74 5B            [12] 1068 	mov	a,#___str_1
+      0004B3 F0               [24] 1069 	movx	@dptr,a
+      0004B4 74 11            [12] 1070 	mov	a,#(___str_1 >> 8)
+      0004B6 A3               [24] 1071 	inc	dptr
+      0004B7 F0               [24] 1072 	movx	@dptr,a
+      0004B8 74 80            [12] 1073 	mov	a,#0x80
+      0004BA A3               [24] 1074 	inc	dptr
+      0004BB F0               [24] 1075 	movx	@dptr,a
+      0004BC 8F 82            [24] 1076 	mov	dpl, r7
+                                   1077 ;	main.c:162: return;
+      0004BE 02 03 FB         [24] 1078 	ljmp	_SSD1306_PrintString
+      0004C1                       1079 00102$:
+                                   1080 ;	main.c:164: val -= 139;
+      0004C1 EB               [12] 1081 	mov	a,r3
+      0004C2 24 75            [12] 1082 	add	a,#0x75
+      0004C4 FB               [12] 1083 	mov	r3,a
+      0004C5 EC               [12] 1084 	mov	a,r4
+      0004C6 34 FF            [12] 1085 	addc	a,#0xff
+      0004C8 FC               [12] 1086 	mov	r4,a
+      0004C9 ED               [12] 1087 	mov	a,r5
+      0004CA 34 FF            [12] 1088 	addc	a,#0xff
+      0004CC FD               [12] 1089 	mov	r5,a
+      0004CD EE               [12] 1090 	mov	a,r6
+      0004CE 34 FF            [12] 1091 	addc	a,#0xff
+      0004D0 FE               [12] 1092 	mov	r6,a
+      0004D1 90 00 14         [24] 1093 	mov	dptr,#_SSD1306_DisplayResult_PARM_3
+      0004D4 EB               [12] 1094 	mov	a,r3
+      0004D5 F0               [24] 1095 	movx	@dptr,a
+      0004D6 EC               [12] 1096 	mov	a,r4
+      0004D7 A3               [24] 1097 	inc	dptr
+      0004D8 F0               [24] 1098 	movx	@dptr,a
+      0004D9 ED               [12] 1099 	mov	a,r5
+      0004DA A3               [24] 1100 	inc	dptr
+      0004DB F0               [24] 1101 	movx	@dptr,a
+      0004DC EE               [12] 1102 	mov	a,r6
+      0004DD A3               [24] 1103 	inc	dptr
+      0004DE F0               [24] 1104 	movx	@dptr,a
+                                   1105 ;	main.c:166: SSD1306_WriteChar(page, x, ((val / 1000) % 10) + '0'); x += 8;
+      0004DF 90 00 13         [24] 1106 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      0004E2 E0               [24] 1107 	movx	a,@dptr
+      0004E3 F5 08            [12] 1108 	mov	_SSD1306_DisplayResult_sloc0_1_0,a
+      0004E5 90 00 14         [24] 1109 	mov	dptr,#_SSD1306_DisplayResult_PARM_3
+      0004E8 E0               [24] 1110 	movx	a,@dptr
+      0004E9 F5 09            [12] 1111 	mov	_SSD1306_DisplayResult_sloc1_1_0,a
+      0004EB A3               [24] 1112 	inc	dptr
+      0004EC E0               [24] 1113 	movx	a,@dptr
+      0004ED F5 0A            [12] 1114 	mov	(_SSD1306_DisplayResult_sloc1_1_0 + 1),a
+      0004EF A3               [24] 1115 	inc	dptr
+      0004F0 E0               [24] 1116 	movx	a,@dptr
+      0004F1 F5 0B            [12] 1117 	mov	(_SSD1306_DisplayResult_sloc1_1_0 + 2),a
+      0004F3 A3               [24] 1118 	inc	dptr
+      0004F4 E0               [24] 1119 	movx	a,@dptr
+      0004F5 F5 0C            [12] 1120 	mov	(_SSD1306_DisplayResult_sloc1_1_0 + 3),a
+      0004F7 90 00 35         [24] 1121 	mov	dptr,#__divulong_PARM_2
+      0004FA 74 E8            [12] 1122 	mov	a,#0xe8
+      0004FC F0               [24] 1123 	movx	@dptr,a
+      0004FD 74 03            [12] 1124 	mov	a,#0x03
+      0004FF A3               [24] 1125 	inc	dptr
+      000500 F0               [24] 1126 	movx	@dptr,a
+      000501 E4               [12] 1127 	clr	a
+      000502 A3               [24] 1128 	inc	dptr
+      000503 F0               [24] 1129 	movx	@dptr,a
+      000504 A3               [24] 1130 	inc	dptr
+      000505 F0               [24] 1131 	movx	@dptr,a
+      000506 85 09 82         [24] 1132 	mov	dpl, _SSD1306_DisplayResult_sloc1_1_0
+      000509 85 0A 83         [24] 1133 	mov	dph, (_SSD1306_DisplayResult_sloc1_1_0 + 1)
+      00050C 85 0B F0         [24] 1134 	mov	b, (_SSD1306_DisplayResult_sloc1_1_0 + 2)
+      00050F E5 0C            [12] 1135 	mov	a, (_SSD1306_DisplayResult_sloc1_1_0 + 3)
+      000511 C0 07            [24] 1136 	push	ar7
+      000513 12 0E 86         [24] 1137 	lcall	__divulong
+      000516 A8 82            [24] 1138 	mov	r0, dpl
+      000518 A9 83            [24] 1139 	mov	r1, dph
+      00051A AD F0            [24] 1140 	mov	r5, b
+      00051C FE               [12] 1141 	mov	r6, a
+      00051D 90 00 2C         [24] 1142 	mov	dptr,#__modulong_PARM_2
+      000520 74 0A            [12] 1143 	mov	a,#0x0a
+      000522 F0               [24] 1144 	movx	@dptr,a
+      000523 E4               [12] 1145 	clr	a
+      000524 A3               [24] 1146 	inc	dptr
+      000525 F0               [24] 1147 	movx	@dptr,a
+      000526 A3               [24] 1148 	inc	dptr
+      000527 F0               [24] 1149 	movx	@dptr,a
+      000528 A3               [24] 1150 	inc	dptr
+      000529 F0               [24] 1151 	movx	@dptr,a
+      00052A 88 82            [24] 1152 	mov	dpl, r0
+      00052C 89 83            [24] 1153 	mov	dph, r1
+      00052E 8D F0            [24] 1154 	mov	b, r5
+      000530 EE               [12] 1155 	mov	a, r6
+      000531 12 0D 47         [24] 1156 	lcall	__modulong
+      000534 AB 82            [24] 1157 	mov	r3, dpl
+      000536 D0 07            [24] 1158 	pop	ar7
+      000538 74 30            [12] 1159 	mov	a,#0x30
+      00053A 2B               [12] 1160 	add	a, r3
+      00053B FB               [12] 1161 	mov	r3,a
+      00053C 90 00 0A         [24] 1162 	mov	dptr,#_SSD1306_WriteChar_PARM_2
+      00053F E5 08            [12] 1163 	mov	a,_SSD1306_DisplayResult_sloc0_1_0
+      000541 F0               [24] 1164 	movx	@dptr,a
+      000542 90 00 0B         [24] 1165 	mov	dptr,#_SSD1306_WriteChar_PARM_3
+      000545 EB               [12] 1166 	mov	a,r3
+      000546 F0               [24] 1167 	movx	@dptr,a
+      000547 8F 82            [24] 1168 	mov	dpl, r7
+      000549 C0 07            [24] 1169 	push	ar7
+      00054B 12 03 14         [24] 1170 	lcall	_SSD1306_WriteChar
+      00054E D0 07            [24] 1171 	pop	ar7
+      000550 AE 08            [24] 1172 	mov	r6,_SSD1306_DisplayResult_sloc0_1_0
+      000552 90 00 13         [24] 1173 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      000555 74 08            [12] 1174 	mov	a,#0x08
+      000557 2E               [12] 1175 	add	a, r6
+      000558 F0               [24] 1176 	movx	@dptr,a
+                                   1177 ;	main.c:167: SSD1306_WriteChar(page, x, ((val / 100) % 10) + '0');  x += 8;
+      000559 E0               [24] 1178 	movx	a,@dptr
+      00055A FE               [12] 1179 	mov	r6,a
+      00055B 90 00 35         [24] 1180 	mov	dptr,#__divulong_PARM_2
+      00055E 74 64            [12] 1181 	mov	a,#0x64
+      000560 F0               [24] 1182 	movx	@dptr,a
+      000561 E4               [12] 1183 	clr	a
+      000562 A3               [24] 1184 	inc	dptr
+      000563 F0               [24] 1185 	movx	@dptr,a
+      000564 A3               [24] 1186 	inc	dptr
+      000565 F0               [24] 1187 	movx	@dptr,a
+      000566 A3               [24] 1188 	inc	dptr
+      000567 F0               [24] 1189 	movx	@dptr,a
+      000568 85 09 82         [24] 1190 	mov	dpl, _SSD1306_DisplayResult_sloc1_1_0
+      00056B 85 0A 83         [24] 1191 	mov	dph, (_SSD1306_DisplayResult_sloc1_1_0 + 1)
+      00056E 85 0B F0         [24] 1192 	mov	b, (_SSD1306_DisplayResult_sloc1_1_0 + 2)
+      000571 E5 0C            [12] 1193 	mov	a, (_SSD1306_DisplayResult_sloc1_1_0 + 3)
+      000573 C0 07            [24] 1194 	push	ar7
+      000575 C0 06            [24] 1195 	push	ar6
+      000577 12 0E 86         [24] 1196 	lcall	__divulong
+      00057A AA 82            [24] 1197 	mov	r2, dpl
+      00057C AB 83            [24] 1198 	mov	r3, dph
+      00057E AC F0            [24] 1199 	mov	r4, b
+      000580 FD               [12] 1200 	mov	r5, a
+      000581 90 00 2C         [24] 1201 	mov	dptr,#__modulong_PARM_2
+      000584 74 0A            [12] 1202 	mov	a,#0x0a
+      000586 F0               [24] 1203 	movx	@dptr,a
+      000587 E4               [12] 1204 	clr	a
+      000588 A3               [24] 1205 	inc	dptr
+      000589 F0               [24] 1206 	movx	@dptr,a
+      00058A A3               [24] 1207 	inc	dptr
+      00058B F0               [24] 1208 	movx	@dptr,a
+      00058C A3               [24] 1209 	inc	dptr
+      00058D F0               [24] 1210 	movx	@dptr,a
+      00058E 8A 82            [24] 1211 	mov	dpl, r2
+      000590 8B 83            [24] 1212 	mov	dph, r3
+      000592 8C F0            [24] 1213 	mov	b, r4
+      000594 ED               [12] 1214 	mov	a, r5
+      000595 12 0D 47         [24] 1215 	lcall	__modulong
+      000598 AA 82            [24] 1216 	mov	r2, dpl
+      00059A D0 06            [24] 1217 	pop	ar6
+      00059C D0 07            [24] 1218 	pop	ar7
+      00059E 74 30            [12] 1219 	mov	a,#0x30
+      0005A0 2A               [12] 1220 	add	a, r2
+      0005A1 FA               [12] 1221 	mov	r2,a
+      0005A2 90 00 0A         [24] 1222 	mov	dptr,#_SSD1306_WriteChar_PARM_2
+      0005A5 EE               [12] 1223 	mov	a,r6
+      0005A6 F0               [24] 1224 	movx	@dptr,a
+      0005A7 90 00 0B         [24] 1225 	mov	dptr,#_SSD1306_WriteChar_PARM_3
+      0005AA EA               [12] 1226 	mov	a,r2
+      0005AB F0               [24] 1227 	movx	@dptr,a
+      0005AC 8F 82            [24] 1228 	mov	dpl, r7
+      0005AE C0 07            [24] 1229 	push	ar7
+      0005B0 C0 06            [24] 1230 	push	ar6
+      0005B2 12 03 14         [24] 1231 	lcall	_SSD1306_WriteChar
+      0005B5 D0 06            [24] 1232 	pop	ar6
+      0005B7 D0 07            [24] 1233 	pop	ar7
+      0005B9 90 00 13         [24] 1234 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      0005BC 74 08            [12] 1235 	mov	a,#0x08
+      0005BE 2E               [12] 1236 	add	a, r6
+      0005BF F0               [24] 1237 	movx	@dptr,a
+                                   1238 ;	main.c:168: SSD1306_WriteChar(page, x, ((val / 10) % 10) + '0');   x += 8;
+      0005C0 E0               [24] 1239 	movx	a,@dptr
+      0005C1 FE               [12] 1240 	mov	r6,a
+      0005C2 90 00 35         [24] 1241 	mov	dptr,#__divulong_PARM_2
+      0005C5 74 0A            [12] 1242 	mov	a,#0x0a
+      0005C7 F0               [24] 1243 	movx	@dptr,a
+      0005C8 E4               [12] 1244 	clr	a
+      0005C9 A3               [24] 1245 	inc	dptr
+      0005CA F0               [24] 1246 	movx	@dptr,a
+      0005CB A3               [24] 1247 	inc	dptr
+      0005CC F0               [24] 1248 	movx	@dptr,a
+      0005CD A3               [24] 1249 	inc	dptr
+      0005CE F0               [24] 1250 	movx	@dptr,a
+      0005CF 85 09 82         [24] 1251 	mov	dpl, _SSD1306_DisplayResult_sloc1_1_0
+      0005D2 85 0A 83         [24] 1252 	mov	dph, (_SSD1306_DisplayResult_sloc1_1_0 + 1)
+      0005D5 85 0B F0         [24] 1253 	mov	b, (_SSD1306_DisplayResult_sloc1_1_0 + 2)
+      0005D8 E5 0C            [12] 1254 	mov	a, (_SSD1306_DisplayResult_sloc1_1_0 + 3)
+      0005DA C0 07            [24] 1255 	push	ar7
+      0005DC C0 06            [24] 1256 	push	ar6
+      0005DE 12 0E 86         [24] 1257 	lcall	__divulong
+      0005E1 AA 82            [24] 1258 	mov	r2, dpl
+      0005E3 AB 83            [24] 1259 	mov	r3, dph
+      0005E5 AC F0            [24] 1260 	mov	r4, b
+      0005E7 FD               [12] 1261 	mov	r5, a
+      0005E8 90 00 2C         [24] 1262 	mov	dptr,#__modulong_PARM_2
+      0005EB 74 0A            [12] 1263 	mov	a,#0x0a
+      0005ED F0               [24] 1264 	movx	@dptr,a
+      0005EE E4               [12] 1265 	clr	a
+      0005EF A3               [24] 1266 	inc	dptr
+      0005F0 F0               [24] 1267 	movx	@dptr,a
+      0005F1 A3               [24] 1268 	inc	dptr
+      0005F2 F0               [24] 1269 	movx	@dptr,a
+      0005F3 A3               [24] 1270 	inc	dptr
+      0005F4 F0               [24] 1271 	movx	@dptr,a
+      0005F5 8A 82            [24] 1272 	mov	dpl, r2
+      0005F7 8B 83            [24] 1273 	mov	dph, r3
+      0005F9 8C F0            [24] 1274 	mov	b, r4
+      0005FB ED               [12] 1275 	mov	a, r5
+      0005FC 12 0D 47         [24] 1276 	lcall	__modulong
+      0005FF AA 82            [24] 1277 	mov	r2, dpl
+      000601 D0 06            [24] 1278 	pop	ar6
+      000603 D0 07            [24] 1279 	pop	ar7
+      000605 74 30            [12] 1280 	mov	a,#0x30
+      000607 2A               [12] 1281 	add	a, r2
+      000608 FA               [12] 1282 	mov	r2,a
+      000609 90 00 0A         [24] 1283 	mov	dptr,#_SSD1306_WriteChar_PARM_2
+      00060C EE               [12] 1284 	mov	a,r6
+      00060D F0               [24] 1285 	movx	@dptr,a
+      00060E 90 00 0B         [24] 1286 	mov	dptr,#_SSD1306_WriteChar_PARM_3
+      000611 EA               [12] 1287 	mov	a,r2
+      000612 F0               [24] 1288 	movx	@dptr,a
+      000613 8F 82            [24] 1289 	mov	dpl, r7
+      000615 C0 07            [24] 1290 	push	ar7
+      000617 C0 06            [24] 1291 	push	ar6
+      000619 12 03 14         [24] 1292 	lcall	_SSD1306_WriteChar
+      00061C D0 06            [24] 1293 	pop	ar6
+      00061E D0 07            [24] 1294 	pop	ar7
+      000620 90 00 13         [24] 1295 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      000623 74 08            [12] 1296 	mov	a,#0x08
+      000625 2E               [12] 1297 	add	a, r6
+      000626 F0               [24] 1298 	movx	@dptr,a
+                                   1299 ;	main.c:169: SSD1306_WriteChar(page, x, '.');                       x += 8;
+      000627 E0               [24] 1300 	movx	a,@dptr
+      000628 FE               [12] 1301 	mov	r6,a
+      000629 90 00 0A         [24] 1302 	mov	dptr,#_SSD1306_WriteChar_PARM_2
+      00062C F0               [24] 1303 	movx	@dptr,a
+      00062D 90 00 0B         [24] 1304 	mov	dptr,#_SSD1306_WriteChar_PARM_3
+      000630 74 2E            [12] 1305 	mov	a,#0x2e
+      000632 F0               [24] 1306 	movx	@dptr,a
+      000633 8F 82            [24] 1307 	mov	dpl, r7
+      000635 C0 07            [24] 1308 	push	ar7
+      000637 C0 06            [24] 1309 	push	ar6
+      000639 12 03 14         [24] 1310 	lcall	_SSD1306_WriteChar
+      00063C D0 06            [24] 1311 	pop	ar6
+      00063E D0 07            [24] 1312 	pop	ar7
+      000640 90 00 13         [24] 1313 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      000643 74 08            [12] 1314 	mov	a,#0x08
+      000645 2E               [12] 1315 	add	a, r6
+      000646 F0               [24] 1316 	movx	@dptr,a
+                                   1317 ;	main.c:170: SSD1306_WriteChar(page, x, (val % 10) + '0');          x += 8;
+      000647 E0               [24] 1318 	movx	a,@dptr
+      000648 FE               [12] 1319 	mov	r6,a
+      000649 90 00 2C         [24] 1320 	mov	dptr,#__modulong_PARM_2
+      00064C 74 0A            [12] 1321 	mov	a,#0x0a
+      00064E F0               [24] 1322 	movx	@dptr,a
+      00064F E4               [12] 1323 	clr	a
+      000650 A3               [24] 1324 	inc	dptr
+      000651 F0               [24] 1325 	movx	@dptr,a
+      000652 A3               [24] 1326 	inc	dptr
+      000653 F0               [24] 1327 	movx	@dptr,a
+      000654 A3               [24] 1328 	inc	dptr
+      000655 F0               [24] 1329 	movx	@dptr,a
+      000656 85 09 82         [24] 1330 	mov	dpl, _SSD1306_DisplayResult_sloc1_1_0
+      000659 85 0A 83         [24] 1331 	mov	dph, (_SSD1306_DisplayResult_sloc1_1_0 + 1)
+      00065C 85 0B F0         [24] 1332 	mov	b, (_SSD1306_DisplayResult_sloc1_1_0 + 2)
+      00065F E5 0C            [12] 1333 	mov	a, (_SSD1306_DisplayResult_sloc1_1_0 + 3)
+      000661 C0 07            [24] 1334 	push	ar7
+      000663 C0 06            [24] 1335 	push	ar6
+      000665 12 0D 47         [24] 1336 	lcall	__modulong
+      000668 AA 82            [24] 1337 	mov	r2, dpl
+      00066A D0 06            [24] 1338 	pop	ar6
+      00066C D0 07            [24] 1339 	pop	ar7
+      00066E 74 30            [12] 1340 	mov	a,#0x30
+      000670 2A               [12] 1341 	add	a, r2
+      000671 FA               [12] 1342 	mov	r2,a
+      000672 90 00 0A         [24] 1343 	mov	dptr,#_SSD1306_WriteChar_PARM_2
+      000675 EE               [12] 1344 	mov	a,r6
+      000676 F0               [24] 1345 	movx	@dptr,a
+      000677 90 00 0B         [24] 1346 	mov	dptr,#_SSD1306_WriteChar_PARM_3
+      00067A EA               [12] 1347 	mov	a,r2
+      00067B F0               [24] 1348 	movx	@dptr,a
+      00067C 8F 82            [24] 1349 	mov	dpl, r7
+      00067E C0 07            [24] 1350 	push	ar7
+      000680 C0 06            [24] 1351 	push	ar6
+      000682 12 03 14         [24] 1352 	lcall	_SSD1306_WriteChar
+      000685 D0 06            [24] 1353 	pop	ar6
+      000687 D0 07            [24] 1354 	pop	ar7
+      000689 90 00 13         [24] 1355 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      00068C 74 08            [12] 1356 	mov	a,#0x08
+      00068E 2E               [12] 1357 	add	a, r6
+      00068F F0               [24] 1358 	movx	@dptr,a
+                                   1359 ;	main.c:171: SSD1306_PrintString(page, x, " NF");
+      000690 E0               [24] 1360 	movx	a,@dptr
+      000691 90 00 0E         [24] 1361 	mov	dptr,#_SSD1306_PrintString_PARM_2
+      000694 F0               [24] 1362 	movx	@dptr,a
+      000695 90 00 0F         [24] 1363 	mov	dptr,#_SSD1306_PrintString_PARM_3
+      000698 74 64            [12] 1364 	mov	a,#___str_2
+      00069A F0               [24] 1365 	movx	@dptr,a
+      00069B 74 11            [12] 1366 	mov	a,#(___str_2 >> 8)
+      00069D A3               [24] 1367 	inc	dptr
+      00069E F0               [24] 1368 	movx	@dptr,a
+      00069F 74 80            [12] 1369 	mov	a,#0x80
+      0006A1 A3               [24] 1370 	inc	dptr
+      0006A2 F0               [24] 1371 	movx	@dptr,a
+      0006A3 8F 82            [24] 1372 	mov	dpl, r7
+      0006A5 02 03 FB         [24] 1373 	ljmp	_SSD1306_PrintString
+      0006A8                       1374 00104$:
+                                   1375 ;	main.c:174: SSD1306_WriteChar(page, x, ((val / 1000) % 10) + '0'); x += 8;
+      0006A8 90 00 13         [24] 1376 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      0006AB E0               [24] 1377 	movx	a,@dptr
+      0006AC F5 09            [12] 1378 	mov	_SSD1306_DisplayResult_sloc1_1_0,a
+      0006AE 90 00 14         [24] 1379 	mov	dptr,#_SSD1306_DisplayResult_PARM_3
+      0006B1 E0               [24] 1380 	movx	a,@dptr
+      0006B2 F5 0D            [12] 1381 	mov	_SSD1306_DisplayResult_sloc2_1_0,a
+      0006B4 A3               [24] 1382 	inc	dptr
+      0006B5 E0               [24] 1383 	movx	a,@dptr
+      0006B6 F5 0E            [12] 1384 	mov	(_SSD1306_DisplayResult_sloc2_1_0 + 1),a
+      0006B8 A3               [24] 1385 	inc	dptr
+      0006B9 E0               [24] 1386 	movx	a,@dptr
+      0006BA F5 0F            [12] 1387 	mov	(_SSD1306_DisplayResult_sloc2_1_0 + 2),a
+      0006BC A3               [24] 1388 	inc	dptr
+      0006BD E0               [24] 1389 	movx	a,@dptr
+      0006BE F5 10            [12] 1390 	mov	(_SSD1306_DisplayResult_sloc2_1_0 + 3),a
+      0006C0 90 00 35         [24] 1391 	mov	dptr,#__divulong_PARM_2
+      0006C3 74 E8            [12] 1392 	mov	a,#0xe8
+      0006C5 F0               [24] 1393 	movx	@dptr,a
+      0006C6 74 03            [12] 1394 	mov	a,#0x03
+      0006C8 A3               [24] 1395 	inc	dptr
+      0006C9 F0               [24] 1396 	movx	@dptr,a
+      0006CA E4               [12] 1397 	clr	a
+      0006CB A3               [24] 1398 	inc	dptr
+      0006CC F0               [24] 1399 	movx	@dptr,a
+      0006CD A3               [24] 1400 	inc	dptr
+      0006CE F0               [24] 1401 	movx	@dptr,a
+      0006CF 85 0D 82         [24] 1402 	mov	dpl, _SSD1306_DisplayResult_sloc2_1_0
+      0006D2 85 0E 83         [24] 1403 	mov	dph, (_SSD1306_DisplayResult_sloc2_1_0 + 1)
+      0006D5 85 0F F0         [24] 1404 	mov	b, (_SSD1306_DisplayResult_sloc2_1_0 + 2)
+      0006D8 E5 10            [12] 1405 	mov	a, (_SSD1306_DisplayResult_sloc2_1_0 + 3)
+      0006DA C0 07            [24] 1406 	push	ar7
+      0006DC 12 0E 86         [24] 1407 	lcall	__divulong
+      0006DF A8 82            [24] 1408 	mov	r0, dpl
+      0006E1 A9 83            [24] 1409 	mov	r1, dph
+      0006E3 AD F0            [24] 1410 	mov	r5, b
+      0006E5 FE               [12] 1411 	mov	r6, a
+      0006E6 90 00 2C         [24] 1412 	mov	dptr,#__modulong_PARM_2
+      0006E9 74 0A            [12] 1413 	mov	a,#0x0a
+      0006EB F0               [24] 1414 	movx	@dptr,a
+      0006EC E4               [12] 1415 	clr	a
+      0006ED A3               [24] 1416 	inc	dptr
+      0006EE F0               [24] 1417 	movx	@dptr,a
+      0006EF A3               [24] 1418 	inc	dptr
+      0006F0 F0               [24] 1419 	movx	@dptr,a
+      0006F1 A3               [24] 1420 	inc	dptr
+      0006F2 F0               [24] 1421 	movx	@dptr,a
+      0006F3 88 82            [24] 1422 	mov	dpl, r0
+      0006F5 89 83            [24] 1423 	mov	dph, r1
+      0006F7 8D F0            [24] 1424 	mov	b, r5
+      0006F9 EE               [12] 1425 	mov	a, r6
+      0006FA 12 0D 47         [24] 1426 	lcall	__modulong
+      0006FD AB 82            [24] 1427 	mov	r3, dpl
+      0006FF D0 07            [24] 1428 	pop	ar7
+      000701 74 30            [12] 1429 	mov	a,#0x30
+      000703 2B               [12] 1430 	add	a, r3
+      000704 FB               [12] 1431 	mov	r3,a
+      000705 90 00 0A         [24] 1432 	mov	dptr,#_SSD1306_WriteChar_PARM_2
+      000708 E5 09            [12] 1433 	mov	a,_SSD1306_DisplayResult_sloc1_1_0
+      00070A F0               [24] 1434 	movx	@dptr,a
+      00070B 90 00 0B         [24] 1435 	mov	dptr,#_SSD1306_WriteChar_PARM_3
+      00070E EB               [12] 1436 	mov	a,r3
+      00070F F0               [24] 1437 	movx	@dptr,a
+      000710 8F 82            [24] 1438 	mov	dpl, r7
+      000712 C0 07            [24] 1439 	push	ar7
+      000714 12 03 14         [24] 1440 	lcall	_SSD1306_WriteChar
+      000717 D0 07            [24] 1441 	pop	ar7
+      000719 AE 09            [24] 1442 	mov	r6,_SSD1306_DisplayResult_sloc1_1_0
+      00071B 90 00 13         [24] 1443 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      00071E 74 08            [12] 1444 	mov	a,#0x08
+      000720 2E               [12] 1445 	add	a, r6
+      000721 F0               [24] 1446 	movx	@dptr,a
+                                   1447 ;	main.c:175: SSD1306_WriteChar(page, x, ((val / 100) % 10) + '0');  x += 8;
+      000722 E0               [24] 1448 	movx	a,@dptr
+      000723 FE               [12] 1449 	mov	r6,a
+      000724 90 00 35         [24] 1450 	mov	dptr,#__divulong_PARM_2
+      000727 74 64            [12] 1451 	mov	a,#0x64
+      000729 F0               [24] 1452 	movx	@dptr,a
+      00072A E4               [12] 1453 	clr	a
+      00072B A3               [24] 1454 	inc	dptr
+      00072C F0               [24] 1455 	movx	@dptr,a
+      00072D A3               [24] 1456 	inc	dptr
+      00072E F0               [24] 1457 	movx	@dptr,a
+      00072F A3               [24] 1458 	inc	dptr
+      000730 F0               [24] 1459 	movx	@dptr,a
+      000731 85 0D 82         [24] 1460 	mov	dpl, _SSD1306_DisplayResult_sloc2_1_0
+      000734 85 0E 83         [24] 1461 	mov	dph, (_SSD1306_DisplayResult_sloc2_1_0 + 1)
+      000737 85 0F F0         [24] 1462 	mov	b, (_SSD1306_DisplayResult_sloc2_1_0 + 2)
+      00073A E5 10            [12] 1463 	mov	a, (_SSD1306_DisplayResult_sloc2_1_0 + 3)
+      00073C C0 07            [24] 1464 	push	ar7
+      00073E C0 06            [24] 1465 	push	ar6
+      000740 12 0E 86         [24] 1466 	lcall	__divulong
+      000743 AA 82            [24] 1467 	mov	r2, dpl
+      000745 AB 83            [24] 1468 	mov	r3, dph
+      000747 AC F0            [24] 1469 	mov	r4, b
+      000749 FD               [12] 1470 	mov	r5, a
+      00074A 90 00 2C         [24] 1471 	mov	dptr,#__modulong_PARM_2
+      00074D 74 0A            [12] 1472 	mov	a,#0x0a
+      00074F F0               [24] 1473 	movx	@dptr,a
+      000750 E4               [12] 1474 	clr	a
+      000751 A3               [24] 1475 	inc	dptr
+      000752 F0               [24] 1476 	movx	@dptr,a
+      000753 A3               [24] 1477 	inc	dptr
+      000754 F0               [24] 1478 	movx	@dptr,a
+      000755 A3               [24] 1479 	inc	dptr
+      000756 F0               [24] 1480 	movx	@dptr,a
+      000757 8A 82            [24] 1481 	mov	dpl, r2
+      000759 8B 83            [24] 1482 	mov	dph, r3
+      00075B 8C F0            [24] 1483 	mov	b, r4
+      00075D ED               [12] 1484 	mov	a, r5
+      00075E 12 0D 47         [24] 1485 	lcall	__modulong
+      000761 AA 82            [24] 1486 	mov	r2, dpl
+      000763 D0 06            [24] 1487 	pop	ar6
+      000765 D0 07            [24] 1488 	pop	ar7
+      000767 74 30            [12] 1489 	mov	a,#0x30
+      000769 2A               [12] 1490 	add	a, r2
+      00076A FA               [12] 1491 	mov	r2,a
+      00076B 90 00 0A         [24] 1492 	mov	dptr,#_SSD1306_WriteChar_PARM_2
+      00076E EE               [12] 1493 	mov	a,r6
+      00076F F0               [24] 1494 	movx	@dptr,a
+      000770 90 00 0B         [24] 1495 	mov	dptr,#_SSD1306_WriteChar_PARM_3
+      000773 EA               [12] 1496 	mov	a,r2
+      000774 F0               [24] 1497 	movx	@dptr,a
+      000775 8F 82            [24] 1498 	mov	dpl, r7
+      000777 C0 07            [24] 1499 	push	ar7
+      000779 C0 06            [24] 1500 	push	ar6
+      00077B 12 03 14         [24] 1501 	lcall	_SSD1306_WriteChar
+      00077E D0 06            [24] 1502 	pop	ar6
+      000780 D0 07            [24] 1503 	pop	ar7
+      000782 90 00 13         [24] 1504 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      000785 74 08            [12] 1505 	mov	a,#0x08
+      000787 2E               [12] 1506 	add	a, r6
+      000788 F0               [24] 1507 	movx	@dptr,a
+                                   1508 ;	main.c:176: SSD1306_WriteChar(page, x, ((val / 10) % 10) + '0');   x += 8;
+      000789 E0               [24] 1509 	movx	a,@dptr
+      00078A FE               [12] 1510 	mov	r6,a
+      00078B 90 00 35         [24] 1511 	mov	dptr,#__divulong_PARM_2
+      00078E 74 0A            [12] 1512 	mov	a,#0x0a
+      000790 F0               [24] 1513 	movx	@dptr,a
+      000791 E4               [12] 1514 	clr	a
+      000792 A3               [24] 1515 	inc	dptr
+      000793 F0               [24] 1516 	movx	@dptr,a
+      000794 A3               [24] 1517 	inc	dptr
+      000795 F0               [24] 1518 	movx	@dptr,a
+      000796 A3               [24] 1519 	inc	dptr
+      000797 F0               [24] 1520 	movx	@dptr,a
+      000798 85 0D 82         [24] 1521 	mov	dpl, _SSD1306_DisplayResult_sloc2_1_0
+      00079B 85 0E 83         [24] 1522 	mov	dph, (_SSD1306_DisplayResult_sloc2_1_0 + 1)
+      00079E 85 0F F0         [24] 1523 	mov	b, (_SSD1306_DisplayResult_sloc2_1_0 + 2)
+      0007A1 E5 10            [12] 1524 	mov	a, (_SSD1306_DisplayResult_sloc2_1_0 + 3)
+      0007A3 C0 07            [24] 1525 	push	ar7
+      0007A5 C0 06            [24] 1526 	push	ar6
+      0007A7 12 0E 86         [24] 1527 	lcall	__divulong
+      0007AA AA 82            [24] 1528 	mov	r2, dpl
+      0007AC AB 83            [24] 1529 	mov	r3, dph
+      0007AE AC F0            [24] 1530 	mov	r4, b
+      0007B0 FD               [12] 1531 	mov	r5, a
+      0007B1 90 00 2C         [24] 1532 	mov	dptr,#__modulong_PARM_2
+      0007B4 74 0A            [12] 1533 	mov	a,#0x0a
+      0007B6 F0               [24] 1534 	movx	@dptr,a
+      0007B7 E4               [12] 1535 	clr	a
+      0007B8 A3               [24] 1536 	inc	dptr
+      0007B9 F0               [24] 1537 	movx	@dptr,a
+      0007BA A3               [24] 1538 	inc	dptr
+      0007BB F0               [24] 1539 	movx	@dptr,a
+      0007BC A3               [24] 1540 	inc	dptr
+      0007BD F0               [24] 1541 	movx	@dptr,a
+      0007BE 8A 82            [24] 1542 	mov	dpl, r2
+      0007C0 8B 83            [24] 1543 	mov	dph, r3
+      0007C2 8C F0            [24] 1544 	mov	b, r4
+      0007C4 ED               [12] 1545 	mov	a, r5
+      0007C5 12 0D 47         [24] 1546 	lcall	__modulong
+      0007C8 AA 82            [24] 1547 	mov	r2, dpl
+      0007CA D0 06            [24] 1548 	pop	ar6
+      0007CC D0 07            [24] 1549 	pop	ar7
+      0007CE 74 30            [12] 1550 	mov	a,#0x30
+      0007D0 2A               [12] 1551 	add	a, r2
+      0007D1 FA               [12] 1552 	mov	r2,a
+      0007D2 90 00 0A         [24] 1553 	mov	dptr,#_SSD1306_WriteChar_PARM_2
+      0007D5 EE               [12] 1554 	mov	a,r6
+      0007D6 F0               [24] 1555 	movx	@dptr,a
+      0007D7 90 00 0B         [24] 1556 	mov	dptr,#_SSD1306_WriteChar_PARM_3
+      0007DA EA               [12] 1557 	mov	a,r2
+      0007DB F0               [24] 1558 	movx	@dptr,a
+      0007DC 8F 82            [24] 1559 	mov	dpl, r7
+      0007DE C0 07            [24] 1560 	push	ar7
+      0007E0 C0 06            [24] 1561 	push	ar6
+      0007E2 12 03 14         [24] 1562 	lcall	_SSD1306_WriteChar
+      0007E5 D0 06            [24] 1563 	pop	ar6
+      0007E7 D0 07            [24] 1564 	pop	ar7
+      0007E9 90 00 13         [24] 1565 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      0007EC 74 08            [12] 1566 	mov	a,#0x08
+      0007EE 2E               [12] 1567 	add	a, r6
+      0007EF F0               [24] 1568 	movx	@dptr,a
+                                   1569 ;	main.c:177: SSD1306_WriteChar(page, x, '.');                       x += 8;
+      0007F0 E0               [24] 1570 	movx	a,@dptr
+      0007F1 FE               [12] 1571 	mov	r6,a
+      0007F2 90 00 0A         [24] 1572 	mov	dptr,#_SSD1306_WriteChar_PARM_2
+      0007F5 F0               [24] 1573 	movx	@dptr,a
+      0007F6 90 00 0B         [24] 1574 	mov	dptr,#_SSD1306_WriteChar_PARM_3
+      0007F9 74 2E            [12] 1575 	mov	a,#0x2e
+      0007FB F0               [24] 1576 	movx	@dptr,a
+      0007FC 8F 82            [24] 1577 	mov	dpl, r7
+      0007FE C0 07            [24] 1578 	push	ar7
+      000800 C0 06            [24] 1579 	push	ar6
+      000802 12 03 14         [24] 1580 	lcall	_SSD1306_WriteChar
+      000805 D0 06            [24] 1581 	pop	ar6
+      000807 D0 07            [24] 1582 	pop	ar7
+      000809 90 00 13         [24] 1583 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      00080C 74 08            [12] 1584 	mov	a,#0x08
+      00080E 2E               [12] 1585 	add	a, r6
+      00080F F0               [24] 1586 	movx	@dptr,a
+                                   1587 ;	main.c:178: SSD1306_WriteChar(page, x, (val % 10) + '0');          x += 8;
+      000810 E0               [24] 1588 	movx	a,@dptr
+      000811 FE               [12] 1589 	mov	r6,a
+      000812 90 00 2C         [24] 1590 	mov	dptr,#__modulong_PARM_2
+      000815 74 0A            [12] 1591 	mov	a,#0x0a
+      000817 F0               [24] 1592 	movx	@dptr,a
+      000818 E4               [12] 1593 	clr	a
+      000819 A3               [24] 1594 	inc	dptr
+      00081A F0               [24] 1595 	movx	@dptr,a
+      00081B A3               [24] 1596 	inc	dptr
+      00081C F0               [24] 1597 	movx	@dptr,a
+      00081D A3               [24] 1598 	inc	dptr
+      00081E F0               [24] 1599 	movx	@dptr,a
+      00081F 85 0D 82         [24] 1600 	mov	dpl, _SSD1306_DisplayResult_sloc2_1_0
+      000822 85 0E 83         [24] 1601 	mov	dph, (_SSD1306_DisplayResult_sloc2_1_0 + 1)
+      000825 85 0F F0         [24] 1602 	mov	b, (_SSD1306_DisplayResult_sloc2_1_0 + 2)
+      000828 E5 10            [12] 1603 	mov	a, (_SSD1306_DisplayResult_sloc2_1_0 + 3)
+      00082A C0 07            [24] 1604 	push	ar7
+      00082C C0 06            [24] 1605 	push	ar6
+      00082E 12 0D 47         [24] 1606 	lcall	__modulong
+      000831 AA 82            [24] 1607 	mov	r2, dpl
+      000833 D0 06            [24] 1608 	pop	ar6
+      000835 D0 07            [24] 1609 	pop	ar7
+      000837 74 30            [12] 1610 	mov	a,#0x30
+      000839 2A               [12] 1611 	add	a, r2
+      00083A FA               [12] 1612 	mov	r2,a
+      00083B 90 00 0A         [24] 1613 	mov	dptr,#_SSD1306_WriteChar_PARM_2
+      00083E EE               [12] 1614 	mov	a,r6
+      00083F F0               [24] 1615 	movx	@dptr,a
+      000840 90 00 0B         [24] 1616 	mov	dptr,#_SSD1306_WriteChar_PARM_3
+      000843 EA               [12] 1617 	mov	a,r2
+      000844 F0               [24] 1618 	movx	@dptr,a
+      000845 8F 82            [24] 1619 	mov	dpl, r7
+      000847 C0 07            [24] 1620 	push	ar7
+      000849 C0 06            [24] 1621 	push	ar6
+      00084B 12 03 14         [24] 1622 	lcall	_SSD1306_WriteChar
+      00084E D0 06            [24] 1623 	pop	ar6
+      000850 D0 07            [24] 1624 	pop	ar7
+      000852 90 00 13         [24] 1625 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      000855 74 08            [12] 1626 	mov	a,#0x08
+      000857 2E               [12] 1627 	add	a, r6
+      000858 F0               [24] 1628 	movx	@dptr,a
+                                   1629 ;	main.c:179: SSD1306_PrintString(page, x, " UF");
+      000859 E0               [24] 1630 	movx	a,@dptr
+      00085A 90 00 0E         [24] 1631 	mov	dptr,#_SSD1306_PrintString_PARM_2
+      00085D F0               [24] 1632 	movx	@dptr,a
+      00085E 90 00 0F         [24] 1633 	mov	dptr,#_SSD1306_PrintString_PARM_3
+      000861 74 68            [12] 1634 	mov	a,#___str_3
+      000863 F0               [24] 1635 	movx	@dptr,a
+      000864 74 11            [12] 1636 	mov	a,#(___str_3 >> 8)
+      000866 A3               [24] 1637 	inc	dptr
+      000867 F0               [24] 1638 	movx	@dptr,a
+      000868 74 80            [12] 1639 	mov	a,#0x80
+      00086A A3               [24] 1640 	inc	dptr
+      00086B F0               [24] 1641 	movx	@dptr,a
+      00086C 8F 82            [24] 1642 	mov	dpl, r7
+                                   1643 ;	main.c:181: }
+      00086E 02 03 FB         [24] 1644 	ljmp	_SSD1306_PrintString
+                                   1645 ;------------------------------------------------------------
+                                   1646 ;Allocation info for local variables in function 'Timer0_ISR'
+                                   1647 ;------------------------------------------------------------
+                                   1648 ;	main.c:185: void Timer0_ISR(void) __interrupt (1) {
+                                   1649 ;	-----------------------------------------
+                                   1650 ;	 function Timer0_ISR
+                                   1651 ;	-----------------------------------------
+      000871                       1652 _Timer0_ISR:
+      000871 C0 E0            [24] 1653 	push	acc
+      000873 C0 82            [24] 1654 	push	dpl
+      000875 C0 83            [24] 1655 	push	dph
+      000877 C0 07            [24] 1656 	push	ar7
+      000879 C0 06            [24] 1657 	push	ar6
+      00087B C0 D0            [24] 1658 	push	psw
+      00087D 75 D0 00         [24] 1659 	mov	psw,#0x00
+                                   1660 ;	main.c:186: timer0_overflows++;
+      000880 90 00 46         [24] 1661 	mov	dptr,#_timer0_overflows
+      000883 E0               [24] 1662 	movx	a,@dptr
+      000884 FE               [12] 1663 	mov	r6,a
+      000885 A3               [24] 1664 	inc	dptr
+      000886 E0               [24] 1665 	movx	a,@dptr
+      000887 FF               [12] 1666 	mov	r7,a
+      000888 90 00 46         [24] 1667 	mov	dptr,#_timer0_overflows
+      00088B 74 01            [12] 1668 	mov	a,#0x01
+      00088D 2E               [12] 1669 	add	a, r6
+      00088E F0               [24] 1670 	movx	@dptr,a
+      00088F E4               [12] 1671 	clr	a
+      000890 3F               [12] 1672 	addc	a, r7
+      000891 A3               [24] 1673 	inc	dptr
+      000892 F0               [24] 1674 	movx	@dptr,a
+                                   1675 ;	main.c:187: }
+      000893 D0 D0            [24] 1676 	pop	psw
+      000895 D0 06            [24] 1677 	pop	ar6
+      000897 D0 07            [24] 1678 	pop	ar7
+      000899 D0 83            [24] 1679 	pop	dph
+      00089B D0 82            [24] 1680 	pop	dpl
+      00089D D0 E0            [24] 1681 	pop	acc
+      00089F 32               [24] 1682 	reti
+                                   1683 ;	eliminated unneeded push/pop b
+                                   1684 ;------------------------------------------------------------
+                                   1685 ;Allocation info for local variables in function 'Measure_Single'
+                                   1686 ;------------------------------------------------------------
+                                   1687 ;total_ticks   Allocated with name '_Measure_Single_total_ticks_10000_53'
+                                   1688 ;stable_counter Allocated with name '_Measure_Single_stable_counter_10000_53'
+                                   1689 ;------------------------------------------------------------
+                                   1690 ;	main.c:190: uint32_t Measure_Single(void) {
+                                   1691 ;	-----------------------------------------
+                                   1692 ;	 function Measure_Single
+                                   1693 ;	-----------------------------------------
+      0008A0                       1694 _Measure_Single:
+                                   1695 ;	main.c:192: uint8_t stable_counter = 0;
+      0008A0 90 00 1A         [24] 1696 	mov	dptr,#_Measure_Single_stable_counter_10000_53
+      0008A3 E4               [12] 1697 	clr	a
+      0008A4 F0               [24] 1698 	movx	@dptr,a
+                                   1699 ;	main.c:195: TH0 = 0x00;
+      0008A5 F5 8C            [12] 1700 	mov	_TH0,a
+                                   1701 ;	main.c:196: TL0 = 0x00;
+      0008A7 F5 8A            [12] 1702 	mov	_TL0,a
+                                   1703 ;	main.c:197: TF0 = 0;
+                                   1704 ;	assignBit
+      0008A9 C2 8D            [12] 1705 	clr	_TF0
+                                   1706 ;	main.c:198: timer0_overflows = 0;
+      0008AB 90 00 46         [24] 1707 	mov	dptr,#_timer0_overflows
+      0008AE E4               [12] 1708 	clr	a
+      0008AF F0               [24] 1709 	movx	@dptr,a
+      0008B0 A3               [24] 1710 	inc	dptr
+      0008B1 F0               [24] 1711 	movx	@dptr,a
+                                   1712 ;	main.c:201: ET0 = 1;
+                                   1713 ;	assignBit
+      0008B2 D2 A9            [12] 1714 	setb	_ET0
+                                   1715 ;	main.c:204: P3M1 &= ~0x02; P3M0 |= 0x02;
+      0008B4 53 B1 FD         [24] 1716 	anl	_P3M1,#0xfd
+      0008B7 43 B2 02         [24] 1717 	orl	_P3M0,#0x02
+                                   1718 ;	main.c:205: PIN_R1_10K = 1;
+                                   1719 ;	assignBit
+      0008BA D2 B1            [12] 1720 	setb	_PIN_R1_10K
+                                   1721 ;	main.c:207: TR0 = 1; // Стартуем Таймер 0
                                    1722 ;	assignBit
-      0008D3 C2 8C            [12] 1723 	clr	_TR0
-                                   1724 ;	main.c:206: cycles += ((uint16_t)TH0 << 8) | TL0;
-      0008D5 AF 8C            [24] 1725 	mov	r7,_TH0
-      0008D7 7E 00            [12] 1726 	mov	r6,#0x00
-      0008D9 AC 8A            [24] 1727 	mov	r4,_TL0
-      0008DB 7D 00            [12] 1728 	mov	r5,#0x00
-      0008DD EC               [12] 1729 	mov	a,r4
-      0008DE 42 06            [12] 1730 	orl	ar6,a
-      0008E0 ED               [12] 1731 	mov	a,r5
-      0008E1 42 07            [12] 1732 	orl	ar7,a
-      0008E3 E4               [12] 1733 	clr	a
-      0008E4 FD               [12] 1734 	mov	r5,a
-      0008E5 FC               [12] 1735 	mov	r4,a
-      0008E6 EE               [12] 1736 	mov	a,r6
-      0008E7 28               [12] 1737 	add	a, r0
-      0008E8 F8               [12] 1738 	mov	r0,a
-      0008E9 EF               [12] 1739 	mov	a,r7
-      0008EA 39               [12] 1740 	addc	a, r1
-      0008EB F9               [12] 1741 	mov	r1,a
-      0008EC ED               [12] 1742 	mov	a,r5
-      0008ED 3A               [12] 1743 	addc	a, r2
-      0008EE FA               [12] 1744 	mov	r2,a
-      0008EF EC               [12] 1745 	mov	a,r4
-      0008F0 3B               [12] 1746 	addc	a, r3
-      0008F1 FB               [12] 1747 	mov	r3,a
-                                   1748 ;	main.c:208: PIN_R1_10K = 0;
-                                   1749 ;	assignBit
-      0008F2 C2 B1            [12] 1750 	clr	_PIN_R1_10K
-                                   1751 ;	main.c:209: PIN_R3_1K = 0;
-                                   1752 ;	assignBit
-      0008F4 C2 C4            [12] 1753 	clr	_PIN_R3_1K
-                                   1754 ;	main.c:211: return cycles;
-      0008F6 88 82            [24] 1755 	mov	dpl, r0
-      0008F8 89 83            [24] 1756 	mov	dph, r1
-      0008FA 8A F0            [24] 1757 	mov	b, r2
-      0008FC EB               [12] 1758 	mov	a, r3
-                                   1759 ;	main.c:212: }
-      0008FD 22               [24] 1760 	ret
-                                   1761 ;------------------------------------------------------------
-                                   1762 ;Allocation info for local variables in function 'main'
-                                   1763 ;------------------------------------------------------------
-                                   1764 ;sloc0                     Allocated with name '_main_sloc0_1_0'
-                                   1765 ;sloc1                     Allocated with name '_main_sloc1_1_0'
-                                   1766 ;raw_ticks                 Allocated with name '_main_raw_ticks_10000_59'
-                                   1767 ;final_calc                Allocated with name '_main_final_calc_10000_59'
-                                   1768 ;last_display_val          Allocated with name '_main_last_display_val_10000_59'
-                                   1769 ;filtered_ticks            Allocated with name '_main_filtered_ticks_10000_59'
-                                   1770 ;mode_uf                   Allocated with name '_main_mode_uf_10000_59'
-                                   1771 ;is_first_run              Allocated with name '_main_is_first_run_10000_59'
-                                   1772 ;is_sleeping               Allocated with name '_main_is_sleeping_10000_59'
-                                   1773 ;------------------------------------------------------------
-                                   1774 ;	main.c:215: void main(void) {
-                                   1775 ;	-----------------------------------------
-                                   1776 ;	 function main
-                                   1777 ;	-----------------------------------------
-      0008FE                       1778 _main:
-                                   1779 ;	main.c:218: uint32_t last_display_val = 0;
-      0008FE 90 00 21         [24] 1780 	mov	dptr,#_main_last_display_val_10000_59
-      000901 E4               [12] 1781 	clr	a
-      000902 F0               [24] 1782 	movx	@dptr,a
-      000903 A3               [24] 1783 	inc	dptr
-      000904 F0               [24] 1784 	movx	@dptr,a
-      000905 A3               [24] 1785 	inc	dptr
-      000906 F0               [24] 1786 	movx	@dptr,a
-      000907 A3               [24] 1787 	inc	dptr
-      000908 F0               [24] 1788 	movx	@dptr,a
-                                   1789 ;	main.c:219: float filtered_ticks = 0.0f;
-      000909 90 00 25         [24] 1790 	mov	dptr,#_main_filtered_ticks_10000_59
-      00090C F0               [24] 1791 	movx	@dptr,a
-      00090D A3               [24] 1792 	inc	dptr
-      00090E F0               [24] 1793 	movx	@dptr,a
-      00090F A3               [24] 1794 	inc	dptr
-      000910 F0               [24] 1795 	movx	@dptr,a
-      000911 A3               [24] 1796 	inc	dptr
-      000912 F0               [24] 1797 	movx	@dptr,a
-                                   1798 ;	main.c:221: uint8_t is_first_run = 1;
-      000913 90 00 2A         [24] 1799 	mov	dptr,#_main_is_first_run_10000_59
-      000916 04               [12] 1800 	inc	a
-      000917 F0               [24] 1801 	movx	@dptr,a
-                                   1802 ;	main.c:222: uint8_t is_sleeping = 0; //программный флаг сна
-      000918 90 00 2B         [24] 1803 	mov	dptr,#_main_is_sleeping_10000_59
-      00091B E4               [12] 1804 	clr	a
-      00091C F0               [24] 1805 	movx	@dptr,a
-                                   1806 ;	main.c:225: P5M1 |= MASK_DET_55; P5M0 &= ~MASK_DET_55;
-      00091D 43 C9 20         [24] 1807 	orl	_P5M1,#0x20
-      000920 53 CA DF         [24] 1808 	anl	_P5M0,#0xdf
-                                   1809 ;	main.c:228: P3M1 |= (1 << 0); P3M0 &= ~(1 << 0);
-      000923 43 B1 01         [24] 1810 	orl	_P3M1,#0x01
-      000926 53 B2 FE         [24] 1811 	anl	_P3M0,#0xfe
-                                   1812 ;	main.c:230: P_SW2 = 0x80; CLKSEL = 0x00; P_SW2 = 0x00;
-      000929 75 8E 80         [24] 1813 	mov	_P_SW2,#0x80
-      00092C 75 9D 00         [24] 1814 	mov	_CLKSEL,#0x00
-      00092F 75 8E 00         [24] 1815 	mov	_P_SW2,#0x00
-                                   1816 ;	main.c:231: AUXR |= 0x80; TMOD &= 0xF0; TR0 = 0; TF0 = 0;
-      000932 43 8E 80         [24] 1817 	orl	_AUXR,#0x80
-      000935 53 89 F0         [24] 1818 	anl	_TMOD,#0xf0
-                                   1819 ;	assignBit
-      000938 C2 8C            [12] 1820 	clr	_TR0
-                                   1821 ;	assignBit
-      00093A C2 8D            [12] 1822 	clr	_TF0
-                                   1823 ;	main.c:233: SCL_HIGH(); SDA_HIGH(); Delay_ms(100);
-      00093C 12 00 CC         [24] 1824 	lcall	_SCL_HIGH
-      00093F 12 00 E0         [24] 1825 	lcall	_SDA_HIGH
-      000942 90 00 64         [24] 1826 	mov	dptr,#0x0064
-      000945 12 00 62         [24] 1827 	lcall	_Delay_ms
-                                   1828 ;	main.c:234: SSD1306_Init();
-      000948 12 01 87         [24] 1829 	lcall	_SSD1306_Init
-                                   1830 ;	main.c:235: SSD1306_Clear();
-      00094B 12 02 3B         [24] 1831 	lcall	_SSD1306_Clear
-                                   1832 ;	main.c:237: while(1) {
-      00094E                       1833 00146$:
-                                   1834 ;	main.c:239: if (PIN_BUTTON == 0) {
-      00094E 20 B0 49         [24] 1835 	jb	_PIN_BUTTON,00110$
-                                   1836 ;	main.c:240: Delay_ms(50); // Надежный антидребезг нажатия
-      000951 90 00 32         [24] 1837 	mov	dptr,#0x0032
-      000954 12 00 62         [24] 1838 	lcall	_Delay_ms
-                                   1839 ;	main.c:241: if (PIN_BUTTON == 0) {
-      000957 20 B0 40         [24] 1840 	jb	_PIN_BUTTON,00110$
-                                   1841 ;	main.c:244: while(PIN_BUTTON == 0) {
-      00095A                       1842 00101$:
-      00095A 20 B0 08         [24] 1843 	jb	_PIN_BUTTON,00103$
-                                   1844 ;	main.c:245: Delay_ms(10);
-      00095D 90 00 0A         [24] 1845 	mov	dptr,#0x000a
-      000960 12 00 62         [24] 1846 	lcall	_Delay_ms
-      000963 80 F5            [24] 1847 	sjmp	00101$
-      000965                       1848 00103$:
-                                   1849 ;	main.c:247: Delay_ms(100); // Антидребезг на размыкание контактов
-      000965 90 00 64         [24] 1850 	mov	dptr,#0x0064
-      000968 12 00 62         [24] 1851 	lcall	_Delay_ms
-                                   1852 ;	main.c:250: if (is_sleeping == 0) {
-      00096B 90 00 2B         [24] 1853 	mov	dptr,#_main_is_sleeping_10000_59
-      00096E E0               [24] 1854 	movx	a,@dptr
-      00096F 70 0E            [24] 1855 	jnz	00105$
-                                   1856 ;	main.c:251: is_sleeping = 1;
-      000971 90 00 2B         [24] 1857 	mov	dptr,#_main_is_sleeping_10000_59
-      000974 74 01            [12] 1858 	mov	a,#0x01
-      000976 F0               [24] 1859 	movx	@dptr,a
-                                   1860 ;	main.c:252: SSD1306_Command(0xAE); // Просто выключаем экран
-      000977 75 82 AE         [24] 1861 	mov	dpl, #0xae
-      00097A 12 01 66         [24] 1862 	lcall	_SSD1306_Command
-      00097D 80 1B            [24] 1863 	sjmp	00110$
-      00097F                       1864 00105$:
-                                   1865 ;	main.c:254: is_sleeping = 0;
-      00097F 90 00 2B         [24] 1866 	mov	dptr,#_main_is_sleeping_10000_59
-      000982 E4               [12] 1867 	clr	a
-      000983 F0               [24] 1868 	movx	@dptr,a
-                                   1869 ;	main.c:255: SSD1306_Command(0xAF); // Просто включаем экран
-      000984 75 82 AF         [24] 1870 	mov	dpl, #0xaf
-      000987 12 01 66         [24] 1871 	lcall	_SSD1306_Command
-                                   1872 ;	main.c:256: last_display_val = 0;  // Сброс, чтобы сразу обновить экран актуальным замером
-      00098A 90 00 21         [24] 1873 	mov	dptr,#_main_last_display_val_10000_59
-      00098D E4               [12] 1874 	clr	a
-      00098E F0               [24] 1875 	movx	@dptr,a
-      00098F A3               [24] 1876 	inc	dptr
-      000990 F0               [24] 1877 	movx	@dptr,a
-      000991 A3               [24] 1878 	inc	dptr
-      000992 F0               [24] 1879 	movx	@dptr,a
-      000993 A3               [24] 1880 	inc	dptr
-      000994 F0               [24] 1881 	movx	@dptr,a
-                                   1882 ;	main.c:257: is_first_run = 1;
-      000995 90 00 2A         [24] 1883 	mov	dptr,#_main_is_first_run_10000_59
-      000998 04               [12] 1884 	inc	a
-      000999 F0               [24] 1885 	movx	@dptr,a
-      00099A                       1886 00110$:
-                                   1887 ;	main.c:263: if (is_sleeping == 1) {
-      00099A 90 00 2B         [24] 1888 	mov	dptr,#_main_is_sleeping_10000_59
-      00099D E0               [24] 1889 	movx	a,@dptr
-      00099E FF               [12] 1890 	mov	r7,a
-      00099F BF 01 08         [24] 1891 	cjne	r7,#0x01,00112$
-                                   1892 ;	main.c:264: Delay_ms(100);
-      0009A2 90 00 64         [24] 1893 	mov	dptr,#0x0064
-      0009A5 12 00 62         [24] 1894 	lcall	_Delay_ms
-                                   1895 ;	main.c:265: continue; // Прыгаем обратно в начало while(1) только опрашивать кнопку
-      0009A8 80 A4            [24] 1896 	sjmp	00146$
-      0009AA                       1897 00112$:
-                                   1898 ;	main.c:270: raw_ticks = Measure_Single(0);
-      0009AA 75 82 00         [24] 1899 	mov	dpl, #0x00
-      0009AD 12 08 27         [24] 1900 	lcall	_Measure_Single
-      0009B0 AC 82            [24] 1901 	mov	r4, dpl
-      0009B2 AD 83            [24] 1902 	mov	r5, dph
-      0009B4 AE F0            [24] 1903 	mov	r6, b
-      0009B6 FF               [12] 1904 	mov	r7, a
-                                   1905 ;	main.c:272: if (raw_ticks > 55000) {
-      0009B7 C3               [12] 1906 	clr	c
-      0009B8 74 D8            [12] 1907 	mov	a,#0xd8
-      0009BA 9C               [12] 1908 	subb	a,r4
-      0009BB 74 D6            [12] 1909 	mov	a,#0xd6
-      0009BD 9D               [12] 1910 	subb	a,r5
-      0009BE E4               [12] 1911 	clr	a
-      0009BF 9E               [12] 1912 	subb	a,r6
-      0009C0 E4               [12] 1913 	clr	a
-      0009C1 9F               [12] 1914 	subb	a,r7
-      0009C2 40 03            [24] 1915 	jc	00270$
-      0009C4 02 0C F5         [24] 1916 	ljmp	00141$
-      0009C7                       1917 00270$:
-                                   1918 ;	main.c:273: mode_uf = 1;
-      0009C7 90 00 29         [24] 1919 	mov	dptr,#_main_mode_uf_10000_59
-      0009CA 74 01            [12] 1920 	mov	a,#0x01
-      0009CC F0               [24] 1921 	movx	@dptr,a
-                                   1922 ;	main.c:274: raw_ticks = Measure_Single(1);
-      0009CD 75 82 01         [24] 1923 	mov	dpl, #0x01
-      0009D0 12 08 27         [24] 1924 	lcall	_Measure_Single
-      0009D3 85 82 15         [24] 1925 	mov	_main_sloc1_1_0,dpl
-      0009D6 85 83 16         [24] 1926 	mov	(_main_sloc1_1_0 + 1),dph
-      0009D9 85 F0 17         [24] 1927 	mov	(_main_sloc1_1_0 + 2),b
-      0009DC F5 18            [12] 1928 	mov	(_main_sloc1_1_0 + 3),a
-                                   1929 ;	main.c:276: if (is_first_run || filtered_ticks < 1000.0f) {
-      0009DE 90 00 2A         [24] 1930 	mov	dptr,#_main_is_first_run_10000_59
-      0009E1 E0               [24] 1931 	movx	a,@dptr
-      0009E2 70 38            [24] 1932 	jnz	00113$
-      0009E4 90 00 25         [24] 1933 	mov	dptr,#_main_filtered_ticks_10000_59
-      0009E7 E0               [24] 1934 	movx	a,@dptr
-      0009E8 F5 11            [12] 1935 	mov	_main_sloc0_1_0,a
-      0009EA A3               [24] 1936 	inc	dptr
-      0009EB E0               [24] 1937 	movx	a,@dptr
-      0009EC F5 12            [12] 1938 	mov	(_main_sloc0_1_0 + 1),a
-      0009EE A3               [24] 1939 	inc	dptr
-      0009EF E0               [24] 1940 	movx	a,@dptr
-      0009F0 F5 13            [12] 1941 	mov	(_main_sloc0_1_0 + 2),a
-      0009F2 A3               [24] 1942 	inc	dptr
-      0009F3 E0               [24] 1943 	movx	a,@dptr
-      0009F4 F5 14            [12] 1944 	mov	(_main_sloc0_1_0 + 3),a
-      0009F6 E4               [12] 1945 	clr	a
-      0009F7 C0 E0            [24] 1946 	push	acc
-      0009F9 C0 E0            [24] 1947 	push	acc
-      0009FB 74 7A            [12] 1948 	mov	a,#0x7a
-      0009FD C0 E0            [24] 1949 	push	acc
-      0009FF 74 44            [12] 1950 	mov	a,#0x44
-      000A01 C0 E0            [24] 1951 	push	acc
-      000A03 85 11 82         [24] 1952 	mov	dpl, _main_sloc0_1_0
-      000A06 85 12 83         [24] 1953 	mov	dph, (_main_sloc0_1_0 + 1)
-      000A09 85 13 F0         [24] 1954 	mov	b, (_main_sloc0_1_0 + 2)
-      000A0C E5 14            [12] 1955 	mov	a, (_main_sloc0_1_0 + 3)
-      000A0E 12 11 D9         [24] 1956 	lcall	___fslt
-      000A11 AB 82            [24] 1957 	mov	r3, dpl
-      000A13 E5 81            [12] 1958 	mov	a,sp
-      000A15 24 FC            [12] 1959 	add	a,#0xfc
-      000A17 F5 81            [12] 1960 	mov	sp,a
-      000A19 EB               [12] 1961 	mov	a,r3
-      000A1A 60 2B            [24] 1962 	jz	00114$
-      000A1C                       1963 00113$:
-                                   1964 ;	main.c:277: filtered_ticks = (float)raw_ticks;
-      000A1C 85 15 82         [24] 1965 	mov	dpl, _main_sloc1_1_0
-      000A1F 85 16 83         [24] 1966 	mov	dph, (_main_sloc1_1_0 + 1)
-      000A22 85 17 F0         [24] 1967 	mov	b, (_main_sloc1_1_0 + 2)
-      000A25 E5 18            [12] 1968 	mov	a, (_main_sloc1_1_0 + 3)
-      000A27 12 11 8D         [24] 1969 	lcall	___ulong2fs
-      000A2A A8 82            [24] 1970 	mov	r0, dpl
-      000A2C A9 83            [24] 1971 	mov	r1, dph
-      000A2E AA F0            [24] 1972 	mov	r2, b
-      000A30 FB               [12] 1973 	mov	r3, a
-      000A31 90 00 25         [24] 1974 	mov	dptr,#_main_filtered_ticks_10000_59
-      000A34 E8               [12] 1975 	mov	a,r0
-      000A35 F0               [24] 1976 	movx	@dptr,a
-      000A36 E9               [12] 1977 	mov	a,r1
-      000A37 A3               [24] 1978 	inc	dptr
-      000A38 F0               [24] 1979 	movx	@dptr,a
-      000A39 EA               [12] 1980 	mov	a,r2
-      000A3A A3               [24] 1981 	inc	dptr
-      000A3B F0               [24] 1982 	movx	@dptr,a
-      000A3C EB               [12] 1983 	mov	a,r3
-      000A3D A3               [24] 1984 	inc	dptr
-      000A3E F0               [24] 1985 	movx	@dptr,a
-                                   1986 ;	main.c:278: is_first_run = 0;
-      000A3F 90 00 2A         [24] 1987 	mov	dptr,#_main_is_first_run_10000_59
-      000A42 E4               [12] 1988 	clr	a
-      000A43 F0               [24] 1989 	movx	@dptr,a
-      000A44 02 0A CC         [24] 1990 	ljmp	00115$
-      000A47                       1991 00114$:
-                                   1992 ;	main.c:280: filtered_ticks = filtered_ticks + 0.25f * ((float)raw_ticks - filtered_ticks);
-      000A47 85 15 82         [24] 1993 	mov	dpl, _main_sloc1_1_0
-      000A4A 85 16 83         [24] 1994 	mov	dph, (_main_sloc1_1_0 + 1)
-      000A4D 85 17 F0         [24] 1995 	mov	b, (_main_sloc1_1_0 + 2)
-      000A50 E5 18            [12] 1996 	mov	a, (_main_sloc1_1_0 + 3)
-      000A52 12 11 8D         [24] 1997 	lcall	___ulong2fs
-      000A55 A8 82            [24] 1998 	mov	r0, dpl
-      000A57 A9 83            [24] 1999 	mov	r1, dph
-      000A59 AA F0            [24] 2000 	mov	r2, b
-      000A5B FB               [12] 2001 	mov	r3, a
-      000A5C C0 11            [24] 2002 	push	_main_sloc0_1_0
-      000A5E C0 12            [24] 2003 	push	(_main_sloc0_1_0 + 1)
-      000A60 C0 13            [24] 2004 	push	(_main_sloc0_1_0 + 2)
-      000A62 C0 14            [24] 2005 	push	(_main_sloc0_1_0 + 3)
-      000A64 88 82            [24] 2006 	mov	dpl, r0
-      000A66 89 83            [24] 2007 	mov	dph, r1
-      000A68 8A F0            [24] 2008 	mov	b, r2
-      000A6A EB               [12] 2009 	mov	a, r3
-      000A6B 12 0E 4B         [24] 2010 	lcall	___fssub
-      000A6E A8 82            [24] 2011 	mov	r0, dpl
-      000A70 A9 83            [24] 2012 	mov	r1, dph
-      000A72 AA F0            [24] 2013 	mov	r2, b
-      000A74 FB               [12] 2014 	mov	r3, a
-      000A75 E5 81            [12] 2015 	mov	a,sp
-      000A77 24 FC            [12] 2016 	add	a,#0xfc
-      000A79 F5 81            [12] 2017 	mov	sp,a
-      000A7B C0 00            [24] 2018 	push	ar0
-      000A7D C0 01            [24] 2019 	push	ar1
-      000A7F C0 02            [24] 2020 	push	ar2
-      000A81 C0 03            [24] 2021 	push	ar3
-      000A83 90 00 00         [24] 2022 	mov	dptr,#0x0000
-      000A86 75 F0 80         [24] 2023 	mov	b, #0x80
-      000A89 74 3E            [12] 2024 	mov	a, #0x3e
-      000A8B 12 0F 95         [24] 2025 	lcall	___fsmul
-      000A8E A8 82            [24] 2026 	mov	r0, dpl
-      000A90 A9 83            [24] 2027 	mov	r1, dph
-      000A92 AA F0            [24] 2028 	mov	r2, b
-      000A94 FB               [12] 2029 	mov	r3, a
-      000A95 E5 81            [12] 2030 	mov	a,sp
-      000A97 24 FC            [12] 2031 	add	a,#0xfc
-      000A99 F5 81            [12] 2032 	mov	sp,a
-      000A9B C0 00            [24] 2033 	push	ar0
-      000A9D C0 01            [24] 2034 	push	ar1
-      000A9F C0 02            [24] 2035 	push	ar2
-      000AA1 C0 03            [24] 2036 	push	ar3
-      000AA3 85 11 82         [24] 2037 	mov	dpl, _main_sloc0_1_0
-      000AA6 85 12 83         [24] 2038 	mov	dph, (_main_sloc0_1_0 + 1)
-      000AA9 85 13 F0         [24] 2039 	mov	b, (_main_sloc0_1_0 + 2)
-      000AAC E5 14            [12] 2040 	mov	a, (_main_sloc0_1_0 + 3)
-      000AAE 12 12 09         [24] 2041 	lcall	___fsadd
-      000AB1 A8 82            [24] 2042 	mov	r0, dpl
-      000AB3 A9 83            [24] 2043 	mov	r1, dph
-      000AB5 AA F0            [24] 2044 	mov	r2, b
-      000AB7 FB               [12] 2045 	mov	r3, a
-      000AB8 E5 81            [12] 2046 	mov	a,sp
-      000ABA 24 FC            [12] 2047 	add	a,#0xfc
-      000ABC F5 81            [12] 2048 	mov	sp,a
-      000ABE 90 00 25         [24] 2049 	mov	dptr,#_main_filtered_ticks_10000_59
-      000AC1 E8               [12] 2050 	mov	a,r0
-      000AC2 F0               [24] 2051 	movx	@dptr,a
-      000AC3 E9               [12] 2052 	mov	a,r1
-      000AC4 A3               [24] 2053 	inc	dptr
-      000AC5 F0               [24] 2054 	movx	@dptr,a
-      000AC6 EA               [12] 2055 	mov	a,r2
-      000AC7 A3               [24] 2056 	inc	dptr
-      000AC8 F0               [24] 2057 	movx	@dptr,a
-      000AC9 EB               [12] 2058 	mov	a,r3
-      000ACA A3               [24] 2059 	inc	dptr
-      000ACB F0               [24] 2060 	movx	@dptr,a
-      000ACC                       2061 00115$:
-                                   2062 ;	main.c:284: if (filtered_ticks < 650000.0f) {
-      000ACC 90 00 25         [24] 2063 	mov	dptr,#_main_filtered_ticks_10000_59
-      000ACF E0               [24] 2064 	movx	a,@dptr
-      000AD0 F5 15            [12] 2065 	mov	_main_sloc1_1_0,a
-      000AD2 A3               [24] 2066 	inc	dptr
-      000AD3 E0               [24] 2067 	movx	a,@dptr
-      000AD4 F5 16            [12] 2068 	mov	(_main_sloc1_1_0 + 1),a
-      000AD6 A3               [24] 2069 	inc	dptr
-      000AD7 E0               [24] 2070 	movx	a,@dptr
-      000AD8 F5 17            [12] 2071 	mov	(_main_sloc1_1_0 + 2),a
-      000ADA A3               [24] 2072 	inc	dptr
-      000ADB E0               [24] 2073 	movx	a,@dptr
-      000ADC F5 18            [12] 2074 	mov	(_main_sloc1_1_0 + 3),a
-      000ADE E4               [12] 2075 	clr	a
-      000ADF C0 E0            [24] 2076 	push	acc
-      000AE1 74 B1            [12] 2077 	mov	a,#0xb1
-      000AE3 C0 E0            [24] 2078 	push	acc
-      000AE5 74 1E            [12] 2079 	mov	a,#0x1e
-      000AE7 C0 E0            [24] 2080 	push	acc
-      000AE9 74 49            [12] 2081 	mov	a,#0x49
-      000AEB C0 E0            [24] 2082 	push	acc
-      000AED 85 15 82         [24] 2083 	mov	dpl, _main_sloc1_1_0
-      000AF0 85 16 83         [24] 2084 	mov	dph, (_main_sloc1_1_0 + 1)
-      000AF3 85 17 F0         [24] 2085 	mov	b, (_main_sloc1_1_0 + 2)
-      000AF6 E5 18            [12] 2086 	mov	a, (_main_sloc1_1_0 + 3)
-      000AF8 12 11 D9         [24] 2087 	lcall	___fslt
-      000AFB AB 82            [24] 2088 	mov	r3, dpl
-      000AFD E5 81            [12] 2089 	mov	a,sp
-      000AFF 24 FC            [12] 2090 	add	a,#0xfc
-      000B01 F5 81            [12] 2091 	mov	sp,a
-      000B03 EB               [12] 2092 	mov	a,r3
-      000B04 60 42            [24] 2093 	jz	00122$
-                                   2094 ;	main.c:285: final_calc = (uint32_t)(filtered_ticks * 0.0000059f); // Скорректировано под 10 мкФ
-      000B06 C0 15            [24] 2095 	push	_main_sloc1_1_0
-      000B08 C0 16            [24] 2096 	push	(_main_sloc1_1_0 + 1)
-      000B0A C0 17            [24] 2097 	push	(_main_sloc1_1_0 + 2)
-      000B0C C0 18            [24] 2098 	push	(_main_sloc1_1_0 + 3)
-      000B0E 90 F8 9D         [24] 2099 	mov	dptr,#0xf89d
-      000B11 75 F0 C5         [24] 2100 	mov	b, #0xc5
-      000B14 74 36            [12] 2101 	mov	a, #0x36
-      000B16 12 0F 95         [24] 2102 	lcall	___fsmul
-      000B19 A8 82            [24] 2103 	mov	r0, dpl
-      000B1B A9 83            [24] 2104 	mov	r1, dph
-      000B1D AA F0            [24] 2105 	mov	r2, b
-      000B1F FB               [12] 2106 	mov	r3, a
-      000B20 E5 81            [12] 2107 	mov	a,sp
-      000B22 24 FC            [12] 2108 	add	a,#0xfc
-      000B24 F5 81            [12] 2109 	mov	sp,a
-      000B26 88 82            [24] 2110 	mov	dpl, r0
-      000B28 89 83            [24] 2111 	mov	dph, r1
-      000B2A 8A F0            [24] 2112 	mov	b, r2
-      000B2C EB               [12] 2113 	mov	a, r3
-      000B2D 12 11 A0         [24] 2114 	lcall	___fs2ulong
-      000B30 A8 82            [24] 2115 	mov	r0, dpl
-      000B32 A9 83            [24] 2116 	mov	r1, dph
-      000B34 AA F0            [24] 2117 	mov	r2, b
-      000B36 FB               [12] 2118 	mov	r3, a
-      000B37 90 00 1D         [24] 2119 	mov	dptr,#_main_final_calc_10000_59
-      000B3A E8               [12] 2120 	mov	a,r0
-      000B3B F0               [24] 2121 	movx	@dptr,a
-      000B3C E9               [12] 2122 	mov	a,r1
-      000B3D A3               [24] 2123 	inc	dptr
-      000B3E F0               [24] 2124 	movx	@dptr,a
-      000B3F EA               [12] 2125 	mov	a,r2
-      000B40 A3               [24] 2126 	inc	dptr
-      000B41 F0               [24] 2127 	movx	@dptr,a
-      000B42 EB               [12] 2128 	mov	a,r3
-      000B43 A3               [24] 2129 	inc	dptr
-      000B44 F0               [24] 2130 	movx	@dptr,a
-      000B45 02 0C 25         [24] 2131 	ljmp	00123$
-      000B48                       2132 00122$:
-                                   2133 ;	main.c:287: else if (filtered_ticks >= 650000.0f && filtered_ticks < 2000000.0f) {
-      000B48 E4               [12] 2134 	clr	a
-      000B49 C0 E0            [24] 2135 	push	acc
-      000B4B 74 B1            [12] 2136 	mov	a,#0xb1
-      000B4D C0 E0            [24] 2137 	push	acc
-      000B4F 74 1E            [12] 2138 	mov	a,#0x1e
-      000B51 C0 E0            [24] 2139 	push	acc
-      000B53 74 49            [12] 2140 	mov	a,#0x49
-      000B55 C0 E0            [24] 2141 	push	acc
-      000B57 85 15 82         [24] 2142 	mov	dpl, _main_sloc1_1_0
-      000B5A 85 16 83         [24] 2143 	mov	dph, (_main_sloc1_1_0 + 1)
-      000B5D 85 17 F0         [24] 2144 	mov	b, (_main_sloc1_1_0 + 2)
-      000B60 E5 18            [12] 2145 	mov	a, (_main_sloc1_1_0 + 3)
-      000B62 12 11 D9         [24] 2146 	lcall	___fslt
-      000B65 E5 81            [12] 2147 	mov	a,sp
-      000B67 24 FC            [12] 2148 	add	a,#0xfc
-      000B69 F5 81            [12] 2149 	mov	sp,a
-      000B6B E5 82            [12] 2150 	mov	a, dpl
-      000B6D 24 FF            [12] 2151 	add	a,#0xff
-      000B6F 92 00            [24] 2152 	mov	_main_sloc2_1_0,c
-      000B71 40 69            [24] 2153 	jc	00118$
-      000B73 E4               [12] 2154 	clr	a
-      000B74 C0 E0            [24] 2155 	push	acc
-      000B76 74 24            [12] 2156 	mov	a,#0x24
-      000B78 C0 E0            [24] 2157 	push	acc
-      000B7A 74 F4            [12] 2158 	mov	a,#0xf4
-      000B7C C0 E0            [24] 2159 	push	acc
-      000B7E 74 49            [12] 2160 	mov	a,#0x49
-      000B80 C0 E0            [24] 2161 	push	acc
-      000B82 85 15 82         [24] 2162 	mov	dpl, _main_sloc1_1_0
-      000B85 85 16 83         [24] 2163 	mov	dph, (_main_sloc1_1_0 + 1)
-      000B88 85 17 F0         [24] 2164 	mov	b, (_main_sloc1_1_0 + 2)
-      000B8B E5 18            [12] 2165 	mov	a, (_main_sloc1_1_0 + 3)
-      000B8D 12 11 D9         [24] 2166 	lcall	___fslt
-      000B90 AB 82            [24] 2167 	mov	r3, dpl
-      000B92 E5 81            [12] 2168 	mov	a,sp
-      000B94 24 FC            [12] 2169 	add	a,#0xfc
-      000B96 F5 81            [12] 2170 	mov	sp,a
-      000B98 EB               [12] 2171 	mov	a,r3
-      000B99 60 41            [24] 2172 	jz	00118$
-                                   2173 ;	main.c:288: final_calc = (uint32_t)(filtered_ticks * 0.0001996f);
-      000B9B C0 15            [24] 2174 	push	_main_sloc1_1_0
-      000B9D C0 16            [24] 2175 	push	(_main_sloc1_1_0 + 1)
-      000B9F C0 17            [24] 2176 	push	(_main_sloc1_1_0 + 2)
-      000BA1 C0 18            [24] 2177 	push	(_main_sloc1_1_0 + 3)
-      000BA3 90 4B B8         [24] 2178 	mov	dptr,#0x4bb8
-      000BA6 75 F0 51         [24] 2179 	mov	b, #0x51
-      000BA9 74 39            [12] 2180 	mov	a, #0x39
-      000BAB 12 0F 95         [24] 2181 	lcall	___fsmul
-      000BAE A8 82            [24] 2182 	mov	r0, dpl
-      000BB0 A9 83            [24] 2183 	mov	r1, dph
-      000BB2 AA F0            [24] 2184 	mov	r2, b
-      000BB4 FB               [12] 2185 	mov	r3, a
-      000BB5 E5 81            [12] 2186 	mov	a,sp
-      000BB7 24 FC            [12] 2187 	add	a,#0xfc
-      000BB9 F5 81            [12] 2188 	mov	sp,a
-      000BBB 88 82            [24] 2189 	mov	dpl, r0
-      000BBD 89 83            [24] 2190 	mov	dph, r1
-      000BBF 8A F0            [24] 2191 	mov	b, r2
-      000BC1 EB               [12] 2192 	mov	a, r3
-      000BC2 12 11 A0         [24] 2193 	lcall	___fs2ulong
-      000BC5 A8 82            [24] 2194 	mov	r0, dpl
-      000BC7 A9 83            [24] 2195 	mov	r1, dph
-      000BC9 AA F0            [24] 2196 	mov	r2, b
-      000BCB FB               [12] 2197 	mov	r3, a
-      000BCC 90 00 1D         [24] 2198 	mov	dptr,#_main_final_calc_10000_59
-      000BCF E8               [12] 2199 	mov	a,r0
-      000BD0 F0               [24] 2200 	movx	@dptr,a
-      000BD1 E9               [12] 2201 	mov	a,r1
-      000BD2 A3               [24] 2202 	inc	dptr
-      000BD3 F0               [24] 2203 	movx	@dptr,a
-      000BD4 EA               [12] 2204 	mov	a,r2
-      000BD5 A3               [24] 2205 	inc	dptr
-      000BD6 F0               [24] 2206 	movx	@dptr,a
-      000BD7 EB               [12] 2207 	mov	a,r3
-      000BD8 A3               [24] 2208 	inc	dptr
-      000BD9 F0               [24] 2209 	movx	@dptr,a
-      000BDA 80 49            [24] 2210 	sjmp	00123$
-      000BDC                       2211 00118$:
-                                   2212 ;	main.c:291: final_calc = (uint32_t)(filtered_ticks * 0.0003050f);
-      000BDC 90 00 25         [24] 2213 	mov	dptr,#_main_filtered_ticks_10000_59
-      000BDF E0               [24] 2214 	movx	a,@dptr
-      000BE0 C0 E0            [24] 2215 	push	acc
-      000BE2 A3               [24] 2216 	inc	dptr
-      000BE3 E0               [24] 2217 	movx	a,@dptr
-      000BE4 C0 E0            [24] 2218 	push	acc
-      000BE6 A3               [24] 2219 	inc	dptr
-      000BE7 E0               [24] 2220 	movx	a,@dptr
-      000BE8 C0 E0            [24] 2221 	push	acc
-      000BEA A3               [24] 2222 	inc	dptr
-      000BEB E0               [24] 2223 	movx	a,@dptr
-      000BEC C0 E0            [24] 2224 	push	acc
-      000BEE 90 E8 68         [24] 2225 	mov	dptr,#0xe868
-      000BF1 75 F0 9F         [24] 2226 	mov	b, #0x9f
-      000BF4 74 39            [12] 2227 	mov	a, #0x39
-      000BF6 12 0F 95         [24] 2228 	lcall	___fsmul
-      000BF9 A8 82            [24] 2229 	mov	r0, dpl
-      000BFB A9 83            [24] 2230 	mov	r1, dph
-      000BFD AA F0            [24] 2231 	mov	r2, b
-      000BFF FB               [12] 2232 	mov	r3, a
-      000C00 E5 81            [12] 2233 	mov	a,sp
-      000C02 24 FC            [12] 2234 	add	a,#0xfc
-      000C04 F5 81            [12] 2235 	mov	sp,a
-      000C06 88 82            [24] 2236 	mov	dpl, r0
-      000C08 89 83            [24] 2237 	mov	dph, r1
-      000C0A 8A F0            [24] 2238 	mov	b, r2
-      000C0C EB               [12] 2239 	mov	a, r3
-      000C0D 12 11 A0         [24] 2240 	lcall	___fs2ulong
-      000C10 A8 82            [24] 2241 	mov	r0, dpl
-      000C12 A9 83            [24] 2242 	mov	r1, dph
-      000C14 AA F0            [24] 2243 	mov	r2, b
-      000C16 FB               [12] 2244 	mov	r3, a
-      000C17 90 00 1D         [24] 2245 	mov	dptr,#_main_final_calc_10000_59
-      000C1A E8               [12] 2246 	mov	a,r0
-      000C1B F0               [24] 2247 	movx	@dptr,a
-      000C1C E9               [12] 2248 	mov	a,r1
-      000C1D A3               [24] 2249 	inc	dptr
-      000C1E F0               [24] 2250 	movx	@dptr,a
-      000C1F EA               [12] 2251 	mov	a,r2
-      000C20 A3               [24] 2252 	inc	dptr
-      000C21 F0               [24] 2253 	movx	@dptr,a
-      000C22 EB               [12] 2254 	mov	a,r3
-      000C23 A3               [24] 2255 	inc	dptr
-      000C24 F0               [24] 2256 	movx	@dptr,a
-      000C25                       2257 00123$:
-                                   2258 ;	main.c:294: if (final_calc == 0) final_calc = 1;
-      000C25 90 00 1D         [24] 2259 	mov	dptr,#_main_final_calc_10000_59
-      000C28 E0               [24] 2260 	movx	a,@dptr
-      000C29 F5 F0            [12] 2261 	mov	b,a
-      000C2B A3               [24] 2262 	inc	dptr
-      000C2C E0               [24] 2263 	movx	a,@dptr
-      000C2D 42 F0            [12] 2264 	orl	b,a
-      000C2F A3               [24] 2265 	inc	dptr
-      000C30 E0               [24] 2266 	movx	a,@dptr
-      000C31 42 F0            [12] 2267 	orl	b,a
-      000C33 A3               [24] 2268 	inc	dptr
-      000C34 E0               [24] 2269 	movx	a,@dptr
-      000C35 45 F0            [12] 2270 	orl	a,b
-      000C37 70 0D            [24] 2271 	jnz	00125$
-      000C39 90 00 1D         [24] 2272 	mov	dptr,#_main_final_calc_10000_59
-      000C3C 74 01            [12] 2273 	mov	a,#0x01
-      000C3E F0               [24] 2274 	movx	@dptr,a
-      000C3F E4               [12] 2275 	clr	a
-      000C40 A3               [24] 2276 	inc	dptr
-      000C41 F0               [24] 2277 	movx	@dptr,a
-      000C42 A3               [24] 2278 	inc	dptr
-      000C43 F0               [24] 2279 	movx	@dptr,a
-      000C44 A3               [24] 2280 	inc	dptr
-      000C45 F0               [24] 2281 	movx	@dptr,a
-      000C46                       2282 00125$:
-                                   2283 ;	main.c:296: if (final_calc > last_display_val) {
-      000C46 90 00 1D         [24] 2284 	mov	dptr,#_main_final_calc_10000_59
-      000C49 E0               [24] 2285 	movx	a,@dptr
-      000C4A F5 11            [12] 2286 	mov	_main_sloc0_1_0,a
-      000C4C A3               [24] 2287 	inc	dptr
-      000C4D E0               [24] 2288 	movx	a,@dptr
-      000C4E F5 12            [12] 2289 	mov	(_main_sloc0_1_0 + 1),a
-      000C50 A3               [24] 2290 	inc	dptr
-      000C51 E0               [24] 2291 	movx	a,@dptr
-      000C52 F5 13            [12] 2292 	mov	(_main_sloc0_1_0 + 2),a
-      000C54 A3               [24] 2293 	inc	dptr
-      000C55 E0               [24] 2294 	movx	a,@dptr
-      000C56 F5 14            [12] 2295 	mov	(_main_sloc0_1_0 + 3),a
-      000C58 90 00 21         [24] 2296 	mov	dptr,#_main_last_display_val_10000_59
-      000C5B E0               [24] 2297 	movx	a,@dptr
-      000C5C F5 15            [12] 2298 	mov	_main_sloc1_1_0,a
-      000C5E A3               [24] 2299 	inc	dptr
-      000C5F E0               [24] 2300 	movx	a,@dptr
-      000C60 F5 16            [12] 2301 	mov	(_main_sloc1_1_0 + 1),a
-      000C62 A3               [24] 2302 	inc	dptr
-      000C63 E0               [24] 2303 	movx	a,@dptr
-      000C64 F5 17            [12] 2304 	mov	(_main_sloc1_1_0 + 2),a
-      000C66 A3               [24] 2305 	inc	dptr
-      000C67 E0               [24] 2306 	movx	a,@dptr
-      000C68 F5 18            [12] 2307 	mov	(_main_sloc1_1_0 + 3),a
-      000C6A C3               [12] 2308 	clr	c
-      000C6B E5 15            [12] 2309 	mov	a,_main_sloc1_1_0
-      000C6D 95 11            [12] 2310 	subb	a,_main_sloc0_1_0
-      000C6F E5 16            [12] 2311 	mov	a,(_main_sloc1_1_0 + 1)
-      000C71 95 12            [12] 2312 	subb	a,(_main_sloc0_1_0 + 1)
-      000C73 E5 17            [12] 2313 	mov	a,(_main_sloc1_1_0 + 2)
-      000C75 95 13            [12] 2314 	subb	a,(_main_sloc0_1_0 + 2)
-      000C77 E5 18            [12] 2315 	mov	a,(_main_sloc1_1_0 + 3)
-      000C79 95 14            [12] 2316 	subb	a,(_main_sloc0_1_0 + 3)
-      000C7B 50 3C            [24] 2317 	jnc	00131$
-                                   2318 ;	main.c:297: if ((final_calc - last_display_val) < 2) final_calc = last_display_val;
-      000C7D E5 11            [12] 2319 	mov	a,_main_sloc0_1_0
-      000C7F C3               [12] 2320 	clr	c
-      000C80 95 15            [12] 2321 	subb	a,_main_sloc1_1_0
-      000C82 F8               [12] 2322 	mov	r0,a
-      000C83 E5 12            [12] 2323 	mov	a,(_main_sloc0_1_0 + 1)
-      000C85 95 16            [12] 2324 	subb	a,(_main_sloc1_1_0 + 1)
-      000C87 F9               [12] 2325 	mov	r1,a
-      000C88 E5 13            [12] 2326 	mov	a,(_main_sloc0_1_0 + 2)
-      000C8A 95 17            [12] 2327 	subb	a,(_main_sloc1_1_0 + 2)
-      000C8C FA               [12] 2328 	mov	r2,a
-      000C8D E5 14            [12] 2329 	mov	a,(_main_sloc0_1_0 + 3)
-      000C8F 95 18            [12] 2330 	subb	a,(_main_sloc1_1_0 + 3)
-      000C91 FB               [12] 2331 	mov	r3,a
-      000C92 C3               [12] 2332 	clr	c
-      000C93 E8               [12] 2333 	mov	a,r0
-      000C94 94 02            [12] 2334 	subb	a,#0x02
-      000C96 E9               [12] 2335 	mov	a,r1
-      000C97 94 00            [12] 2336 	subb	a,#0x00
-      000C99 EA               [12] 2337 	mov	a,r2
-      000C9A 94 00            [12] 2338 	subb	a,#0x00
-      000C9C EB               [12] 2339 	mov	a,r3
-      000C9D 94 00            [12] 2340 	subb	a,#0x00
-      000C9F 40 03            [24] 2341 	jc	00278$
-      000CA1 02 0D D2         [24] 2342 	ljmp	00142$
-      000CA4                       2343 00278$:
-      000CA4 90 00 1D         [24] 2344 	mov	dptr,#_main_final_calc_10000_59
-      000CA7 E5 15            [12] 2345 	mov	a,_main_sloc1_1_0
-      000CA9 F0               [24] 2346 	movx	@dptr,a
-      000CAA E5 16            [12] 2347 	mov	a,(_main_sloc1_1_0 + 1)
-      000CAC A3               [24] 2348 	inc	dptr
-      000CAD F0               [24] 2349 	movx	@dptr,a
-      000CAE E5 17            [12] 2350 	mov	a,(_main_sloc1_1_0 + 2)
-      000CB0 A3               [24] 2351 	inc	dptr
-      000CB1 F0               [24] 2352 	movx	@dptr,a
-      000CB2 E5 18            [12] 2353 	mov	a,(_main_sloc1_1_0 + 3)
-      000CB4 A3               [24] 2354 	inc	dptr
-      000CB5 F0               [24] 2355 	movx	@dptr,a
-      000CB6 02 0D D2         [24] 2356 	ljmp	00142$
-      000CB9                       2357 00131$:
-                                   2358 ;	main.c:299: if ((last_display_val - final_calc) < 2) final_calc = last_display_val;
-      000CB9 E5 15            [12] 2359 	mov	a,_main_sloc1_1_0
-      000CBB C3               [12] 2360 	clr	c
-      000CBC 95 11            [12] 2361 	subb	a,_main_sloc0_1_0
-      000CBE F8               [12] 2362 	mov	r0,a
-      000CBF E5 16            [12] 2363 	mov	a,(_main_sloc1_1_0 + 1)
-      000CC1 95 12            [12] 2364 	subb	a,(_main_sloc0_1_0 + 1)
-      000CC3 F9               [12] 2365 	mov	r1,a
-      000CC4 E5 17            [12] 2366 	mov	a,(_main_sloc1_1_0 + 2)
-      000CC6 95 13            [12] 2367 	subb	a,(_main_sloc0_1_0 + 2)
-      000CC8 FA               [12] 2368 	mov	r2,a
-      000CC9 E5 18            [12] 2369 	mov	a,(_main_sloc1_1_0 + 3)
-      000CCB 95 14            [12] 2370 	subb	a,(_main_sloc0_1_0 + 3)
-      000CCD FB               [12] 2371 	mov	r3,a
-      000CCE C3               [12] 2372 	clr	c
-      000CCF E8               [12] 2373 	mov	a,r0
-      000CD0 94 02            [12] 2374 	subb	a,#0x02
-      000CD2 E9               [12] 2375 	mov	a,r1
-      000CD3 94 00            [12] 2376 	subb	a,#0x00
-      000CD5 EA               [12] 2377 	mov	a,r2
-      000CD6 94 00            [12] 2378 	subb	a,#0x00
-      000CD8 EB               [12] 2379 	mov	a,r3
-      000CD9 94 00            [12] 2380 	subb	a,#0x00
-      000CDB 40 03            [24] 2381 	jc	00279$
-      000CDD 02 0D D2         [24] 2382 	ljmp	00142$
-      000CE0                       2383 00279$:
-      000CE0 90 00 1D         [24] 2384 	mov	dptr,#_main_final_calc_10000_59
-      000CE3 E5 15            [12] 2385 	mov	a,_main_sloc1_1_0
-      000CE5 F0               [24] 2386 	movx	@dptr,a
-      000CE6 E5 16            [12] 2387 	mov	a,(_main_sloc1_1_0 + 1)
-      000CE8 A3               [24] 2388 	inc	dptr
-      000CE9 F0               [24] 2389 	movx	@dptr,a
-      000CEA E5 17            [12] 2390 	mov	a,(_main_sloc1_1_0 + 2)
-      000CEC A3               [24] 2391 	inc	dptr
-      000CED F0               [24] 2392 	movx	@dptr,a
-      000CEE E5 18            [12] 2393 	mov	a,(_main_sloc1_1_0 + 3)
-      000CF0 A3               [24] 2394 	inc	dptr
-      000CF1 F0               [24] 2395 	movx	@dptr,a
-      000CF2 02 0D D2         [24] 2396 	ljmp	00142$
-      000CF5                       2397 00141$:
-                                   2398 ;	main.c:303: mode_uf = 0;
-      000CF5 90 00 29         [24] 2399 	mov	dptr,#_main_mode_uf_10000_59
-      000CF8 E4               [12] 2400 	clr	a
-      000CF9 F0               [24] 2401 	movx	@dptr,a
-                                   2402 ;	main.c:304: is_first_run = 1;
-      000CFA 90 00 2A         [24] 2403 	mov	dptr,#_main_is_first_run_10000_59
-      000CFD 04               [12] 2404 	inc	a
-      000CFE F0               [24] 2405 	movx	@dptr,a
-                                   2406 ;	main.c:306: final_calc = (uint32_t)((float)raw_ticks * 0.18823f);
-      000CFF 8C 82            [24] 2407 	mov	dpl, r4
-      000D01 8D 83            [24] 2408 	mov	dph, r5
-      000D03 8E F0            [24] 2409 	mov	b, r6
-      000D05 EF               [12] 2410 	mov	a, r7
-      000D06 12 11 8D         [24] 2411 	lcall	___ulong2fs
-      000D09 AC 82            [24] 2412 	mov	r4, dpl
-      000D0B AD 83            [24] 2413 	mov	r5, dph
-      000D0D AE F0            [24] 2414 	mov	r6, b
-      000D0F FF               [12] 2415 	mov	r7, a
-      000D10 C0 04            [24] 2416 	push	ar4
-      000D12 C0 05            [24] 2417 	push	ar5
-      000D14 C0 06            [24] 2418 	push	ar6
-      000D16 C0 07            [24] 2419 	push	ar7
-      000D18 90 BF 5D         [24] 2420 	mov	dptr,#0xbf5d
-      000D1B 75 F0 40         [24] 2421 	mov	b, #0x40
-      000D1E 74 3E            [12] 2422 	mov	a, #0x3e
-      000D20 12 0F 95         [24] 2423 	lcall	___fsmul
-      000D23 AC 82            [24] 2424 	mov	r4, dpl
-      000D25 AD 83            [24] 2425 	mov	r5, dph
-      000D27 AE F0            [24] 2426 	mov	r6, b
-      000D29 FF               [12] 2427 	mov	r7, a
-      000D2A E5 81            [12] 2428 	mov	a,sp
-      000D2C 24 FC            [12] 2429 	add	a,#0xfc
-      000D2E F5 81            [12] 2430 	mov	sp,a
-      000D30 8C 82            [24] 2431 	mov	dpl, r4
-      000D32 8D 83            [24] 2432 	mov	dph, r5
-      000D34 8E F0            [24] 2433 	mov	b, r6
-      000D36 EF               [12] 2434 	mov	a, r7
-      000D37 12 11 A0         [24] 2435 	lcall	___fs2ulong
-      000D3A 85 82 15         [24] 2436 	mov	_main_sloc1_1_0,dpl
-      000D3D 85 83 16         [24] 2437 	mov	(_main_sloc1_1_0 + 1),dph
-      000D40 85 F0 17         [24] 2438 	mov	(_main_sloc1_1_0 + 2),b
-      000D43 F5 18            [12] 2439 	mov	(_main_sloc1_1_0 + 3),a
-      000D45 90 00 1D         [24] 2440 	mov	dptr,#_main_final_calc_10000_59
-      000D48 E5 15            [12] 2441 	mov	a,_main_sloc1_1_0
-      000D4A F0               [24] 2442 	movx	@dptr,a
-      000D4B E5 16            [12] 2443 	mov	a,(_main_sloc1_1_0 + 1)
-      000D4D A3               [24] 2444 	inc	dptr
-      000D4E F0               [24] 2445 	movx	@dptr,a
-      000D4F E5 17            [12] 2446 	mov	a,(_main_sloc1_1_0 + 2)
-      000D51 A3               [24] 2447 	inc	dptr
-      000D52 F0               [24] 2448 	movx	@dptr,a
-      000D53 E5 18            [12] 2449 	mov	a,(_main_sloc1_1_0 + 3)
-      000D55 A3               [24] 2450 	inc	dptr
-      000D56 F0               [24] 2451 	movx	@dptr,a
-                                   2452 ;	main.c:308: if (final_calc > last_display_val) {
-      000D57 90 00 21         [24] 2453 	mov	dptr,#_main_last_display_val_10000_59
-      000D5A E0               [24] 2454 	movx	a,@dptr
-      000D5B F8               [12] 2455 	mov	r0,a
-      000D5C A3               [24] 2456 	inc	dptr
-      000D5D E0               [24] 2457 	movx	a,@dptr
-      000D5E F9               [12] 2458 	mov	r1,a
-      000D5F A3               [24] 2459 	inc	dptr
-      000D60 E0               [24] 2460 	movx	a,@dptr
-      000D61 FA               [12] 2461 	mov	r2,a
-      000D62 A3               [24] 2462 	inc	dptr
-      000D63 E0               [24] 2463 	movx	a,@dptr
-      000D64 FB               [12] 2464 	mov	r3,a
-      000D65 C3               [12] 2465 	clr	c
-      000D66 E8               [12] 2466 	mov	a,r0
-      000D67 95 15            [12] 2467 	subb	a,_main_sloc1_1_0
-      000D69 E9               [12] 2468 	mov	a,r1
-      000D6A 95 16            [12] 2469 	subb	a,(_main_sloc1_1_0 + 1)
-      000D6C EA               [12] 2470 	mov	a,r2
-      000D6D 95 17            [12] 2471 	subb	a,(_main_sloc1_1_0 + 2)
-      000D6F EB               [12] 2472 	mov	a,r3
-      000D70 95 18            [12] 2473 	subb	a,(_main_sloc1_1_0 + 3)
-      000D72 50 30            [24] 2474 	jnc	00138$
-                                   2475 ;	main.c:309: if ((final_calc - last_display_val) < 12) final_calc = last_display_val;
-      000D74 E5 15            [12] 2476 	mov	a,_main_sloc1_1_0
-      000D76 C3               [12] 2477 	clr	c
-      000D77 98               [12] 2478 	subb	a,r0
-      000D78 FC               [12] 2479 	mov	r4,a
-      000D79 E5 16            [12] 2480 	mov	a,(_main_sloc1_1_0 + 1)
-      000D7B 99               [12] 2481 	subb	a,r1
-      000D7C FD               [12] 2482 	mov	r5,a
-      000D7D E5 17            [12] 2483 	mov	a,(_main_sloc1_1_0 + 2)
-      000D7F 9A               [12] 2484 	subb	a,r2
-      000D80 FE               [12] 2485 	mov	r6,a
-      000D81 E5 18            [12] 2486 	mov	a,(_main_sloc1_1_0 + 3)
-      000D83 9B               [12] 2487 	subb	a,r3
-      000D84 FF               [12] 2488 	mov	r7,a
-      000D85 C3               [12] 2489 	clr	c
-      000D86 EC               [12] 2490 	mov	a,r4
-      000D87 94 0C            [12] 2491 	subb	a,#0x0c
-      000D89 ED               [12] 2492 	mov	a,r5
-      000D8A 94 00            [12] 2493 	subb	a,#0x00
-      000D8C EE               [12] 2494 	mov	a,r6
-      000D8D 94 00            [12] 2495 	subb	a,#0x00
-      000D8F EF               [12] 2496 	mov	a,r7
-      000D90 94 00            [12] 2497 	subb	a,#0x00
-      000D92 50 3E            [24] 2498 	jnc	00142$
-      000D94 90 00 1D         [24] 2499 	mov	dptr,#_main_final_calc_10000_59
-      000D97 E8               [12] 2500 	mov	a,r0
-      000D98 F0               [24] 2501 	movx	@dptr,a
-      000D99 E9               [12] 2502 	mov	a,r1
-      000D9A A3               [24] 2503 	inc	dptr
-      000D9B F0               [24] 2504 	movx	@dptr,a
-      000D9C EA               [12] 2505 	mov	a,r2
-      000D9D A3               [24] 2506 	inc	dptr
-      000D9E F0               [24] 2507 	movx	@dptr,a
-      000D9F EB               [12] 2508 	mov	a,r3
-      000DA0 A3               [24] 2509 	inc	dptr
-      000DA1 F0               [24] 2510 	movx	@dptr,a
-      000DA2 80 2E            [24] 2511 	sjmp	00142$
-      000DA4                       2512 00138$:
-                                   2513 ;	main.c:311: if ((last_display_val - final_calc) < 12) final_calc = last_display_val;
-      000DA4 E8               [12] 2514 	mov	a,r0
-      000DA5 C3               [12] 2515 	clr	c
-      000DA6 95 15            [12] 2516 	subb	a,_main_sloc1_1_0
-      000DA8 FC               [12] 2517 	mov	r4,a
-      000DA9 E9               [12] 2518 	mov	a,r1
-      000DAA 95 16            [12] 2519 	subb	a,(_main_sloc1_1_0 + 1)
-      000DAC FD               [12] 2520 	mov	r5,a
-      000DAD EA               [12] 2521 	mov	a,r2
-      000DAE 95 17            [12] 2522 	subb	a,(_main_sloc1_1_0 + 2)
-      000DB0 FE               [12] 2523 	mov	r6,a
-      000DB1 EB               [12] 2524 	mov	a,r3
-      000DB2 95 18            [12] 2525 	subb	a,(_main_sloc1_1_0 + 3)
-      000DB4 FF               [12] 2526 	mov	r7,a
-      000DB5 C3               [12] 2527 	clr	c
-      000DB6 EC               [12] 2528 	mov	a,r4
-      000DB7 94 0C            [12] 2529 	subb	a,#0x0c
-      000DB9 ED               [12] 2530 	mov	a,r5
-      000DBA 94 00            [12] 2531 	subb	a,#0x00
-      000DBC EE               [12] 2532 	mov	a,r6
-      000DBD 94 00            [12] 2533 	subb	a,#0x00
-      000DBF EF               [12] 2534 	mov	a,r7
-      000DC0 94 00            [12] 2535 	subb	a,#0x00
-      000DC2 50 0E            [24] 2536 	jnc	00142$
-      000DC4 90 00 1D         [24] 2537 	mov	dptr,#_main_final_calc_10000_59
-      000DC7 E8               [12] 2538 	mov	a,r0
-      000DC8 F0               [24] 2539 	movx	@dptr,a
-      000DC9 E9               [12] 2540 	mov	a,r1
-      000DCA A3               [24] 2541 	inc	dptr
-      000DCB F0               [24] 2542 	movx	@dptr,a
-      000DCC EA               [12] 2543 	mov	a,r2
-      000DCD A3               [24] 2544 	inc	dptr
-      000DCE F0               [24] 2545 	movx	@dptr,a
-      000DCF EB               [12] 2546 	mov	a,r3
-      000DD0 A3               [24] 2547 	inc	dptr
-      000DD1 F0               [24] 2548 	movx	@dptr,a
-      000DD2                       2549 00142$:
-                                   2550 ;	main.c:315: if (final_calc != last_display_val) {
-      000DD2 90 00 1D         [24] 2551 	mov	dptr,#_main_final_calc_10000_59
-      000DD5 E0               [24] 2552 	movx	a,@dptr
-      000DD6 FC               [12] 2553 	mov	r4,a
-      000DD7 A3               [24] 2554 	inc	dptr
-      000DD8 E0               [24] 2555 	movx	a,@dptr
-      000DD9 FD               [12] 2556 	mov	r5,a
-      000DDA A3               [24] 2557 	inc	dptr
-      000DDB E0               [24] 2558 	movx	a,@dptr
-      000DDC FE               [12] 2559 	mov	r6,a
-      000DDD A3               [24] 2560 	inc	dptr
-      000DDE E0               [24] 2561 	movx	a,@dptr
-      000DDF FF               [12] 2562 	mov	r7,a
-      000DE0 90 00 21         [24] 2563 	mov	dptr,#_main_last_display_val_10000_59
-      000DE3 E0               [24] 2564 	movx	a,@dptr
-      000DE4 F8               [12] 2565 	mov	r0,a
-      000DE5 A3               [24] 2566 	inc	dptr
-      000DE6 E0               [24] 2567 	movx	a,@dptr
-      000DE7 F9               [12] 2568 	mov	r1,a
-      000DE8 A3               [24] 2569 	inc	dptr
-      000DE9 E0               [24] 2570 	movx	a,@dptr
-      000DEA FA               [12] 2571 	mov	r2,a
-      000DEB A3               [24] 2572 	inc	dptr
-      000DEC E0               [24] 2573 	movx	a,@dptr
-      000DED FB               [12] 2574 	mov	r3,a
-      000DEE EC               [12] 2575 	mov	a,r4
-      000DEF B5 00 0E         [24] 2576 	cjne	a,ar0,00283$
-      000DF2 ED               [12] 2577 	mov	a,r5
-      000DF3 B5 01 0A         [24] 2578 	cjne	a,ar1,00283$
-      000DF6 EE               [12] 2579 	mov	a,r6
-      000DF7 B5 02 06         [24] 2580 	cjne	a,ar2,00283$
-      000DFA EF               [12] 2581 	mov	a,r7
-      000DFB B5 03 02         [24] 2582 	cjne	a,ar3,00283$
-      000DFE 80 42            [24] 2583 	sjmp	00144$
-      000E00                       2584 00283$:
-                                   2585 ;	main.c:316: SSD1306_DisplayResult(3, 16, final_calc, mode_uf);
-      000E00 90 00 29         [24] 2586 	mov	dptr,#_main_mode_uf_10000_59
-      000E03 E0               [24] 2587 	movx	a,@dptr
-      000E04 FB               [12] 2588 	mov	r3,a
-      000E05 90 00 13         [24] 2589 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
-      000E08 74 10            [12] 2590 	mov	a,#0x10
-      000E0A F0               [24] 2591 	movx	@dptr,a
-      000E0B 90 00 14         [24] 2592 	mov	dptr,#_SSD1306_DisplayResult_PARM_3
-      000E0E EC               [12] 2593 	mov	a,r4
-      000E0F F0               [24] 2594 	movx	@dptr,a
-      000E10 ED               [12] 2595 	mov	a,r5
-      000E11 A3               [24] 2596 	inc	dptr
-      000E12 F0               [24] 2597 	movx	@dptr,a
-      000E13 EE               [12] 2598 	mov	a,r6
-      000E14 A3               [24] 2599 	inc	dptr
-      000E15 F0               [24] 2600 	movx	@dptr,a
-      000E16 EF               [12] 2601 	mov	a,r7
-      000E17 A3               [24] 2602 	inc	dptr
-      000E18 F0               [24] 2603 	movx	@dptr,a
-      000E19 90 00 18         [24] 2604 	mov	dptr,#_SSD1306_DisplayResult_PARM_4
-      000E1C EB               [12] 2605 	mov	a,r3
-      000E1D F0               [24] 2606 	movx	@dptr,a
-      000E1E 75 82 03         [24] 2607 	mov	dpl, #0x03
-      000E21 C0 07            [24] 2608 	push	ar7
-      000E23 C0 06            [24] 2609 	push	ar6
-      000E25 C0 05            [24] 2610 	push	ar5
-      000E27 C0 04            [24] 2611 	push	ar4
-      000E29 12 04 06         [24] 2612 	lcall	_SSD1306_DisplayResult
-      000E2C D0 04            [24] 2613 	pop	ar4
-      000E2E D0 05            [24] 2614 	pop	ar5
-      000E30 D0 06            [24] 2615 	pop	ar6
-      000E32 D0 07            [24] 2616 	pop	ar7
-                                   2617 ;	main.c:317: last_display_val = final_calc;
-      000E34 90 00 21         [24] 2618 	mov	dptr,#_main_last_display_val_10000_59
-      000E37 EC               [12] 2619 	mov	a,r4
-      000E38 F0               [24] 2620 	movx	@dptr,a
-      000E39 ED               [12] 2621 	mov	a,r5
-      000E3A A3               [24] 2622 	inc	dptr
-      000E3B F0               [24] 2623 	movx	@dptr,a
-      000E3C EE               [12] 2624 	mov	a,r6
-      000E3D A3               [24] 2625 	inc	dptr
-      000E3E F0               [24] 2626 	movx	@dptr,a
-      000E3F EF               [12] 2627 	mov	a,r7
-      000E40 A3               [24] 2628 	inc	dptr
-      000E41 F0               [24] 2629 	movx	@dptr,a
-      000E42                       2630 00144$:
-                                   2631 ;	main.c:320: Delay_ms(300);
-      000E42 90 01 2C         [24] 2632 	mov	dptr,#0x012c
-      000E45 12 00 62         [24] 2633 	lcall	_Delay_ms
-                                   2634 ;	main.c:322: }
-      000E48 02 09 4E         [24] 2635 	ljmp	00146$
-                                   2636 	.area CSEG    (CODE)
-                                   2637 	.area CONST   (CODE)
-      001377                       2638 _Font_8x8:
-      001377 3E                    2639 	.db #0x3e	; 62
-      001378 51                    2640 	.db #0x51	; 81	'Q'
-      001379 49                    2641 	.db #0x49	; 73	'I'
-      00137A 45                    2642 	.db #0x45	; 69	'E'
-      00137B 3E                    2643 	.db #0x3e	; 62
-      00137C 00                    2644 	.db #0x00	; 0
-      00137D 00                    2645 	.db #0x00	; 0
-      00137E 00                    2646 	.db #0x00	; 0
-      00137F 00                    2647 	.db #0x00	; 0
-      001380 42                    2648 	.db #0x42	; 66	'B'
-      001381 7F                    2649 	.db #0x7f	; 127
-      001382 40                    2650 	.db #0x40	; 64
-      001383 00                    2651 	.db #0x00	; 0
-      001384 00                    2652 	.db #0x00	; 0
-      001385 00                    2653 	.db #0x00	; 0
-      001386 00                    2654 	.db #0x00	; 0
-      001387 42                    2655 	.db #0x42	; 66	'B'
-      001388 61                    2656 	.db #0x61	; 97	'a'
-      001389 51                    2657 	.db #0x51	; 81	'Q'
-      00138A 49                    2658 	.db #0x49	; 73	'I'
-      00138B 46                    2659 	.db #0x46	; 70	'F'
-      00138C 00                    2660 	.db #0x00	; 0
-      00138D 00                    2661 	.db #0x00	; 0
-      00138E 00                    2662 	.db #0x00	; 0
-      00138F 21                    2663 	.db #0x21	; 33
-      001390 41                    2664 	.db #0x41	; 65	'A'
-      001391 45                    2665 	.db #0x45	; 69	'E'
-      001392 4B                    2666 	.db #0x4b	; 75	'K'
-      001393 31                    2667 	.db #0x31	; 49	'1'
-      001394 00                    2668 	.db #0x00	; 0
-      001395 00                    2669 	.db #0x00	; 0
-      001396 00                    2670 	.db #0x00	; 0
-      001397 18                    2671 	.db #0x18	; 24
-      001398 14                    2672 	.db #0x14	; 20
-      001399 12                    2673 	.db #0x12	; 18
-      00139A 7F                    2674 	.db #0x7f	; 127
-      00139B 10                    2675 	.db #0x10	; 16
-      00139C 00                    2676 	.db #0x00	; 0
-      00139D 00                    2677 	.db #0x00	; 0
-      00139E 00                    2678 	.db #0x00	; 0
-      00139F 27                    2679 	.db #0x27	; 39
-      0013A0 45                    2680 	.db #0x45	; 69	'E'
-      0013A1 45                    2681 	.db #0x45	; 69	'E'
-      0013A2 45                    2682 	.db #0x45	; 69	'E'
-      0013A3 39                    2683 	.db #0x39	; 57	'9'
-      0013A4 00                    2684 	.db #0x00	; 0
-      0013A5 00                    2685 	.db #0x00	; 0
-      0013A6 00                    2686 	.db #0x00	; 0
-      0013A7 3C                    2687 	.db #0x3c	; 60
-      0013A8 4A                    2688 	.db #0x4a	; 74	'J'
-      0013A9 49                    2689 	.db #0x49	; 73	'I'
-      0013AA 49                    2690 	.db #0x49	; 73	'I'
-      0013AB 30                    2691 	.db #0x30	; 48	'0'
-      0013AC 00                    2692 	.db #0x00	; 0
-      0013AD 00                    2693 	.db #0x00	; 0
-      0013AE 00                    2694 	.db #0x00	; 0
-      0013AF 01                    2695 	.db #0x01	; 1
-      0013B0 71                    2696 	.db #0x71	; 113	'q'
-      0013B1 09                    2697 	.db #0x09	; 9
-      0013B2 05                    2698 	.db #0x05	; 5
-      0013B3 03                    2699 	.db #0x03	; 3
-      0013B4 00                    2700 	.db #0x00	; 0
-      0013B5 00                    2701 	.db #0x00	; 0
-      0013B6 00                    2702 	.db #0x00	; 0
-      0013B7 36                    2703 	.db #0x36	; 54	'6'
-      0013B8 49                    2704 	.db #0x49	; 73	'I'
-      0013B9 49                    2705 	.db #0x49	; 73	'I'
-      0013BA 49                    2706 	.db #0x49	; 73	'I'
-      0013BB 36                    2707 	.db #0x36	; 54	'6'
-      0013BC 00                    2708 	.db #0x00	; 0
-      0013BD 00                    2709 	.db #0x00	; 0
-      0013BE 00                    2710 	.db #0x00	; 0
-      0013BF 06                    2711 	.db #0x06	; 6
-      0013C0 49                    2712 	.db #0x49	; 73	'I'
-      0013C1 49                    2713 	.db #0x49	; 73	'I'
-      0013C2 29                    2714 	.db #0x29	; 41
-      0013C3 1E                    2715 	.db #0x1e	; 30
-      0013C4 00                    2716 	.db #0x00	; 0
-      0013C5 00                    2717 	.db #0x00	; 0
-      0013C6 00                    2718 	.db #0x00	; 0
-      0013C7 08                    2719 	.db #0x08	; 8
-      0013C8 08                    2720 	.db #0x08	; 8
-      0013C9 08                    2721 	.db #0x08	; 8
-      0013CA 08                    2722 	.db #0x08	; 8
-      0013CB 08                    2723 	.db #0x08	; 8
-      0013CC 00                    2724 	.db #0x00	; 0
-      0013CD 00                    2725 	.db #0x00	; 0
-      0013CE 00                    2726 	.db #0x00	; 0
-      0013CF 00                    2727 	.db #0x00	; 0
-      0013D0 00                    2728 	.db #0x00	; 0
-      0013D1 00                    2729 	.db #0x00	; 0
-      0013D2 00                    2730 	.db #0x00	; 0
-      0013D3 00                    2731 	.db #0x00	; 0
-      0013D4 00                    2732 	.db #0x00	; 0
-      0013D5 00                    2733 	.db #0x00	; 0
-      0013D6 00                    2734 	.db #0x00	; 0
-      0013D7 00                    2735 	.db #0x00	; 0
-      0013D8 60                    2736 	.db #0x60	; 96
-      0013D9 60                    2737 	.db #0x60	; 96
-      0013DA 00                    2738 	.db #0x00	; 0
-      0013DB 00                    2739 	.db #0x00	; 0
-      0013DC 00                    2740 	.db #0x00	; 0
-      0013DD 00                    2741 	.db #0x00	; 0
-      0013DE 00                    2742 	.db #0x00	; 0
-      0013DF 00                    2743 	.db #0x00	; 0
-      0013E0 36                    2744 	.db #0x36	; 54	'6'
-      0013E1 36                    2745 	.db #0x36	; 54	'6'
-      0013E2 00                    2746 	.db #0x00	; 0
-      0013E3 00                    2747 	.db #0x00	; 0
-      0013E4 00                    2748 	.db #0x00	; 0
-      0013E5 00                    2749 	.db #0x00	; 0
-      0013E6 00                    2750 	.db #0x00	; 0
-      0013E7 06                    2751 	.db #0x06	; 6
-      0013E8 09                    2752 	.db #0x09	; 9
-      0013E9 09                    2753 	.db #0x09	; 9
-      0013EA 06                    2754 	.db #0x06	; 6
-      0013EB 00                    2755 	.db #0x00	; 0
-      0013EC 00                    2756 	.db #0x00	; 0
-      0013ED 00                    2757 	.db #0x00	; 0
-      0013EE 00                    2758 	.db #0x00	; 0
-      0013EF 14                    2759 	.db #0x14	; 20
-      0013F0 14                    2760 	.db #0x14	; 20
-      0013F1 14                    2761 	.db #0x14	; 20
-      0013F2 14                    2762 	.db #0x14	; 20
-      0013F3 14                    2763 	.db #0x14	; 20
-      0013F4 00                    2764 	.db #0x00	; 0
-      0013F5 00                    2765 	.db #0x00	; 0
-      0013F6 00                    2766 	.db #0x00	; 0
-      0013F7 7E                    2767 	.db #0x7e	; 126
-      0013F8 11                    2768 	.db #0x11	; 17
-      0013F9 11                    2769 	.db #0x11	; 17
-      0013FA 11                    2770 	.db #0x11	; 17
-      0013FB 7E                    2771 	.db #0x7e	; 126
-      0013FC 00                    2772 	.db #0x00	; 0
-      0013FD 00                    2773 	.db #0x00	; 0
-      0013FE 00                    2774 	.db #0x00	; 0
-      0013FF 7F                    2775 	.db #0x7f	; 127
-      001400 49                    2776 	.db #0x49	; 73	'I'
-      001401 49                    2777 	.db #0x49	; 73	'I'
-      001402 49                    2778 	.db #0x49	; 73	'I'
-      001403 36                    2779 	.db #0x36	; 54	'6'
-      001404 00                    2780 	.db #0x00	; 0
-      001405 00                    2781 	.db #0x00	; 0
-      001406 00                    2782 	.db #0x00	; 0
-      001407 3E                    2783 	.db #0x3e	; 62
-      001408 41                    2784 	.db #0x41	; 65	'A'
-      001409 41                    2785 	.db #0x41	; 65	'A'
-      00140A 41                    2786 	.db #0x41	; 65	'A'
-      00140B 22                    2787 	.db #0x22	; 34
-      00140C 00                    2788 	.db #0x00	; 0
-      00140D 00                    2789 	.db #0x00	; 0
-      00140E 00                    2790 	.db #0x00	; 0
-      00140F 7F                    2791 	.db #0x7f	; 127
-      001410 41                    2792 	.db #0x41	; 65	'A'
-      001411 41                    2793 	.db #0x41	; 65	'A'
-      001412 22                    2794 	.db #0x22	; 34
-      001413 1C                    2795 	.db #0x1c	; 28
-      001414 00                    2796 	.db #0x00	; 0
-      001415 00                    2797 	.db #0x00	; 0
-      001416 00                    2798 	.db #0x00	; 0
-      001417 7F                    2799 	.db #0x7f	; 127
-      001418 49                    2800 	.db #0x49	; 73	'I'
-      001419 49                    2801 	.db #0x49	; 73	'I'
-      00141A 49                    2802 	.db #0x49	; 73	'I'
-      00141B 41                    2803 	.db #0x41	; 65	'A'
-      00141C 00                    2804 	.db #0x00	; 0
-      00141D 00                    2805 	.db #0x00	; 0
-      00141E 00                    2806 	.db #0x00	; 0
-      00141F 7F                    2807 	.db #0x7f	; 127
-      001420 09                    2808 	.db #0x09	; 9
-      001421 09                    2809 	.db #0x09	; 9
-      001422 01                    2810 	.db #0x01	; 1
-      001423 01                    2811 	.db #0x01	; 1
-      001424 00                    2812 	.db #0x00	; 0
-      001425 00                    2813 	.db #0x00	; 0
-      001426 00                    2814 	.db #0x00	; 0
-      001427 3E                    2815 	.db #0x3e	; 62
-      001428 41                    2816 	.db #0x41	; 65	'A'
-      001429 49                    2817 	.db #0x49	; 73	'I'
-      00142A 49                    2818 	.db #0x49	; 73	'I'
-      00142B 7A                    2819 	.db #0x7a	; 122	'z'
-      00142C 00                    2820 	.db #0x00	; 0
-      00142D 00                    2821 	.db #0x00	; 0
-      00142E 00                    2822 	.db #0x00	; 0
-      00142F 7F                    2823 	.db #0x7f	; 127
-      001430 08                    2824 	.db #0x08	; 8
-      001431 08                    2825 	.db #0x08	; 8
-      001432 08                    2826 	.db #0x08	; 8
-      001433 7F                    2827 	.db #0x7f	; 127
-      001434 00                    2828 	.db #0x00	; 0
-      001435 00                    2829 	.db #0x00	; 0
-      001436 00                    2830 	.db #0x00	; 0
-      001437 00                    2831 	.db #0x00	; 0
-      001438 41                    2832 	.db #0x41	; 65	'A'
-      001439 7F                    2833 	.db #0x7f	; 127
-      00143A 41                    2834 	.db #0x41	; 65	'A'
-      00143B 00                    2835 	.db #0x00	; 0
-      00143C 00                    2836 	.db #0x00	; 0
-      00143D 00                    2837 	.db #0x00	; 0
-      00143E 00                    2838 	.db #0x00	; 0
-      00143F 20                    2839 	.db #0x20	; 32
-      001440 40                    2840 	.db #0x40	; 64
-      001441 41                    2841 	.db #0x41	; 65	'A'
-      001442 3F                    2842 	.db #0x3f	; 63
-      001443 01                    2843 	.db #0x01	; 1
-      001444 00                    2844 	.db #0x00	; 0
-      001445 00                    2845 	.db #0x00	; 0
-      001446 00                    2846 	.db #0x00	; 0
-      001447 7F                    2847 	.db #0x7f	; 127
-      001448 08                    2848 	.db #0x08	; 8
-      001449 14                    2849 	.db #0x14	; 20
-      00144A 22                    2850 	.db #0x22	; 34
-      00144B 41                    2851 	.db #0x41	; 65	'A'
-      00144C 00                    2852 	.db #0x00	; 0
-      00144D 00                    2853 	.db #0x00	; 0
-      00144E 00                    2854 	.db #0x00	; 0
-      00144F 7F                    2855 	.db #0x7f	; 127
-      001450 40                    2856 	.db #0x40	; 64
-      001451 40                    2857 	.db #0x40	; 64
-      001452 40                    2858 	.db #0x40	; 64
-      001453 40                    2859 	.db #0x40	; 64
-      001454 00                    2860 	.db #0x00	; 0
-      001455 00                    2861 	.db #0x00	; 0
-      001456 00                    2862 	.db #0x00	; 0
-      001457 7F                    2863 	.db #0x7f	; 127
-      001458 02                    2864 	.db #0x02	; 2
-      001459 0C                    2865 	.db #0x0c	; 12
-      00145A 02                    2866 	.db #0x02	; 2
-      00145B 7F                    2867 	.db #0x7f	; 127
-      00145C 00                    2868 	.db #0x00	; 0
-      00145D 00                    2869 	.db #0x00	; 0
-      00145E 00                    2870 	.db #0x00	; 0
-      00145F 7F                    2871 	.db #0x7f	; 127
-      001460 04                    2872 	.db #0x04	; 4
-      001461 08                    2873 	.db #0x08	; 8
-      001462 10                    2874 	.db #0x10	; 16
-      001463 7F                    2875 	.db #0x7f	; 127
-      001464 00                    2876 	.db #0x00	; 0
-      001465 00                    2877 	.db #0x00	; 0
-      001466 00                    2878 	.db #0x00	; 0
-      001467 3E                    2879 	.db #0x3e	; 62
-      001468 41                    2880 	.db #0x41	; 65	'A'
-      001469 41                    2881 	.db #0x41	; 65	'A'
-      00146A 41                    2882 	.db #0x41	; 65	'A'
-      00146B 3E                    2883 	.db #0x3e	; 62
-      00146C 00                    2884 	.db #0x00	; 0
-      00146D 00                    2885 	.db #0x00	; 0
-      00146E 00                    2886 	.db #0x00	; 0
-      00146F 7F                    2887 	.db #0x7f	; 127
-      001470 09                    2888 	.db #0x09	; 9
-      001471 09                    2889 	.db #0x09	; 9
-      001472 09                    2890 	.db #0x09	; 9
-      001473 06                    2891 	.db #0x06	; 6
-      001474 00                    2892 	.db #0x00	; 0
-      001475 00                    2893 	.db #0x00	; 0
-      001476 00                    2894 	.db #0x00	; 0
-      001477 3E                    2895 	.db #0x3e	; 62
-      001478 41                    2896 	.db #0x41	; 65	'A'
-      001479 51                    2897 	.db #0x51	; 81	'Q'
-      00147A 21                    2898 	.db #0x21	; 33
-      00147B 5E                    2899 	.db #0x5e	; 94
-      00147C 00                    2900 	.db #0x00	; 0
-      00147D 00                    2901 	.db #0x00	; 0
-      00147E 00                    2902 	.db #0x00	; 0
-      00147F 7F                    2903 	.db #0x7f	; 127
-      001480 09                    2904 	.db #0x09	; 9
-      001481 19                    2905 	.db #0x19	; 25
-      001482 29                    2906 	.db #0x29	; 41
-      001483 46                    2907 	.db #0x46	; 70	'F'
-      001484 00                    2908 	.db #0x00	; 0
-      001485 00                    2909 	.db #0x00	; 0
-      001486 00                    2910 	.db #0x00	; 0
-      001487 46                    2911 	.db #0x46	; 70	'F'
-      001488 49                    2912 	.db #0x49	; 73	'I'
-      001489 49                    2913 	.db #0x49	; 73	'I'
-      00148A 49                    2914 	.db #0x49	; 73	'I'
-      00148B 31                    2915 	.db #0x31	; 49	'1'
-      00148C 00                    2916 	.db #0x00	; 0
-      00148D 00                    2917 	.db #0x00	; 0
-      00148E 00                    2918 	.db #0x00	; 0
-      00148F 01                    2919 	.db #0x01	; 1
-      001490 01                    2920 	.db #0x01	; 1
-      001491 7F                    2921 	.db #0x7f	; 127
-      001492 01                    2922 	.db #0x01	; 1
-      001493 01                    2923 	.db #0x01	; 1
-      001494 00                    2924 	.db #0x00	; 0
-      001495 00                    2925 	.db #0x00	; 0
-      001496 00                    2926 	.db #0x00	; 0
-      001497 3F                    2927 	.db #0x3f	; 63
-      001498 40                    2928 	.db #0x40	; 64
-      001499 40                    2929 	.db #0x40	; 64
-      00149A 40                    2930 	.db #0x40	; 64
-      00149B 3F                    2931 	.db #0x3f	; 63
-      00149C 00                    2932 	.db #0x00	; 0
-      00149D 00                    2933 	.db #0x00	; 0
-      00149E 00                    2934 	.db #0x00	; 0
-      00149F 1F                    2935 	.db #0x1f	; 31
-      0014A0 20                    2936 	.db #0x20	; 32
-      0014A1 40                    2937 	.db #0x40	; 64
-      0014A2 20                    2938 	.db #0x20	; 32
-      0014A3 1F                    2939 	.db #0x1f	; 31
-      0014A4 00                    2940 	.db #0x00	; 0
-      0014A5 00                    2941 	.db #0x00	; 0
-      0014A6 00                    2942 	.db #0x00	; 0
-      0014A7 7F                    2943 	.db #0x7f	; 127
-      0014A8 20                    2944 	.db #0x20	; 32
-      0014A9 18                    2945 	.db #0x18	; 24
-      0014AA 20                    2946 	.db #0x20	; 32
-      0014AB 7F                    2947 	.db #0x7f	; 127
-      0014AC 00                    2948 	.db #0x00	; 0
-      0014AD 00                    2949 	.db #0x00	; 0
-      0014AE 00                    2950 	.db #0x00	; 0
-      0014AF 63                    2951 	.db #0x63	; 99	'c'
-      0014B0 14                    2952 	.db #0x14	; 20
-      0014B1 08                    2953 	.db #0x08	; 8
-      0014B2 14                    2954 	.db #0x14	; 20
-      0014B3 63                    2955 	.db #0x63	; 99	'c'
-      0014B4 00                    2956 	.db #0x00	; 0
-      0014B5 00                    2957 	.db #0x00	; 0
-      0014B6 00                    2958 	.db #0x00	; 0
-      0014B7 07                    2959 	.db #0x07	; 7
-      0014B8 08                    2960 	.db #0x08	; 8
-      0014B9 70                    2961 	.db #0x70	; 112	'p'
-      0014BA 08                    2962 	.db #0x08	; 8
-      0014BB 07                    2963 	.db #0x07	; 7
-      0014BC 00                    2964 	.db #0x00	; 0
-      0014BD 00                    2965 	.db #0x00	; 0
-      0014BE 00                    2966 	.db #0x00	; 0
-      0014BF 61                    2967 	.db #0x61	; 97	'a'
-      0014C0 51                    2968 	.db #0x51	; 81	'Q'
-      0014C1 49                    2969 	.db #0x49	; 73	'I'
-      0014C2 45                    2970 	.db #0x45	; 69	'E'
-      0014C3 43                    2971 	.db #0x43	; 67	'C'
-      0014C4 00                    2972 	.db #0x00	; 0
-      0014C5 00                    2973 	.db #0x00	; 0
-      0014C6 00                    2974 	.db #0x00	; 0
-                                   2975 	.area CONST   (CODE)
-      0014C7                       2976 ___str_0:
-      0014C7 43 58 3A 20           2977 	.ascii "CX: "
-      0014CB 00                    2978 	.db 0x00
-                                   2979 	.area CSEG    (CODE)
-                                   2980 	.area CONST   (CODE)
-      0014CC                       2981 ___str_1:
-      0014CC 20 20 30 2E 30 20 4E  2982 	.ascii "  0.0 NF"
+      0008BC D2 8C            [12] 1723 	setb	_TR0
+                                   1724 ;	main.c:210: while (1) {
+      0008BE                       1725 00109$:
+                                   1726 ;	main.c:211: if (P5 & MASK_DET_55) {
+      0008BE E5 C8            [12] 1727 	mov	a,_P5
+      0008C0 30 E5 0E         [24] 1728 	jnb	acc.5,00104$
+                                   1729 ;	main.c:212: stable_counter++;
+      0008C3 90 00 1A         [24] 1730 	mov	dptr,#_Measure_Single_stable_counter_10000_53
+      0008C6 E0               [24] 1731 	movx	a,@dptr
+      0008C7 24 01            [12] 1732 	add	a, #0x01
+      0008C9 F0               [24] 1733 	movx	@dptr,a
+                                   1734 ;	main.c:213: if (stable_counter > 10) {
+      0008CA E0               [24] 1735 	movx	a,@dptr
+      0008CB 24 F5            [12] 1736 	add	a,#0xff - 0x0a
+      0008CD 50 07            [24] 1737 	jnc	00105$
+                                   1738 ;	main.c:214: break; // Успешно зарядился
+      0008CF 80 16            [24] 1739 	sjmp	00110$
+      0008D1                       1740 00104$:
+                                   1741 ;	main.c:217: stable_counter = 0;
+      0008D1 90 00 1A         [24] 1742 	mov	dptr,#_Measure_Single_stable_counter_10000_53
+      0008D4 E4               [12] 1743 	clr	a
+      0008D5 F0               [24] 1744 	movx	@dptr,a
+      0008D6                       1745 00105$:
+                                   1746 ;	main.c:221: if (timer0_overflows > 1700) {
+      0008D6 90 00 46         [24] 1747 	mov	dptr,#_timer0_overflows
+      0008D9 E0               [24] 1748 	movx	a,@dptr
+      0008DA FE               [12] 1749 	mov	r6,a
+      0008DB A3               [24] 1750 	inc	dptr
+      0008DC E0               [24] 1751 	movx	a,@dptr
+      0008DD FF               [12] 1752 	mov	r7,a
+      0008DE C3               [12] 1753 	clr	c
+      0008DF 74 A4            [12] 1754 	mov	a,#0xa4
+      0008E1 9E               [12] 1755 	subb	a,r6
+      0008E2 74 06            [12] 1756 	mov	a,#0x06
+      0008E4 9F               [12] 1757 	subb	a,r7
+      0008E5 50 D7            [24] 1758 	jnc	00109$
+                                   1759 ;	main.c:222: break;
+      0008E7                       1760 00110$:
+                                   1761 ;	main.c:225: TR0 = 0;  // Стоп Таймер 0
+                                   1762 ;	assignBit
+      0008E7 C2 8C            [12] 1763 	clr	_TR0
+                                   1764 ;	main.c:226: ET0 = 0;  // Выключаем прерывание таймера, чтобы не мешало основной программе
+                                   1765 ;	assignBit
+      0008E9 C2 A9            [12] 1766 	clr	_ET0
+                                   1767 ;	main.c:229: total_ticks = ((uint32_t)timer0_overflows << 16) | ((uint16_t)TH0 << 8) | TL0;
+      0008EB 90 00 46         [24] 1768 	mov	dptr,#_timer0_overflows
+      0008EE E0               [24] 1769 	movx	a,@dptr
+      0008EF FC               [12] 1770 	mov	r4,a
+      0008F0 A3               [24] 1771 	inc	dptr
+      0008F1 E0               [24] 1772 	movx	a,@dptr
+      0008F2 FF               [12] 1773 	mov	r7,a
+      0008F3 8C 06            [24] 1774 	mov	ar6,r4
+      0008F5 7C 00            [12] 1775 	mov	r4,#0x00
+      0008F7 7D 00            [12] 1776 	mov	r5,#0x00
+      0008F9 AB 8C            [24] 1777 	mov	r3,_TH0
+      0008FB 7A 00            [12] 1778 	mov	r2,#0x00
+      0008FD 8A 00            [24] 1779 	mov	ar0,r2
+      0008FF 8B 01            [24] 1780 	mov	ar1,r3
+      000901 7B 00            [12] 1781 	mov	r3,#0x00
+      000903 E8               [12] 1782 	mov	a,r0
+      000904 42 04            [12] 1783 	orl	ar4,a
+      000906 E9               [12] 1784 	mov	a,r1
+      000907 42 05            [12] 1785 	orl	ar5,a
+      000909 EA               [12] 1786 	mov	a,r2
+      00090A 42 06            [12] 1787 	orl	ar6,a
+      00090C EB               [12] 1788 	mov	a,r3
+      00090D 42 07            [12] 1789 	orl	ar7,a
+      00090F A8 8A            [24] 1790 	mov	r0,_TL0
+      000911 E4               [12] 1791 	clr	a
+      000912 F9               [12] 1792 	mov	r1,a
+      000913 FA               [12] 1793 	mov	r2,a
+      000914 FB               [12] 1794 	mov	r3,a
+      000915 E8               [12] 1795 	mov	a,r0
+      000916 42 04            [12] 1796 	orl	ar4,a
+      000918 E9               [12] 1797 	mov	a,r1
+      000919 42 05            [12] 1798 	orl	ar5,a
+      00091B EA               [12] 1799 	mov	a,r2
+      00091C 42 06            [12] 1800 	orl	ar6,a
+      00091E EB               [12] 1801 	mov	a,r3
+      00091F 42 07            [12] 1802 	orl	ar7,a
+                                   1803 ;	main.c:231: return total_ticks;
+      000921 8C 82            [24] 1804 	mov	dpl, r4
+      000923 8D 83            [24] 1805 	mov	dph, r5
+      000925 8E F0            [24] 1806 	mov	b, r6
+      000927 EF               [12] 1807 	mov	a, r7
+                                   1808 ;	main.c:232: }
+      000928 22               [24] 1809 	ret
+                                   1810 ;------------------------------------------------------------
+                                   1811 ;Allocation info for local variables in function 'main'
+                                   1812 ;------------------------------------------------------------
+                                   1813 ;sloc0         Allocated with name '_main_sloc0_1_0'
+                                   1814 ;sloc1         Allocated with name '_main_sloc1_1_0'
+                                   1815 ;raw_ticks     Allocated with name '_main_raw_ticks_10000_60'
+                                   1816 ;final_calc    Allocated with name '_main_final_calc_10000_60'
+                                   1817 ;last_display_val Allocated with name '_main_last_display_val_10000_60'
+                                   1818 ;filtered_ticks Allocated with name '_main_filtered_ticks_10000_60'
+                                   1819 ;mode_uf       Allocated with name '_main_mode_uf_10000_60'
+                                   1820 ;is_first_run  Allocated with name '_main_is_first_run_10000_60'
+                                   1821 ;is_sleeping   Allocated with name '_main_is_sleeping_10000_60'
+                                   1822 ;discharge     Allocated with name '_main_discharge_10000_60'
+                                   1823 ;------------------------------------------------------------
+                                   1824 ;	main.c:235: void main(void) {
+                                   1825 ;	-----------------------------------------
+                                   1826 ;	 function main
+                                   1827 ;	-----------------------------------------
+      000929                       1828 _main:
+                                   1829 ;	main.c:238: uint32_t last_display_val = 0;
+      000929 90 00 1F         [24] 1830 	mov	dptr,#_main_last_display_val_10000_60
+      00092C E4               [12] 1831 	clr	a
+      00092D F0               [24] 1832 	movx	@dptr,a
+      00092E A3               [24] 1833 	inc	dptr
+      00092F F0               [24] 1834 	movx	@dptr,a
+      000930 A3               [24] 1835 	inc	dptr
+      000931 F0               [24] 1836 	movx	@dptr,a
+      000932 A3               [24] 1837 	inc	dptr
+      000933 F0               [24] 1838 	movx	@dptr,a
+                                   1839 ;	main.c:239: uint32_t filtered_ticks = 0;
+      000934 90 00 23         [24] 1840 	mov	dptr,#_main_filtered_ticks_10000_60
+      000937 F0               [24] 1841 	movx	@dptr,a
+      000938 A3               [24] 1842 	inc	dptr
+      000939 F0               [24] 1843 	movx	@dptr,a
+      00093A A3               [24] 1844 	inc	dptr
+      00093B F0               [24] 1845 	movx	@dptr,a
+      00093C A3               [24] 1846 	inc	dptr
+      00093D F0               [24] 1847 	movx	@dptr,a
+                                   1848 ;	main.c:241: uint8_t is_first_run = 1;
+      00093E 90 00 28         [24] 1849 	mov	dptr,#_main_is_first_run_10000_60
+      000941 04               [12] 1850 	inc	a
+      000942 F0               [24] 1851 	movx	@dptr,a
+                                   1852 ;	main.c:242: uint8_t is_sleeping = 0;
+      000943 90 00 29         [24] 1853 	mov	dptr,#_main_is_sleeping_10000_60
+      000946 E4               [12] 1854 	clr	a
+      000947 F0               [24] 1855 	movx	@dptr,a
+                                   1856 ;	main.c:246: P5M1 |= MASK_DET_55; P5M0 &= ~MASK_DET_55;
+      000948 43 C9 20         [24] 1857 	orl	_P5M1,#0x20
+      00094B 53 CA DF         [24] 1858 	anl	_P5M0,#0xdf
+                                   1859 ;	main.c:249: P3M1 |= (1 << 0); P3M0 &= ~(1 << 0);
+      00094E 43 B1 01         [24] 1860 	orl	_P3M1,#0x01
+      000951 53 B2 FE         [24] 1861 	anl	_P3M0,#0xfe
+                                   1862 ;	main.c:252: P_SW2 = 0x80; CLKSEL = 0x00; P_SW2 = 0x00;
+      000954 75 8E 80         [24] 1863 	mov	_P_SW2,#0x80
+      000957 75 9D 00         [24] 1864 	mov	_CLKSEL,#0x00
+      00095A 75 8E 00         [24] 1865 	mov	_P_SW2,#0x00
+                                   1866 ;	main.c:253: AUXR |= 0x80;
+      00095D 43 8E 80         [24] 1867 	orl	_AUXR,#0x80
+                                   1868 ;	main.c:254: TMOD &= 0xF0; // Режим 0 (16-битный таймер)
+      000960 53 89 F0         [24] 1869 	anl	_TMOD,#0xf0
+                                   1870 ;	main.c:255: TR0 = 0; TF0 = 0;
+                                   1871 ;	assignBit
+      000963 C2 8C            [12] 1872 	clr	_TR0
+                                   1873 ;	assignBit
+      000965 C2 8D            [12] 1874 	clr	_TF0
+                                   1875 ;	main.c:258: EA = 1;
+                                   1876 ;	assignBit
+      000967 D2 AF            [12] 1877 	setb	_EA
+                                   1878 ;	main.c:260: SCL_HIGH(); SDA_HIGH(); Delay_ms(100);
+      000969 12 01 1A         [24] 1879 	lcall	_SCL_HIGH
+      00096C 12 01 2E         [24] 1880 	lcall	_SDA_HIGH
+      00096F 90 00 64         [24] 1881 	mov	dptr,#0x0064
+      000972 12 00 B0         [24] 1882 	lcall	_Delay_ms
+                                   1883 ;	main.c:261: SSD1306_Init();
+      000975 12 01 D5         [24] 1884 	lcall	_SSD1306_Init
+                                   1885 ;	main.c:262: SSD1306_Clear();
+      000978 12 02 89         [24] 1886 	lcall	_SSD1306_Clear
+                                   1887 ;	main.c:264: while(1) {
+      00097B                       1888 00142$:
+                                   1889 ;	main.c:266: if (PIN_BUTTON == 0) {
+      00097B 20 B0 49         [24] 1890 	jb	_PIN_BUTTON,00110$
+                                   1891 ;	main.c:267: Delay_ms(40);
+      00097E 90 00 28         [24] 1892 	mov	dptr,#0x0028
+      000981 12 00 B0         [24] 1893 	lcall	_Delay_ms
+                                   1894 ;	main.c:268: if (PIN_BUTTON == 0) {
+      000984 20 B0 40         [24] 1895 	jb	_PIN_BUTTON,00110$
+                                   1896 ;	main.c:269: while(PIN_BUTTON == 0) { Delay_ms(10); }
+      000987                       1897 00101$:
+      000987 20 B0 08         [24] 1898 	jb	_PIN_BUTTON,00103$
+      00098A 90 00 0A         [24] 1899 	mov	dptr,#0x000a
+      00098D 12 00 B0         [24] 1900 	lcall	_Delay_ms
+      000990 80 F5            [24] 1901 	sjmp	00101$
+      000992                       1902 00103$:
+                                   1903 ;	main.c:270: Delay_ms(50);
+      000992 90 00 32         [24] 1904 	mov	dptr,#0x0032
+      000995 12 00 B0         [24] 1905 	lcall	_Delay_ms
+                                   1906 ;	main.c:272: if (is_sleeping == 0) {
+      000998 90 00 29         [24] 1907 	mov	dptr,#_main_is_sleeping_10000_60
+      00099B E0               [24] 1908 	movx	a,@dptr
+      00099C 70 0E            [24] 1909 	jnz	00105$
+                                   1910 ;	main.c:273: is_sleeping = 1;
+      00099E 90 00 29         [24] 1911 	mov	dptr,#_main_is_sleeping_10000_60
+      0009A1 74 01            [12] 1912 	mov	a,#0x01
+      0009A3 F0               [24] 1913 	movx	@dptr,a
+                                   1914 ;	main.c:274: SSD1306_Command(0xAE); // Выключить экран
+      0009A4 75 82 AE         [24] 1915 	mov	dpl, #0xae
+      0009A7 12 01 B4         [24] 1916 	lcall	_SSD1306_Command
+      0009AA 80 1B            [24] 1917 	sjmp	00110$
+      0009AC                       1918 00105$:
+                                   1919 ;	main.c:276: is_sleeping = 0;
+      0009AC 90 00 29         [24] 1920 	mov	dptr,#_main_is_sleeping_10000_60
+      0009AF E4               [12] 1921 	clr	a
+      0009B0 F0               [24] 1922 	movx	@dptr,a
+                                   1923 ;	main.c:277: SSD1306_Command(0xAF); // Включить экран
+      0009B1 75 82 AF         [24] 1924 	mov	dpl, #0xaf
+      0009B4 12 01 B4         [24] 1925 	lcall	_SSD1306_Command
+                                   1926 ;	main.c:278: last_display_val = 0;
+      0009B7 90 00 1F         [24] 1927 	mov	dptr,#_main_last_display_val_10000_60
+      0009BA E4               [12] 1928 	clr	a
+      0009BB F0               [24] 1929 	movx	@dptr,a
+      0009BC A3               [24] 1930 	inc	dptr
+      0009BD F0               [24] 1931 	movx	@dptr,a
+      0009BE A3               [24] 1932 	inc	dptr
+      0009BF F0               [24] 1933 	movx	@dptr,a
+      0009C0 A3               [24] 1934 	inc	dptr
+      0009C1 F0               [24] 1935 	movx	@dptr,a
+                                   1936 ;	main.c:279: is_first_run = 1;
+      0009C2 90 00 28         [24] 1937 	mov	dptr,#_main_is_first_run_10000_60
+      0009C5 04               [12] 1938 	inc	a
+      0009C6 F0               [24] 1939 	movx	@dptr,a
+      0009C7                       1940 00110$:
+                                   1941 ;	main.c:284: if (is_sleeping == 1) {
+      0009C7 90 00 29         [24] 1942 	mov	dptr,#_main_is_sleeping_10000_60
+      0009CA E0               [24] 1943 	movx	a,@dptr
+      0009CB FF               [12] 1944 	mov	r7,a
+      0009CC BF 01 10         [24] 1945 	cjne	r7,#0x01,00112$
+                                   1946 ;	main.c:286: P3M1 &= ~0x02; P3M0 |= 0x02; PIN_R1_10K = 0;
+      0009CF 53 B1 FD         [24] 1947 	anl	_P3M1,#0xfd
+      0009D2 43 B2 02         [24] 1948 	orl	_P3M0,#0x02
+                                   1949 ;	assignBit
+      0009D5 C2 B1            [12] 1950 	clr	_PIN_R1_10K
+                                   1951 ;	main.c:287: Delay_ms(100);
+      0009D7 90 00 64         [24] 1952 	mov	dptr,#0x0064
+      0009DA 12 00 B0         [24] 1953 	lcall	_Delay_ms
+                                   1954 ;	main.c:288: continue;
+      0009DD 80 9C            [24] 1955 	sjmp	00142$
+      0009DF                       1956 00112$:
+                                   1957 ;	main.c:292: raw_ticks = Measure_Single(); // Делаем чистый замер времени заряда
+      0009DF 12 08 A0         [24] 1958 	lcall	_Measure_Single
+      0009E2 85 82 11         [24] 1959 	mov	_main_sloc0_1_0,dpl
+      0009E5 85 83 12         [24] 1960 	mov	(_main_sloc0_1_0 + 1),dph
+      0009E8 85 F0 13         [24] 1961 	mov	(_main_sloc0_1_0 + 2),b
+      0009EB F5 14            [12] 1962 	mov	(_main_sloc0_1_0 + 3),a
+                                   1963 ;	main.c:295: if (is_first_run || filtered_ticks < 100) {
+      0009ED 90 00 28         [24] 1964 	mov	dptr,#_main_is_first_run_10000_60
+      0009F0 E0               [24] 1965 	movx	a,@dptr
+      0009F1 70 1D            [24] 1966 	jnz	00113$
+      0009F3 90 00 23         [24] 1967 	mov	dptr,#_main_filtered_ticks_10000_60
+      0009F6 E0               [24] 1968 	movx	a,@dptr
+      0009F7 F8               [12] 1969 	mov	r0,a
+      0009F8 A3               [24] 1970 	inc	dptr
+      0009F9 E0               [24] 1971 	movx	a,@dptr
+      0009FA F9               [12] 1972 	mov	r1,a
+      0009FB A3               [24] 1973 	inc	dptr
+      0009FC E0               [24] 1974 	movx	a,@dptr
+      0009FD FA               [12] 1975 	mov	r2,a
+      0009FE A3               [24] 1976 	inc	dptr
+      0009FF E0               [24] 1977 	movx	a,@dptr
+      000A00 FB               [12] 1978 	mov	r3,a
+      000A01 C3               [12] 1979 	clr	c
+      000A02 E8               [12] 1980 	mov	a,r0
+      000A03 94 64            [12] 1981 	subb	a,#0x64
+      000A05 E9               [12] 1982 	mov	a,r1
+      000A06 94 00            [12] 1983 	subb	a,#0x00
+      000A08 EA               [12] 1984 	mov	a,r2
+      000A09 94 00            [12] 1985 	subb	a,#0x00
+      000A0B EB               [12] 1986 	mov	a,r3
+      000A0C 94 00            [12] 1987 	subb	a,#0x00
+      000A0E 50 19            [24] 1988 	jnc	00114$
+      000A10                       1989 00113$:
+                                   1990 ;	main.c:296: filtered_ticks = raw_ticks;
+      000A10 90 00 23         [24] 1991 	mov	dptr,#_main_filtered_ticks_10000_60
+      000A13 E5 11            [12] 1992 	mov	a,_main_sloc0_1_0
+      000A15 F0               [24] 1993 	movx	@dptr,a
+      000A16 E5 12            [12] 1994 	mov	a,(_main_sloc0_1_0 + 1)
+      000A18 A3               [24] 1995 	inc	dptr
+      000A19 F0               [24] 1996 	movx	@dptr,a
+      000A1A E5 13            [12] 1997 	mov	a,(_main_sloc0_1_0 + 2)
+      000A1C A3               [24] 1998 	inc	dptr
+      000A1D F0               [24] 1999 	movx	@dptr,a
+      000A1E E5 14            [12] 2000 	mov	a,(_main_sloc0_1_0 + 3)
+      000A20 A3               [24] 2001 	inc	dptr
+      000A21 F0               [24] 2002 	movx	@dptr,a
+                                   2003 ;	main.c:297: is_first_run = 0;
+      000A22 90 00 28         [24] 2004 	mov	dptr,#_main_is_first_run_10000_60
+      000A25 E4               [12] 2005 	clr	a
+      000A26 F0               [24] 2006 	movx	@dptr,a
+      000A27 80 5F            [24] 2007 	sjmp	00115$
+      000A29                       2008 00114$:
+                                   2009 ;	main.c:299: filtered_ticks = ((filtered_ticks >> 1) + (filtered_ticks >> 2)) + (raw_ticks >> 2);
+      000A29 EB               [12] 2010 	mov	a,r3
+      000A2A C3               [12] 2011 	clr	c
+      000A2B 13               [12] 2012 	rrc	a
+      000A2C FF               [12] 2013 	mov	r7,a
+      000A2D EA               [12] 2014 	mov	a,r2
+      000A2E 13               [12] 2015 	rrc	a
+      000A2F FE               [12] 2016 	mov	r6,a
+      000A30 E9               [12] 2017 	mov	a,r1
+      000A31 13               [12] 2018 	rrc	a
+      000A32 FD               [12] 2019 	mov	r5,a
+      000A33 E8               [12] 2020 	mov	a,r0
+      000A34 13               [12] 2021 	rrc	a
+      000A35 FC               [12] 2022 	mov	r4,a
+      000A36 EB               [12] 2023 	mov	a,r3
+      000A37 C3               [12] 2024 	clr	c
+      000A38 13               [12] 2025 	rrc	a
+      000A39 FB               [12] 2026 	mov	r3,a
+      000A3A EA               [12] 2027 	mov	a,r2
+      000A3B 13               [12] 2028 	rrc	a
+      000A3C FA               [12] 2029 	mov	r2,a
+      000A3D E9               [12] 2030 	mov	a,r1
+      000A3E 13               [12] 2031 	rrc	a
+      000A3F F9               [12] 2032 	mov	r1,a
+      000A40 E8               [12] 2033 	mov	a,r0
+      000A41 13               [12] 2034 	rrc	a
+      000A42 F8               [12] 2035 	mov	r0,a
+      000A43 EB               [12] 2036 	mov	a,r3
+      000A44 C3               [12] 2037 	clr	c
+      000A45 13               [12] 2038 	rrc	a
+      000A46 FB               [12] 2039 	mov	r3,a
+      000A47 EA               [12] 2040 	mov	a,r2
+      000A48 13               [12] 2041 	rrc	a
+      000A49 FA               [12] 2042 	mov	r2,a
+      000A4A E9               [12] 2043 	mov	a,r1
+      000A4B 13               [12] 2044 	rrc	a
+      000A4C F9               [12] 2045 	mov	r1,a
+      000A4D E8               [12] 2046 	mov	a,r0
+      000A4E 13               [12] 2047 	rrc	a
+      000A4F 2C               [12] 2048 	add	a, r4
+      000A50 FC               [12] 2049 	mov	r4,a
+      000A51 E9               [12] 2050 	mov	a,r1
+      000A52 3D               [12] 2051 	addc	a, r5
+      000A53 FD               [12] 2052 	mov	r5,a
+      000A54 EA               [12] 2053 	mov	a,r2
+      000A55 3E               [12] 2054 	addc	a, r6
+      000A56 FE               [12] 2055 	mov	r6,a
+      000A57 EB               [12] 2056 	mov	a,r3
+      000A58 3F               [12] 2057 	addc	a, r7
+      000A59 FF               [12] 2058 	mov	r7,a
+      000A5A E5 14            [12] 2059 	mov	a,(_main_sloc0_1_0 + 3)
+      000A5C C3               [12] 2060 	clr	c
+      000A5D 13               [12] 2061 	rrc	a
+      000A5E FB               [12] 2062 	mov	r3,a
+      000A5F E5 13            [12] 2063 	mov	a,(_main_sloc0_1_0 + 2)
+      000A61 13               [12] 2064 	rrc	a
+      000A62 FA               [12] 2065 	mov	r2,a
+      000A63 E5 12            [12] 2066 	mov	a,(_main_sloc0_1_0 + 1)
+      000A65 13               [12] 2067 	rrc	a
+      000A66 F9               [12] 2068 	mov	r1,a
+      000A67 E5 11            [12] 2069 	mov	a,_main_sloc0_1_0
+      000A69 13               [12] 2070 	rrc	a
+      000A6A F8               [12] 2071 	mov	r0,a
+      000A6B EB               [12] 2072 	mov	a,r3
+      000A6C C3               [12] 2073 	clr	c
+      000A6D 13               [12] 2074 	rrc	a
+      000A6E FB               [12] 2075 	mov	r3,a
+      000A6F EA               [12] 2076 	mov	a,r2
+      000A70 13               [12] 2077 	rrc	a
+      000A71 FA               [12] 2078 	mov	r2,a
+      000A72 E9               [12] 2079 	mov	a,r1
+      000A73 13               [12] 2080 	rrc	a
+      000A74 F9               [12] 2081 	mov	r1,a
+      000A75 E8               [12] 2082 	mov	a,r0
+      000A76 13               [12] 2083 	rrc	a
+      000A77 90 00 23         [24] 2084 	mov	dptr,#_main_filtered_ticks_10000_60
+      000A7A 2C               [12] 2085 	add	a, r4
+      000A7B F0               [24] 2086 	movx	@dptr,a
+      000A7C E9               [12] 2087 	mov	a,r1
+      000A7D 3D               [12] 2088 	addc	a, r5
+      000A7E A3               [24] 2089 	inc	dptr
+      000A7F F0               [24] 2090 	movx	@dptr,a
+      000A80 EA               [12] 2091 	mov	a,r2
+      000A81 3E               [12] 2092 	addc	a, r6
+      000A82 A3               [24] 2093 	inc	dptr
+      000A83 F0               [24] 2094 	movx	@dptr,a
+      000A84 EB               [12] 2095 	mov	a,r3
+      000A85 3F               [12] 2096 	addc	a, r7
+      000A86 A3               [24] 2097 	inc	dptr
+      000A87 F0               [24] 2098 	movx	@dptr,a
+      000A88                       2099 00115$:
+                                   2100 ;	main.c:302: if (filtered_ticks > 43000) {
+      000A88 90 00 23         [24] 2101 	mov	dptr,#_main_filtered_ticks_10000_60
+      000A8B E0               [24] 2102 	movx	a,@dptr
+      000A8C FC               [12] 2103 	mov	r4,a
+      000A8D A3               [24] 2104 	inc	dptr
+      000A8E E0               [24] 2105 	movx	a,@dptr
+      000A8F FD               [12] 2106 	mov	r5,a
+      000A90 A3               [24] 2107 	inc	dptr
+      000A91 E0               [24] 2108 	movx	a,@dptr
+      000A92 FE               [12] 2109 	mov	r6,a
+      000A93 A3               [24] 2110 	inc	dptr
+      000A94 E0               [24] 2111 	movx	a,@dptr
+      000A95 FF               [12] 2112 	mov	r7,a
+      000A96 C3               [12] 2113 	clr	c
+      000A97 74 F8            [12] 2114 	mov	a,#0xf8
+      000A99 9C               [12] 2115 	subb	a,r4
+      000A9A 74 A7            [12] 2116 	mov	a,#0xa7
+      000A9C 9D               [12] 2117 	subb	a,r5
+      000A9D E4               [12] 2118 	clr	a
+      000A9E 9E               [12] 2119 	subb	a,r6
+      000A9F E4               [12] 2120 	clr	a
+      000AA0 9F               [12] 2121 	subb	a,r7
+      000AA1 40 03            [24] 2122 	jc	00271$
+      000AA3 02 0B BC         [24] 2123 	ljmp	00134$
+      000AA6                       2124 00271$:
+                                   2125 ;	main.c:303: mode_uf = 1; // Режим "мкФ"
+      000AA6 90 00 27         [24] 2126 	mov	dptr,#_main_mode_uf_10000_60
+      000AA9 74 01            [12] 2127 	mov	a,#0x01
+      000AAB F0               [24] 2128 	movx	@dptr,a
+                                   2129 ;	main.c:308: final_calc = (filtered_ticks * 23) / 100000;
+      000AAC 90 00 42         [24] 2130 	mov	dptr,#__mullong_PARM_2
+      000AAF EC               [12] 2131 	mov	a,r4
+      000AB0 F0               [24] 2132 	movx	@dptr,a
+      000AB1 ED               [12] 2133 	mov	a,r5
+      000AB2 A3               [24] 2134 	inc	dptr
+      000AB3 F0               [24] 2135 	movx	@dptr,a
+      000AB4 EE               [12] 2136 	mov	a,r6
+      000AB5 A3               [24] 2137 	inc	dptr
+      000AB6 F0               [24] 2138 	movx	@dptr,a
+      000AB7 EF               [12] 2139 	mov	a,r7
+      000AB8 A3               [24] 2140 	inc	dptr
+      000AB9 F0               [24] 2141 	movx	@dptr,a
+      000ABA 90 00 17         [24] 2142 	mov	dptr,#0x0017
+      000ABD E4               [12] 2143 	clr	a
+      000ABE F5 F0            [12] 2144 	mov	b,a
+      000AC0 12 0F 7A         [24] 2145 	lcall	__mullong
+      000AC3 A8 82            [24] 2146 	mov	r0, dpl
+      000AC5 A9 83            [24] 2147 	mov	r1, dph
+      000AC7 AA F0            [24] 2148 	mov	r2, b
+      000AC9 FB               [12] 2149 	mov	r3, a
+      000ACA 90 00 35         [24] 2150 	mov	dptr,#__divulong_PARM_2
+      000ACD 74 A0            [12] 2151 	mov	a,#0xa0
+      000ACF F0               [24] 2152 	movx	@dptr,a
+      000AD0 74 86            [12] 2153 	mov	a,#0x86
+      000AD2 A3               [24] 2154 	inc	dptr
+      000AD3 F0               [24] 2155 	movx	@dptr,a
+      000AD4 74 01            [12] 2156 	mov	a,#0x01
+      000AD6 A3               [24] 2157 	inc	dptr
+      000AD7 F0               [24] 2158 	movx	@dptr,a
+      000AD8 E4               [12] 2159 	clr	a
+      000AD9 A3               [24] 2160 	inc	dptr
+      000ADA F0               [24] 2161 	movx	@dptr,a
+      000ADB 88 82            [24] 2162 	mov	dpl, r0
+      000ADD 89 83            [24] 2163 	mov	dph, r1
+      000ADF 8A F0            [24] 2164 	mov	b, r2
+      000AE1 EB               [12] 2165 	mov	a, r3
+      000AE2 12 0E 86         [24] 2166 	lcall	__divulong
+      000AE5 A8 82            [24] 2167 	mov	r0, dpl
+      000AE7 A9 83            [24] 2168 	mov	r1, dph
+      000AE9 AA F0            [24] 2169 	mov	r2, b
+      000AEB FB               [12] 2170 	mov	r3, a
+      000AEC 90 00 1B         [24] 2171 	mov	dptr,#_main_final_calc_10000_60
+      000AEF E8               [12] 2172 	mov	a,r0
+      000AF0 F0               [24] 2173 	movx	@dptr,a
+      000AF1 E9               [12] 2174 	mov	a,r1
+      000AF2 A3               [24] 2175 	inc	dptr
+      000AF3 F0               [24] 2176 	movx	@dptr,a
+      000AF4 EA               [12] 2177 	mov	a,r2
+      000AF5 A3               [24] 2178 	inc	dptr
+      000AF6 F0               [24] 2179 	movx	@dptr,a
+      000AF7 EB               [12] 2180 	mov	a,r3
+      000AF8 A3               [24] 2181 	inc	dptr
+      000AF9 F0               [24] 2182 	movx	@dptr,a
+                                   2183 ;	main.c:310: if (final_calc == 0) final_calc = 1;
+      000AFA E8               [12] 2184 	mov	a,r0
+      000AFB 49               [12] 2185 	orl	a,r1
+      000AFC 4A               [12] 2186 	orl	a,r2
+      000AFD 4B               [12] 2187 	orl	a,r3
+      000AFE 70 0D            [24] 2188 	jnz	00118$
+      000B00 90 00 1B         [24] 2189 	mov	dptr,#_main_final_calc_10000_60
+      000B03 74 01            [12] 2190 	mov	a,#0x01
+      000B05 F0               [24] 2191 	movx	@dptr,a
+      000B06 E4               [12] 2192 	clr	a
+      000B07 A3               [24] 2193 	inc	dptr
+      000B08 F0               [24] 2194 	movx	@dptr,a
+      000B09 A3               [24] 2195 	inc	dptr
+      000B0A F0               [24] 2196 	movx	@dptr,a
+      000B0B A3               [24] 2197 	inc	dptr
+      000B0C F0               [24] 2198 	movx	@dptr,a
+      000B0D                       2199 00118$:
+                                   2200 ;	main.c:312: if (final_calc > last_display_val) {
+      000B0D 90 00 1B         [24] 2201 	mov	dptr,#_main_final_calc_10000_60
+      000B10 E0               [24] 2202 	movx	a,@dptr
+      000B11 F5 15            [12] 2203 	mov	_main_sloc1_1_0,a
+      000B13 A3               [24] 2204 	inc	dptr
+      000B14 E0               [24] 2205 	movx	a,@dptr
+      000B15 F5 16            [12] 2206 	mov	(_main_sloc1_1_0 + 1),a
+      000B17 A3               [24] 2207 	inc	dptr
+      000B18 E0               [24] 2208 	movx	a,@dptr
+      000B19 F5 17            [12] 2209 	mov	(_main_sloc1_1_0 + 2),a
+      000B1B A3               [24] 2210 	inc	dptr
+      000B1C E0               [24] 2211 	movx	a,@dptr
+      000B1D F5 18            [12] 2212 	mov	(_main_sloc1_1_0 + 3),a
+      000B1F 90 00 1F         [24] 2213 	mov	dptr,#_main_last_display_val_10000_60
+      000B22 E0               [24] 2214 	movx	a,@dptr
+      000B23 F5 11            [12] 2215 	mov	_main_sloc0_1_0,a
+      000B25 A3               [24] 2216 	inc	dptr
+      000B26 E0               [24] 2217 	movx	a,@dptr
+      000B27 F5 12            [12] 2218 	mov	(_main_sloc0_1_0 + 1),a
+      000B29 A3               [24] 2219 	inc	dptr
+      000B2A E0               [24] 2220 	movx	a,@dptr
+      000B2B F5 13            [12] 2221 	mov	(_main_sloc0_1_0 + 2),a
+      000B2D A3               [24] 2222 	inc	dptr
+      000B2E E0               [24] 2223 	movx	a,@dptr
+      000B2F F5 14            [12] 2224 	mov	(_main_sloc0_1_0 + 3),a
+      000B31 C3               [12] 2225 	clr	c
+      000B32 E5 11            [12] 2226 	mov	a,_main_sloc0_1_0
+      000B34 95 15            [12] 2227 	subb	a,_main_sloc1_1_0
+      000B36 E5 12            [12] 2228 	mov	a,(_main_sloc0_1_0 + 1)
+      000B38 95 16            [12] 2229 	subb	a,(_main_sloc1_1_0 + 1)
+      000B3A E5 13            [12] 2230 	mov	a,(_main_sloc0_1_0 + 2)
+      000B3C 95 17            [12] 2231 	subb	a,(_main_sloc1_1_0 + 2)
+      000B3E E5 14            [12] 2232 	mov	a,(_main_sloc0_1_0 + 3)
+      000B40 95 18            [12] 2233 	subb	a,(_main_sloc1_1_0 + 3)
+      000B42 50 3C            [24] 2234 	jnc	00124$
+                                   2235 ;	main.c:313: if ((final_calc - last_display_val) < 1) final_calc = last_display_val;
+      000B44 E5 15            [12] 2236 	mov	a,_main_sloc1_1_0
+      000B46 C3               [12] 2237 	clr	c
+      000B47 95 11            [12] 2238 	subb	a,_main_sloc0_1_0
+      000B49 F8               [12] 2239 	mov	r0,a
+      000B4A E5 16            [12] 2240 	mov	a,(_main_sloc1_1_0 + 1)
+      000B4C 95 12            [12] 2241 	subb	a,(_main_sloc0_1_0 + 1)
+      000B4E F9               [12] 2242 	mov	r1,a
+      000B4F E5 17            [12] 2243 	mov	a,(_main_sloc1_1_0 + 2)
+      000B51 95 13            [12] 2244 	subb	a,(_main_sloc0_1_0 + 2)
+      000B53 FA               [12] 2245 	mov	r2,a
+      000B54 E5 18            [12] 2246 	mov	a,(_main_sloc1_1_0 + 3)
+      000B56 95 14            [12] 2247 	subb	a,(_main_sloc0_1_0 + 3)
+      000B58 FB               [12] 2248 	mov	r3,a
+      000B59 C3               [12] 2249 	clr	c
+      000B5A E8               [12] 2250 	mov	a,r0
+      000B5B 94 01            [12] 2251 	subb	a,#0x01
+      000B5D E9               [12] 2252 	mov	a,r1
+      000B5E 94 00            [12] 2253 	subb	a,#0x00
+      000B60 EA               [12] 2254 	mov	a,r2
+      000B61 94 00            [12] 2255 	subb	a,#0x00
+      000B63 EB               [12] 2256 	mov	a,r3
+      000B64 94 00            [12] 2257 	subb	a,#0x00
+      000B66 40 03            [24] 2258 	jc	00274$
+      000B68 02 0C 93         [24] 2259 	ljmp	00135$
+      000B6B                       2260 00274$:
+      000B6B 90 00 1B         [24] 2261 	mov	dptr,#_main_final_calc_10000_60
+      000B6E E5 11            [12] 2262 	mov	a,_main_sloc0_1_0
+      000B70 F0               [24] 2263 	movx	@dptr,a
+      000B71 E5 12            [12] 2264 	mov	a,(_main_sloc0_1_0 + 1)
+      000B73 A3               [24] 2265 	inc	dptr
+      000B74 F0               [24] 2266 	movx	@dptr,a
+      000B75 E5 13            [12] 2267 	mov	a,(_main_sloc0_1_0 + 2)
+      000B77 A3               [24] 2268 	inc	dptr
+      000B78 F0               [24] 2269 	movx	@dptr,a
+      000B79 E5 14            [12] 2270 	mov	a,(_main_sloc0_1_0 + 3)
+      000B7B A3               [24] 2271 	inc	dptr
+      000B7C F0               [24] 2272 	movx	@dptr,a
+      000B7D 02 0C 93         [24] 2273 	ljmp	00135$
+      000B80                       2274 00124$:
+                                   2275 ;	main.c:315: if ((last_display_val - final_calc) < 1) final_calc = last_display_val;
+      000B80 E5 11            [12] 2276 	mov	a,_main_sloc0_1_0
+      000B82 C3               [12] 2277 	clr	c
+      000B83 95 15            [12] 2278 	subb	a,_main_sloc1_1_0
+      000B85 F8               [12] 2279 	mov	r0,a
+      000B86 E5 12            [12] 2280 	mov	a,(_main_sloc0_1_0 + 1)
+      000B88 95 16            [12] 2281 	subb	a,(_main_sloc1_1_0 + 1)
+      000B8A F9               [12] 2282 	mov	r1,a
+      000B8B E5 13            [12] 2283 	mov	a,(_main_sloc0_1_0 + 2)
+      000B8D 95 17            [12] 2284 	subb	a,(_main_sloc1_1_0 + 2)
+      000B8F FA               [12] 2285 	mov	r2,a
+      000B90 E5 14            [12] 2286 	mov	a,(_main_sloc0_1_0 + 3)
+      000B92 95 18            [12] 2287 	subb	a,(_main_sloc1_1_0 + 3)
+      000B94 FB               [12] 2288 	mov	r3,a
+      000B95 C3               [12] 2289 	clr	c
+      000B96 E8               [12] 2290 	mov	a,r0
+      000B97 94 01            [12] 2291 	subb	a,#0x01
+      000B99 E9               [12] 2292 	mov	a,r1
+      000B9A 94 00            [12] 2293 	subb	a,#0x00
+      000B9C EA               [12] 2294 	mov	a,r2
+      000B9D 94 00            [12] 2295 	subb	a,#0x00
+      000B9F EB               [12] 2296 	mov	a,r3
+      000BA0 94 00            [12] 2297 	subb	a,#0x00
+      000BA2 40 03            [24] 2298 	jc	00275$
+      000BA4 02 0C 93         [24] 2299 	ljmp	00135$
+      000BA7                       2300 00275$:
+      000BA7 90 00 1B         [24] 2301 	mov	dptr,#_main_final_calc_10000_60
+      000BAA E5 11            [12] 2302 	mov	a,_main_sloc0_1_0
+      000BAC F0               [24] 2303 	movx	@dptr,a
+      000BAD E5 12            [12] 2304 	mov	a,(_main_sloc0_1_0 + 1)
+      000BAF A3               [24] 2305 	inc	dptr
+      000BB0 F0               [24] 2306 	movx	@dptr,a
+      000BB1 E5 13            [12] 2307 	mov	a,(_main_sloc0_1_0 + 2)
+      000BB3 A3               [24] 2308 	inc	dptr
+      000BB4 F0               [24] 2309 	movx	@dptr,a
+      000BB5 E5 14            [12] 2310 	mov	a,(_main_sloc0_1_0 + 3)
+      000BB7 A3               [24] 2311 	inc	dptr
+      000BB8 F0               [24] 2312 	movx	@dptr,a
+      000BB9 02 0C 93         [24] 2313 	ljmp	00135$
+      000BBC                       2314 00134$:
+                                   2315 ;	main.c:319: mode_uf = 0; // Режим "нФ"
+      000BBC 90 00 27         [24] 2316 	mov	dptr,#_main_mode_uf_10000_60
+      000BBF E4               [12] 2317 	clr	a
+      000BC0 F0               [24] 2318 	movx	@dptr,a
+                                   2319 ;	main.c:320: is_first_run = 1;
+      000BC1 90 00 28         [24] 2320 	mov	dptr,#_main_is_first_run_10000_60
+      000BC4 04               [12] 2321 	inc	a
+      000BC5 F0               [24] 2322 	movx	@dptr,a
+                                   2323 ;	main.c:323: final_calc = (filtered_ticks * 23) / 100;
+      000BC6 90 00 42         [24] 2324 	mov	dptr,#__mullong_PARM_2
+      000BC9 EC               [12] 2325 	mov	a,r4
+      000BCA F0               [24] 2326 	movx	@dptr,a
+      000BCB ED               [12] 2327 	mov	a,r5
+      000BCC A3               [24] 2328 	inc	dptr
+      000BCD F0               [24] 2329 	movx	@dptr,a
+      000BCE EE               [12] 2330 	mov	a,r6
+      000BCF A3               [24] 2331 	inc	dptr
+      000BD0 F0               [24] 2332 	movx	@dptr,a
+      000BD1 EF               [12] 2333 	mov	a,r7
+      000BD2 A3               [24] 2334 	inc	dptr
+      000BD3 F0               [24] 2335 	movx	@dptr,a
+      000BD4 90 00 17         [24] 2336 	mov	dptr,#0x0017
+      000BD7 E4               [12] 2337 	clr	a
+      000BD8 F5 F0            [12] 2338 	mov	b,a
+      000BDA 12 0F 7A         [24] 2339 	lcall	__mullong
+      000BDD AC 82            [24] 2340 	mov	r4, dpl
+      000BDF AD 83            [24] 2341 	mov	r5, dph
+      000BE1 AE F0            [24] 2342 	mov	r6, b
+      000BE3 FF               [12] 2343 	mov	r7, a
+      000BE4 90 00 35         [24] 2344 	mov	dptr,#__divulong_PARM_2
+      000BE7 74 64            [12] 2345 	mov	a,#0x64
+      000BE9 F0               [24] 2346 	movx	@dptr,a
+      000BEA E4               [12] 2347 	clr	a
+      000BEB A3               [24] 2348 	inc	dptr
+      000BEC F0               [24] 2349 	movx	@dptr,a
+      000BED A3               [24] 2350 	inc	dptr
+      000BEE F0               [24] 2351 	movx	@dptr,a
+      000BEF A3               [24] 2352 	inc	dptr
+      000BF0 F0               [24] 2353 	movx	@dptr,a
+      000BF1 8C 82            [24] 2354 	mov	dpl, r4
+      000BF3 8D 83            [24] 2355 	mov	dph, r5
+      000BF5 8E F0            [24] 2356 	mov	b, r6
+      000BF7 EF               [12] 2357 	mov	a, r7
+      000BF8 12 0E 86         [24] 2358 	lcall	__divulong
+      000BFB 85 82 15         [24] 2359 	mov	_main_sloc1_1_0,dpl
+      000BFE 85 83 16         [24] 2360 	mov	(_main_sloc1_1_0 + 1),dph
+      000C01 85 F0 17         [24] 2361 	mov	(_main_sloc1_1_0 + 2),b
+      000C04 F5 18            [12] 2362 	mov	(_main_sloc1_1_0 + 3),a
+      000C06 90 00 1B         [24] 2363 	mov	dptr,#_main_final_calc_10000_60
+      000C09 E5 15            [12] 2364 	mov	a,_main_sloc1_1_0
+      000C0B F0               [24] 2365 	movx	@dptr,a
+      000C0C E5 16            [12] 2366 	mov	a,(_main_sloc1_1_0 + 1)
+      000C0E A3               [24] 2367 	inc	dptr
+      000C0F F0               [24] 2368 	movx	@dptr,a
+      000C10 E5 17            [12] 2369 	mov	a,(_main_sloc1_1_0 + 2)
+      000C12 A3               [24] 2370 	inc	dptr
+      000C13 F0               [24] 2371 	movx	@dptr,a
+      000C14 E5 18            [12] 2372 	mov	a,(_main_sloc1_1_0 + 3)
+      000C16 A3               [24] 2373 	inc	dptr
+      000C17 F0               [24] 2374 	movx	@dptr,a
+                                   2375 ;	main.c:325: if (final_calc > last_display_val) {
+      000C18 90 00 1F         [24] 2376 	mov	dptr,#_main_last_display_val_10000_60
+      000C1B E0               [24] 2377 	movx	a,@dptr
+      000C1C F8               [12] 2378 	mov	r0,a
+      000C1D A3               [24] 2379 	inc	dptr
+      000C1E E0               [24] 2380 	movx	a,@dptr
+      000C1F F9               [12] 2381 	mov	r1,a
+      000C20 A3               [24] 2382 	inc	dptr
+      000C21 E0               [24] 2383 	movx	a,@dptr
+      000C22 FA               [12] 2384 	mov	r2,a
+      000C23 A3               [24] 2385 	inc	dptr
+      000C24 E0               [24] 2386 	movx	a,@dptr
+      000C25 FB               [12] 2387 	mov	r3,a
+      000C26 C3               [12] 2388 	clr	c
+      000C27 E8               [12] 2389 	mov	a,r0
+      000C28 95 15            [12] 2390 	subb	a,_main_sloc1_1_0
+      000C2A E9               [12] 2391 	mov	a,r1
+      000C2B 95 16            [12] 2392 	subb	a,(_main_sloc1_1_0 + 1)
+      000C2D EA               [12] 2393 	mov	a,r2
+      000C2E 95 17            [12] 2394 	subb	a,(_main_sloc1_1_0 + 2)
+      000C30 EB               [12] 2395 	mov	a,r3
+      000C31 95 18            [12] 2396 	subb	a,(_main_sloc1_1_0 + 3)
+      000C33 50 30            [24] 2397 	jnc	00131$
+                                   2398 ;	main.c:326: if ((final_calc - last_display_val) < 2) final_calc = last_display_val;
+      000C35 E5 15            [12] 2399 	mov	a,_main_sloc1_1_0
+      000C37 C3               [12] 2400 	clr	c
+      000C38 98               [12] 2401 	subb	a,r0
+      000C39 FC               [12] 2402 	mov	r4,a
+      000C3A E5 16            [12] 2403 	mov	a,(_main_sloc1_1_0 + 1)
+      000C3C 99               [12] 2404 	subb	a,r1
+      000C3D FD               [12] 2405 	mov	r5,a
+      000C3E E5 17            [12] 2406 	mov	a,(_main_sloc1_1_0 + 2)
+      000C40 9A               [12] 2407 	subb	a,r2
+      000C41 FE               [12] 2408 	mov	r6,a
+      000C42 E5 18            [12] 2409 	mov	a,(_main_sloc1_1_0 + 3)
+      000C44 9B               [12] 2410 	subb	a,r3
+      000C45 FF               [12] 2411 	mov	r7,a
+      000C46 C3               [12] 2412 	clr	c
+      000C47 EC               [12] 2413 	mov	a,r4
+      000C48 94 02            [12] 2414 	subb	a,#0x02
+      000C4A ED               [12] 2415 	mov	a,r5
+      000C4B 94 00            [12] 2416 	subb	a,#0x00
+      000C4D EE               [12] 2417 	mov	a,r6
+      000C4E 94 00            [12] 2418 	subb	a,#0x00
+      000C50 EF               [12] 2419 	mov	a,r7
+      000C51 94 00            [12] 2420 	subb	a,#0x00
+      000C53 50 3E            [24] 2421 	jnc	00135$
+      000C55 90 00 1B         [24] 2422 	mov	dptr,#_main_final_calc_10000_60
+      000C58 E8               [12] 2423 	mov	a,r0
+      000C59 F0               [24] 2424 	movx	@dptr,a
+      000C5A E9               [12] 2425 	mov	a,r1
+      000C5B A3               [24] 2426 	inc	dptr
+      000C5C F0               [24] 2427 	movx	@dptr,a
+      000C5D EA               [12] 2428 	mov	a,r2
+      000C5E A3               [24] 2429 	inc	dptr
+      000C5F F0               [24] 2430 	movx	@dptr,a
+      000C60 EB               [12] 2431 	mov	a,r3
+      000C61 A3               [24] 2432 	inc	dptr
+      000C62 F0               [24] 2433 	movx	@dptr,a
+      000C63 80 2E            [24] 2434 	sjmp	00135$
+      000C65                       2435 00131$:
+                                   2436 ;	main.c:328: if ((last_display_val - final_calc) < 2) final_calc = last_display_val;
+      000C65 E8               [12] 2437 	mov	a,r0
+      000C66 C3               [12] 2438 	clr	c
+      000C67 95 15            [12] 2439 	subb	a,_main_sloc1_1_0
+      000C69 FC               [12] 2440 	mov	r4,a
+      000C6A E9               [12] 2441 	mov	a,r1
+      000C6B 95 16            [12] 2442 	subb	a,(_main_sloc1_1_0 + 1)
+      000C6D FD               [12] 2443 	mov	r5,a
+      000C6E EA               [12] 2444 	mov	a,r2
+      000C6F 95 17            [12] 2445 	subb	a,(_main_sloc1_1_0 + 2)
+      000C71 FE               [12] 2446 	mov	r6,a
+      000C72 EB               [12] 2447 	mov	a,r3
+      000C73 95 18            [12] 2448 	subb	a,(_main_sloc1_1_0 + 3)
+      000C75 FF               [12] 2449 	mov	r7,a
+      000C76 C3               [12] 2450 	clr	c
+      000C77 EC               [12] 2451 	mov	a,r4
+      000C78 94 02            [12] 2452 	subb	a,#0x02
+      000C7A ED               [12] 2453 	mov	a,r5
+      000C7B 94 00            [12] 2454 	subb	a,#0x00
+      000C7D EE               [12] 2455 	mov	a,r6
+      000C7E 94 00            [12] 2456 	subb	a,#0x00
+      000C80 EF               [12] 2457 	mov	a,r7
+      000C81 94 00            [12] 2458 	subb	a,#0x00
+      000C83 50 0E            [24] 2459 	jnc	00135$
+      000C85 90 00 1B         [24] 2460 	mov	dptr,#_main_final_calc_10000_60
+      000C88 E8               [12] 2461 	mov	a,r0
+      000C89 F0               [24] 2462 	movx	@dptr,a
+      000C8A E9               [12] 2463 	mov	a,r1
+      000C8B A3               [24] 2464 	inc	dptr
+      000C8C F0               [24] 2465 	movx	@dptr,a
+      000C8D EA               [12] 2466 	mov	a,r2
+      000C8E A3               [24] 2467 	inc	dptr
+      000C8F F0               [24] 2468 	movx	@dptr,a
+      000C90 EB               [12] 2469 	mov	a,r3
+      000C91 A3               [24] 2470 	inc	dptr
+      000C92 F0               [24] 2471 	movx	@dptr,a
+      000C93                       2472 00135$:
+                                   2473 ;	main.c:333: if (final_calc != last_display_val) {
+      000C93 90 00 1B         [24] 2474 	mov	dptr,#_main_final_calc_10000_60
+      000C96 E0               [24] 2475 	movx	a,@dptr
+      000C97 FC               [12] 2476 	mov	r4,a
+      000C98 A3               [24] 2477 	inc	dptr
+      000C99 E0               [24] 2478 	movx	a,@dptr
+      000C9A FD               [12] 2479 	mov	r5,a
+      000C9B A3               [24] 2480 	inc	dptr
+      000C9C E0               [24] 2481 	movx	a,@dptr
+      000C9D FE               [12] 2482 	mov	r6,a
+      000C9E A3               [24] 2483 	inc	dptr
+      000C9F E0               [24] 2484 	movx	a,@dptr
+      000CA0 FF               [12] 2485 	mov	r7,a
+      000CA1 90 00 1F         [24] 2486 	mov	dptr,#_main_last_display_val_10000_60
+      000CA4 E0               [24] 2487 	movx	a,@dptr
+      000CA5 F8               [12] 2488 	mov	r0,a
+      000CA6 A3               [24] 2489 	inc	dptr
+      000CA7 E0               [24] 2490 	movx	a,@dptr
+      000CA8 F9               [12] 2491 	mov	r1,a
+      000CA9 A3               [24] 2492 	inc	dptr
+      000CAA E0               [24] 2493 	movx	a,@dptr
+      000CAB FA               [12] 2494 	mov	r2,a
+      000CAC A3               [24] 2495 	inc	dptr
+      000CAD E0               [24] 2496 	movx	a,@dptr
+      000CAE FB               [12] 2497 	mov	r3,a
+      000CAF EC               [12] 2498 	mov	a,r4
+      000CB0 B5 00 0E         [24] 2499 	cjne	a,ar0,00279$
+      000CB3 ED               [12] 2500 	mov	a,r5
+      000CB4 B5 01 0A         [24] 2501 	cjne	a,ar1,00279$
+      000CB7 EE               [12] 2502 	mov	a,r6
+      000CB8 B5 02 06         [24] 2503 	cjne	a,ar2,00279$
+      000CBB EF               [12] 2504 	mov	a,r7
+      000CBC B5 03 02         [24] 2505 	cjne	a,ar3,00279$
+      000CBF 80 42            [24] 2506 	sjmp	00137$
+      000CC1                       2507 00279$:
+                                   2508 ;	main.c:334: SSD1306_DisplayResult(3, 16, final_calc, mode_uf);
+      000CC1 90 00 27         [24] 2509 	mov	dptr,#_main_mode_uf_10000_60
+      000CC4 E0               [24] 2510 	movx	a,@dptr
+      000CC5 FB               [12] 2511 	mov	r3,a
+      000CC6 90 00 13         [24] 2512 	mov	dptr,#_SSD1306_DisplayResult_PARM_2
+      000CC9 74 10            [12] 2513 	mov	a,#0x10
+      000CCB F0               [24] 2514 	movx	@dptr,a
+      000CCC 90 00 14         [24] 2515 	mov	dptr,#_SSD1306_DisplayResult_PARM_3
+      000CCF EC               [12] 2516 	mov	a,r4
+      000CD0 F0               [24] 2517 	movx	@dptr,a
+      000CD1 ED               [12] 2518 	mov	a,r5
+      000CD2 A3               [24] 2519 	inc	dptr
+      000CD3 F0               [24] 2520 	movx	@dptr,a
+      000CD4 EE               [12] 2521 	mov	a,r6
+      000CD5 A3               [24] 2522 	inc	dptr
+      000CD6 F0               [24] 2523 	movx	@dptr,a
+      000CD7 EF               [12] 2524 	mov	a,r7
+      000CD8 A3               [24] 2525 	inc	dptr
+      000CD9 F0               [24] 2526 	movx	@dptr,a
+      000CDA 90 00 18         [24] 2527 	mov	dptr,#_SSD1306_DisplayResult_PARM_4
+      000CDD EB               [12] 2528 	mov	a,r3
+      000CDE F0               [24] 2529 	movx	@dptr,a
+      000CDF 75 82 03         [24] 2530 	mov	dpl, #0x03
+      000CE2 C0 07            [24] 2531 	push	ar7
+      000CE4 C0 06            [24] 2532 	push	ar6
+      000CE6 C0 05            [24] 2533 	push	ar5
+      000CE8 C0 04            [24] 2534 	push	ar4
+      000CEA 12 04 50         [24] 2535 	lcall	_SSD1306_DisplayResult
+      000CED D0 04            [24] 2536 	pop	ar4
+      000CEF D0 05            [24] 2537 	pop	ar5
+      000CF1 D0 06            [24] 2538 	pop	ar6
+      000CF3 D0 07            [24] 2539 	pop	ar7
+                                   2540 ;	main.c:335: last_display_val = final_calc;
+      000CF5 90 00 1F         [24] 2541 	mov	dptr,#_main_last_display_val_10000_60
+      000CF8 EC               [12] 2542 	mov	a,r4
+      000CF9 F0               [24] 2543 	movx	@dptr,a
+      000CFA ED               [12] 2544 	mov	a,r5
+      000CFB A3               [24] 2545 	inc	dptr
+      000CFC F0               [24] 2546 	movx	@dptr,a
+      000CFD EE               [12] 2547 	mov	a,r6
+      000CFE A3               [24] 2548 	inc	dptr
+      000CFF F0               [24] 2549 	movx	@dptr,a
+      000D00 EF               [12] 2550 	mov	a,r7
+      000D01 A3               [24] 2551 	inc	dptr
+      000D02 F0               [24] 2552 	movx	@dptr,a
+      000D03                       2553 00137$:
+                                   2554 ;	main.c:340: P3M1 &= ~0x02; P3M0 |= 0x02; PIN_R1_10K = 0;
+      000D03 53 B1 FD         [24] 2555 	anl	_P3M1,#0xfd
+      000D06 43 B2 02         [24] 2556 	orl	_P3M0,#0x02
+                                   2557 ;	assignBit
+      000D09 C2 B1            [12] 2558 	clr	_PIN_R1_10K
+                                   2559 ;	main.c:344: for(discharge = 0; discharge < 30; discharge++) {
+      000D0B 90 00 2A         [24] 2560 	mov	dptr,#_main_discharge_10000_60
+      000D0E E4               [12] 2561 	clr	a
+      000D0F F0               [24] 2562 	movx	@dptr,a
+      000D10 A3               [24] 2563 	inc	dptr
+      000D11 F0               [24] 2564 	movx	@dptr,a
+      000D12                       2565 00145$:
+      000D12 90 00 2A         [24] 2566 	mov	dptr,#_main_discharge_10000_60
+      000D15 E0               [24] 2567 	movx	a,@dptr
+      000D16 FE               [12] 2568 	mov	r6,a
+      000D17 A3               [24] 2569 	inc	dptr
+      000D18 E0               [24] 2570 	movx	a,@dptr
+      000D19 FF               [12] 2571 	mov	r7,a
+      000D1A C3               [12] 2572 	clr	c
+      000D1B EE               [12] 2573 	mov	a,r6
+      000D1C 94 1E            [12] 2574 	subb	a,#0x1e
+      000D1E EF               [12] 2575 	mov	a,r7
+      000D1F 94 00            [12] 2576 	subb	a,#0x00
+      000D21 40 03            [24] 2577 	jc	00280$
+      000D23 02 09 7B         [24] 2578 	ljmp	00142$
+      000D26                       2579 00280$:
+                                   2580 ;	main.c:345: Delay_ms(10);
+      000D26 90 00 0A         [24] 2581 	mov	dptr,#0x000a
+      000D29 12 00 B0         [24] 2582 	lcall	_Delay_ms
+                                   2583 ;	main.c:346: if (PIN_BUTTON == 0) break; // Если во время паузы нажали кнопку — мгновенно прерываем её
+      000D2C 20 B0 03         [24] 2584 	jb	_PIN_BUTTON,00281$
+      000D2F 02 09 7B         [24] 2585 	ljmp	00142$
+      000D32                       2586 00281$:
+                                   2587 ;	main.c:344: for(discharge = 0; discharge < 30; discharge++) {
+      000D32 90 00 2A         [24] 2588 	mov	dptr,#_main_discharge_10000_60
+      000D35 E0               [24] 2589 	movx	a,@dptr
+      000D36 FE               [12] 2590 	mov	r6,a
+      000D37 A3               [24] 2591 	inc	dptr
+      000D38 E0               [24] 2592 	movx	a,@dptr
+      000D39 FF               [12] 2593 	mov	r7,a
+      000D3A 90 00 2A         [24] 2594 	mov	dptr,#_main_discharge_10000_60
+      000D3D 74 01            [12] 2595 	mov	a,#0x01
+      000D3F 2E               [12] 2596 	add	a, r6
+      000D40 F0               [24] 2597 	movx	@dptr,a
+      000D41 E4               [12] 2598 	clr	a
+      000D42 3F               [12] 2599 	addc	a, r7
+      000D43 A3               [24] 2600 	inc	dptr
+      000D44 F0               [24] 2601 	movx	@dptr,a
+                                   2602 ;	main.c:349: }
+      000D45 80 CB            [24] 2603 	sjmp	00145$
+                                   2604 	.area CSEG    (CODE)
+                                   2605 	.area CONST   (CODE)
+                                   2606 	.area CONST   (CODE)
+      001006                       2607 _Font_8x8:
+      001006 3E                    2608 	.db #0x3e	; 62
+      001007 51                    2609 	.db #0x51	; 81	'Q'
+      001008 49                    2610 	.db #0x49	; 73	'I'
+      001009 45                    2611 	.db #0x45	; 69	'E'
+      00100A 3E                    2612 	.db #0x3e	; 62
+      00100B 00                    2613 	.db #0x00	; 0
+      00100C 00                    2614 	.db #0x00	; 0
+      00100D 00                    2615 	.db #0x00	; 0
+      00100E 00                    2616 	.db #0x00	; 0
+      00100F 42                    2617 	.db #0x42	; 66	'B'
+      001010 7F                    2618 	.db #0x7f	; 127
+      001011 40                    2619 	.db #0x40	; 64
+      001012 00                    2620 	.db #0x00	; 0
+      001013 00                    2621 	.db #0x00	; 0
+      001014 00                    2622 	.db #0x00	; 0
+      001015 00                    2623 	.db #0x00	; 0
+      001016 42                    2624 	.db #0x42	; 66	'B'
+      001017 61                    2625 	.db #0x61	; 97	'a'
+      001018 51                    2626 	.db #0x51	; 81	'Q'
+      001019 49                    2627 	.db #0x49	; 73	'I'
+      00101A 46                    2628 	.db #0x46	; 70	'F'
+      00101B 00                    2629 	.db #0x00	; 0
+      00101C 00                    2630 	.db #0x00	; 0
+      00101D 00                    2631 	.db #0x00	; 0
+      00101E 21                    2632 	.db #0x21	; 33
+      00101F 41                    2633 	.db #0x41	; 65	'A'
+      001020 45                    2634 	.db #0x45	; 69	'E'
+      001021 4B                    2635 	.db #0x4b	; 75	'K'
+      001022 31                    2636 	.db #0x31	; 49	'1'
+      001023 00                    2637 	.db #0x00	; 0
+      001024 00                    2638 	.db #0x00	; 0
+      001025 00                    2639 	.db #0x00	; 0
+      001026 18                    2640 	.db #0x18	; 24
+      001027 14                    2641 	.db #0x14	; 20
+      001028 12                    2642 	.db #0x12	; 18
+      001029 7F                    2643 	.db #0x7f	; 127
+      00102A 10                    2644 	.db #0x10	; 16
+      00102B 00                    2645 	.db #0x00	; 0
+      00102C 00                    2646 	.db #0x00	; 0
+      00102D 00                    2647 	.db #0x00	; 0
+      00102E 27                    2648 	.db #0x27	; 39
+      00102F 45                    2649 	.db #0x45	; 69	'E'
+      001030 45                    2650 	.db #0x45	; 69	'E'
+      001031 45                    2651 	.db #0x45	; 69	'E'
+      001032 39                    2652 	.db #0x39	; 57	'9'
+      001033 00                    2653 	.db #0x00	; 0
+      001034 00                    2654 	.db #0x00	; 0
+      001035 00                    2655 	.db #0x00	; 0
+      001036 3C                    2656 	.db #0x3c	; 60
+      001037 4A                    2657 	.db #0x4a	; 74	'J'
+      001038 49                    2658 	.db #0x49	; 73	'I'
+      001039 49                    2659 	.db #0x49	; 73	'I'
+      00103A 30                    2660 	.db #0x30	; 48	'0'
+      00103B 00                    2661 	.db #0x00	; 0
+      00103C 00                    2662 	.db #0x00	; 0
+      00103D 00                    2663 	.db #0x00	; 0
+      00103E 01                    2664 	.db #0x01	; 1
+      00103F 71                    2665 	.db #0x71	; 113	'q'
+      001040 09                    2666 	.db #0x09	; 9
+      001041 05                    2667 	.db #0x05	; 5
+      001042 03                    2668 	.db #0x03	; 3
+      001043 00                    2669 	.db #0x00	; 0
+      001044 00                    2670 	.db #0x00	; 0
+      001045 00                    2671 	.db #0x00	; 0
+      001046 36                    2672 	.db #0x36	; 54	'6'
+      001047 49                    2673 	.db #0x49	; 73	'I'
+      001048 49                    2674 	.db #0x49	; 73	'I'
+      001049 49                    2675 	.db #0x49	; 73	'I'
+      00104A 36                    2676 	.db #0x36	; 54	'6'
+      00104B 00                    2677 	.db #0x00	; 0
+      00104C 00                    2678 	.db #0x00	; 0
+      00104D 00                    2679 	.db #0x00	; 0
+      00104E 06                    2680 	.db #0x06	; 6
+      00104F 49                    2681 	.db #0x49	; 73	'I'
+      001050 49                    2682 	.db #0x49	; 73	'I'
+      001051 29                    2683 	.db #0x29	; 41
+      001052 1E                    2684 	.db #0x1e	; 30
+      001053 00                    2685 	.db #0x00	; 0
+      001054 00                    2686 	.db #0x00	; 0
+      001055 00                    2687 	.db #0x00	; 0
+      001056 08                    2688 	.db #0x08	; 8
+      001057 08                    2689 	.db #0x08	; 8
+      001058 08                    2690 	.db #0x08	; 8
+      001059 08                    2691 	.db #0x08	; 8
+      00105A 08                    2692 	.db #0x08	; 8
+      00105B 00                    2693 	.db #0x00	; 0
+      00105C 00                    2694 	.db #0x00	; 0
+      00105D 00                    2695 	.db #0x00	; 0
+      00105E 00                    2696 	.db #0x00	; 0
+      00105F 00                    2697 	.db #0x00	; 0
+      001060 00                    2698 	.db #0x00	; 0
+      001061 00                    2699 	.db #0x00	; 0
+      001062 00                    2700 	.db #0x00	; 0
+      001063 00                    2701 	.db #0x00	; 0
+      001064 00                    2702 	.db #0x00	; 0
+      001065 00                    2703 	.db #0x00	; 0
+      001066 00                    2704 	.db #0x00	; 0
+      001067 60                    2705 	.db #0x60	; 96
+      001068 60                    2706 	.db #0x60	; 96
+      001069 00                    2707 	.db #0x00	; 0
+      00106A 00                    2708 	.db #0x00	; 0
+      00106B 00                    2709 	.db #0x00	; 0
+      00106C 00                    2710 	.db #0x00	; 0
+      00106D 00                    2711 	.db #0x00	; 0
+      00106E 00                    2712 	.db #0x00	; 0
+      00106F 36                    2713 	.db #0x36	; 54	'6'
+      001070 36                    2714 	.db #0x36	; 54	'6'
+      001071 00                    2715 	.db #0x00	; 0
+      001072 00                    2716 	.db #0x00	; 0
+      001073 00                    2717 	.db #0x00	; 0
+      001074 00                    2718 	.db #0x00	; 0
+      001075 00                    2719 	.db #0x00	; 0
+      001076 06                    2720 	.db #0x06	; 6
+      001077 09                    2721 	.db #0x09	; 9
+      001078 09                    2722 	.db #0x09	; 9
+      001079 06                    2723 	.db #0x06	; 6
+      00107A 00                    2724 	.db #0x00	; 0
+      00107B 00                    2725 	.db #0x00	; 0
+      00107C 00                    2726 	.db #0x00	; 0
+      00107D 00                    2727 	.db #0x00	; 0
+      00107E 14                    2728 	.db #0x14	; 20
+      00107F 14                    2729 	.db #0x14	; 20
+      001080 14                    2730 	.db #0x14	; 20
+      001081 14                    2731 	.db #0x14	; 20
+      001082 14                    2732 	.db #0x14	; 20
+      001083 00                    2733 	.db #0x00	; 0
+      001084 00                    2734 	.db #0x00	; 0
+      001085 00                    2735 	.db #0x00	; 0
+      001086 7E                    2736 	.db #0x7e	; 126
+      001087 11                    2737 	.db #0x11	; 17
+      001088 11                    2738 	.db #0x11	; 17
+      001089 11                    2739 	.db #0x11	; 17
+      00108A 7E                    2740 	.db #0x7e	; 126
+      00108B 00                    2741 	.db #0x00	; 0
+      00108C 00                    2742 	.db #0x00	; 0
+      00108D 00                    2743 	.db #0x00	; 0
+      00108E 7F                    2744 	.db #0x7f	; 127
+      00108F 49                    2745 	.db #0x49	; 73	'I'
+      001090 49                    2746 	.db #0x49	; 73	'I'
+      001091 49                    2747 	.db #0x49	; 73	'I'
+      001092 36                    2748 	.db #0x36	; 54	'6'
+      001093 00                    2749 	.db #0x00	; 0
+      001094 00                    2750 	.db #0x00	; 0
+      001095 00                    2751 	.db #0x00	; 0
+      001096 3E                    2752 	.db #0x3e	; 62
+      001097 41                    2753 	.db #0x41	; 65	'A'
+      001098 41                    2754 	.db #0x41	; 65	'A'
+      001099 41                    2755 	.db #0x41	; 65	'A'
+      00109A 22                    2756 	.db #0x22	; 34
+      00109B 00                    2757 	.db #0x00	; 0
+      00109C 00                    2758 	.db #0x00	; 0
+      00109D 00                    2759 	.db #0x00	; 0
+      00109E 7F                    2760 	.db #0x7f	; 127
+      00109F 41                    2761 	.db #0x41	; 65	'A'
+      0010A0 41                    2762 	.db #0x41	; 65	'A'
+      0010A1 22                    2763 	.db #0x22	; 34
+      0010A2 1C                    2764 	.db #0x1c	; 28
+      0010A3 00                    2765 	.db #0x00	; 0
+      0010A4 00                    2766 	.db #0x00	; 0
+      0010A5 00                    2767 	.db #0x00	; 0
+      0010A6 7F                    2768 	.db #0x7f	; 127
+      0010A7 49                    2769 	.db #0x49	; 73	'I'
+      0010A8 49                    2770 	.db #0x49	; 73	'I'
+      0010A9 49                    2771 	.db #0x49	; 73	'I'
+      0010AA 41                    2772 	.db #0x41	; 65	'A'
+      0010AB 00                    2773 	.db #0x00	; 0
+      0010AC 00                    2774 	.db #0x00	; 0
+      0010AD 00                    2775 	.db #0x00	; 0
+      0010AE 7F                    2776 	.db #0x7f	; 127
+      0010AF 09                    2777 	.db #0x09	; 9
+      0010B0 09                    2778 	.db #0x09	; 9
+      0010B1 01                    2779 	.db #0x01	; 1
+      0010B2 01                    2780 	.db #0x01	; 1
+      0010B3 00                    2781 	.db #0x00	; 0
+      0010B4 00                    2782 	.db #0x00	; 0
+      0010B5 00                    2783 	.db #0x00	; 0
+      0010B6 3E                    2784 	.db #0x3e	; 62
+      0010B7 41                    2785 	.db #0x41	; 65	'A'
+      0010B8 49                    2786 	.db #0x49	; 73	'I'
+      0010B9 49                    2787 	.db #0x49	; 73	'I'
+      0010BA 7A                    2788 	.db #0x7a	; 122	'z'
+      0010BB 00                    2789 	.db #0x00	; 0
+      0010BC 00                    2790 	.db #0x00	; 0
+      0010BD 00                    2791 	.db #0x00	; 0
+      0010BE 7F                    2792 	.db #0x7f	; 127
+      0010BF 08                    2793 	.db #0x08	; 8
+      0010C0 08                    2794 	.db #0x08	; 8
+      0010C1 08                    2795 	.db #0x08	; 8
+      0010C2 7F                    2796 	.db #0x7f	; 127
+      0010C3 00                    2797 	.db #0x00	; 0
+      0010C4 00                    2798 	.db #0x00	; 0
+      0010C5 00                    2799 	.db #0x00	; 0
+      0010C6 00                    2800 	.db #0x00	; 0
+      0010C7 41                    2801 	.db #0x41	; 65	'A'
+      0010C8 7F                    2802 	.db #0x7f	; 127
+      0010C9 41                    2803 	.db #0x41	; 65	'A'
+      0010CA 00                    2804 	.db #0x00	; 0
+      0010CB 00                    2805 	.db #0x00	; 0
+      0010CC 00                    2806 	.db #0x00	; 0
+      0010CD 00                    2807 	.db #0x00	; 0
+      0010CE 20                    2808 	.db #0x20	; 32
+      0010CF 40                    2809 	.db #0x40	; 64
+      0010D0 41                    2810 	.db #0x41	; 65	'A'
+      0010D1 3F                    2811 	.db #0x3f	; 63
+      0010D2 01                    2812 	.db #0x01	; 1
+      0010D3 00                    2813 	.db #0x00	; 0
+      0010D4 00                    2814 	.db #0x00	; 0
+      0010D5 00                    2815 	.db #0x00	; 0
+      0010D6 7F                    2816 	.db #0x7f	; 127
+      0010D7 08                    2817 	.db #0x08	; 8
+      0010D8 14                    2818 	.db #0x14	; 20
+      0010D9 22                    2819 	.db #0x22	; 34
+      0010DA 41                    2820 	.db #0x41	; 65	'A'
+      0010DB 00                    2821 	.db #0x00	; 0
+      0010DC 00                    2822 	.db #0x00	; 0
+      0010DD 00                    2823 	.db #0x00	; 0
+      0010DE 7F                    2824 	.db #0x7f	; 127
+      0010DF 40                    2825 	.db #0x40	; 64
+      0010E0 40                    2826 	.db #0x40	; 64
+      0010E1 40                    2827 	.db #0x40	; 64
+      0010E2 40                    2828 	.db #0x40	; 64
+      0010E3 00                    2829 	.db #0x00	; 0
+      0010E4 00                    2830 	.db #0x00	; 0
+      0010E5 00                    2831 	.db #0x00	; 0
+      0010E6 7F                    2832 	.db #0x7f	; 127
+      0010E7 02                    2833 	.db #0x02	; 2
+      0010E8 0C                    2834 	.db #0x0c	; 12
+      0010E9 02                    2835 	.db #0x02	; 2
+      0010EA 7F                    2836 	.db #0x7f	; 127
+      0010EB 00                    2837 	.db #0x00	; 0
+      0010EC 00                    2838 	.db #0x00	; 0
+      0010ED 00                    2839 	.db #0x00	; 0
+      0010EE 7F                    2840 	.db #0x7f	; 127
+      0010EF 04                    2841 	.db #0x04	; 4
+      0010F0 08                    2842 	.db #0x08	; 8
+      0010F1 10                    2843 	.db #0x10	; 16
+      0010F2 7F                    2844 	.db #0x7f	; 127
+      0010F3 00                    2845 	.db #0x00	; 0
+      0010F4 00                    2846 	.db #0x00	; 0
+      0010F5 00                    2847 	.db #0x00	; 0
+      0010F6 3E                    2848 	.db #0x3e	; 62
+      0010F7 41                    2849 	.db #0x41	; 65	'A'
+      0010F8 41                    2850 	.db #0x41	; 65	'A'
+      0010F9 41                    2851 	.db #0x41	; 65	'A'
+      0010FA 3E                    2852 	.db #0x3e	; 62
+      0010FB 00                    2853 	.db #0x00	; 0
+      0010FC 00                    2854 	.db #0x00	; 0
+      0010FD 00                    2855 	.db #0x00	; 0
+      0010FE 7F                    2856 	.db #0x7f	; 127
+      0010FF 09                    2857 	.db #0x09	; 9
+      001100 09                    2858 	.db #0x09	; 9
+      001101 09                    2859 	.db #0x09	; 9
+      001102 06                    2860 	.db #0x06	; 6
+      001103 00                    2861 	.db #0x00	; 0
+      001104 00                    2862 	.db #0x00	; 0
+      001105 00                    2863 	.db #0x00	; 0
+      001106 3E                    2864 	.db #0x3e	; 62
+      001107 41                    2865 	.db #0x41	; 65	'A'
+      001108 51                    2866 	.db #0x51	; 81	'Q'
+      001109 21                    2867 	.db #0x21	; 33
+      00110A 5E                    2868 	.db #0x5e	; 94
+      00110B 00                    2869 	.db #0x00	; 0
+      00110C 00                    2870 	.db #0x00	; 0
+      00110D 00                    2871 	.db #0x00	; 0
+      00110E 7F                    2872 	.db #0x7f	; 127
+      00110F 09                    2873 	.db #0x09	; 9
+      001110 19                    2874 	.db #0x19	; 25
+      001111 29                    2875 	.db #0x29	; 41
+      001112 46                    2876 	.db #0x46	; 70	'F'
+      001113 00                    2877 	.db #0x00	; 0
+      001114 00                    2878 	.db #0x00	; 0
+      001115 00                    2879 	.db #0x00	; 0
+      001116 46                    2880 	.db #0x46	; 70	'F'
+      001117 49                    2881 	.db #0x49	; 73	'I'
+      001118 49                    2882 	.db #0x49	; 73	'I'
+      001119 49                    2883 	.db #0x49	; 73	'I'
+      00111A 31                    2884 	.db #0x31	; 49	'1'
+      00111B 00                    2885 	.db #0x00	; 0
+      00111C 00                    2886 	.db #0x00	; 0
+      00111D 00                    2887 	.db #0x00	; 0
+      00111E 01                    2888 	.db #0x01	; 1
+      00111F 01                    2889 	.db #0x01	; 1
+      001120 7F                    2890 	.db #0x7f	; 127
+      001121 01                    2891 	.db #0x01	; 1
+      001122 01                    2892 	.db #0x01	; 1
+      001123 00                    2893 	.db #0x00	; 0
+      001124 00                    2894 	.db #0x00	; 0
+      001125 00                    2895 	.db #0x00	; 0
+      001126 3F                    2896 	.db #0x3f	; 63
+      001127 40                    2897 	.db #0x40	; 64
+      001128 40                    2898 	.db #0x40	; 64
+      001129 40                    2899 	.db #0x40	; 64
+      00112A 3F                    2900 	.db #0x3f	; 63
+      00112B 00                    2901 	.db #0x00	; 0
+      00112C 00                    2902 	.db #0x00	; 0
+      00112D 00                    2903 	.db #0x00	; 0
+      00112E 1F                    2904 	.db #0x1f	; 31
+      00112F 20                    2905 	.db #0x20	; 32
+      001130 40                    2906 	.db #0x40	; 64
+      001131 20                    2907 	.db #0x20	; 32
+      001132 1F                    2908 	.db #0x1f	; 31
+      001133 00                    2909 	.db #0x00	; 0
+      001134 00                    2910 	.db #0x00	; 0
+      001135 00                    2911 	.db #0x00	; 0
+      001136 7F                    2912 	.db #0x7f	; 127
+      001137 20                    2913 	.db #0x20	; 32
+      001138 18                    2914 	.db #0x18	; 24
+      001139 20                    2915 	.db #0x20	; 32
+      00113A 7F                    2916 	.db #0x7f	; 127
+      00113B 00                    2917 	.db #0x00	; 0
+      00113C 00                    2918 	.db #0x00	; 0
+      00113D 00                    2919 	.db #0x00	; 0
+      00113E 63                    2920 	.db #0x63	; 99	'c'
+      00113F 14                    2921 	.db #0x14	; 20
+      001140 08                    2922 	.db #0x08	; 8
+      001141 14                    2923 	.db #0x14	; 20
+      001142 63                    2924 	.db #0x63	; 99	'c'
+      001143 00                    2925 	.db #0x00	; 0
+      001144 00                    2926 	.db #0x00	; 0
+      001145 00                    2927 	.db #0x00	; 0
+      001146 07                    2928 	.db #0x07	; 7
+      001147 08                    2929 	.db #0x08	; 8
+      001148 70                    2930 	.db #0x70	; 112	'p'
+      001149 08                    2931 	.db #0x08	; 8
+      00114A 07                    2932 	.db #0x07	; 7
+      00114B 00                    2933 	.db #0x00	; 0
+      00114C 00                    2934 	.db #0x00	; 0
+      00114D 00                    2935 	.db #0x00	; 0
+      00114E 61                    2936 	.db #0x61	; 97	'a'
+      00114F 51                    2937 	.db #0x51	; 81	'Q'
+      001150 49                    2938 	.db #0x49	; 73	'I'
+      001151 45                    2939 	.db #0x45	; 69	'E'
+      001152 43                    2940 	.db #0x43	; 67	'C'
+      001153 00                    2941 	.db #0x00	; 0
+      001154 00                    2942 	.db #0x00	; 0
+      001155 00                    2943 	.db #0x00	; 0
+                                   2944 	.area CSEG    (CODE)
+                                   2945 	.area CONST   (CODE)
+      001156                       2946 ___str_0:
+      001156 43 58 3A 20           2947 	.ascii "CX: "
+      00115A 00                    2948 	.db 0x00
+                                   2949 	.area CSEG    (CODE)
+                                   2950 	.area CONST   (CODE)
+      00115B                       2951 ___str_1:
+      00115B 20 20 30 2E 30 20 4E  2952 	.ascii "  0.0 NF"
              46
-      0014D4 00                    2983 	.db 0x00
-                                   2984 	.area CSEG    (CODE)
-                                   2985 	.area CONST   (CODE)
-      0014D5                       2986 ___str_2:
-      0014D5 20 4E 46              2987 	.ascii " NF"
-      0014D8 00                    2988 	.db 0x00
-                                   2989 	.area CSEG    (CODE)
-                                   2990 	.area CONST   (CODE)
-      0014D9                       2991 ___str_3:
-      0014D9 20 55 46              2992 	.ascii " UF"
-      0014DC 00                    2993 	.db 0x00
-                                   2994 	.area CSEG    (CODE)
-                                   2995 	.area XINIT   (CODE)
-                                   2996 	.area CABS    (ABS,CODE)
+      001163 00                    2953 	.db 0x00
+                                   2954 	.area CSEG    (CODE)
+                                   2955 	.area CONST   (CODE)
+      001164                       2956 ___str_2:
+      001164 20 4E 46              2957 	.ascii " NF"
+      001167 00                    2958 	.db 0x00
+                                   2959 	.area CSEG    (CODE)
+                                   2960 	.area CONST   (CODE)
+      001168                       2961 ___str_3:
+      001168 20 55 46              2962 	.ascii " UF"
+      00116B 00                    2963 	.db 0x00
+                                   2964 	.area CSEG    (CODE)
+                                   2965 	.area XINIT   (CODE)
+      00116C                       2966 __xinit__timer0_overflows:
+      00116C 00 00                 2967 	.byte #0x00, #0x00	; 0
+                                   2968 	.area CABS    (ABS,CODE)

@@ -6,17 +6,23 @@ __sfr __at (0xA0) P2; __sfr __at (0xB0) P3; __sfr __at (0xB1) P3M1; __sfr __at (
 __sfr __at (0xC0) P4; __sfr __at (0xC8) P5; __sfr __at (0xC9) P5M1; __sfr __at (0xCA) P5M0;
 __sfr __at (0x8E) P_SW2; __sfr __at (0x9D) CLKSEL;
 
-// Таймер 0
+// Регистрация Таймера 0 и прерываний
 __sfr __at (0x89) TMOD; __sfr __at (0x88) TCON; __sfr __at (0x8A) TL0; __sfr __at (0x8C) TH0; __sfr __at (0x8E) AUXR;
+__sfr __at (0xA8) IE;   // Регистр разрешений прерываний
 __sbit __at (0x8C) TR0; __sbit __at (0x8D) TF0;
+__sbit __at (0xAF) EA;  // Глобальные прерывания
+__sbit __at (0xA9) ET0; // Прерывание Таймера 0
 
 // Измерительные пины
-__sbit __at (0xB1) PIN_R1_10K; // P3.1 — Точный заряд 10 кОм
-__sbit __at (0xC4) PIN_R3_1K;  // P5.4 — Быстрый заряд 1 кОм
-__sbit __at (0xB0) PIN_BUTTON; // P3.0 — Кнопка Сон / Пробуждение
+__sbit __at (0xB1) PIN_R1_10K; // P3.1 — Заряд через 10 кОм
+__sbit __at (0xB0) PIN_BUTTON; // P3.0 — Кнопка Сон / Включение
 
-#define MASK_R3_1K   (1 << 4)
-#define MASK_DET_55  (1 << 5) // Вход компаратора P5.5
+#define MASK_DET_55  (1 << 5) // P5.5 — Измерительный вход уровня
+
+// Глобальный счетчик кругов таймера
+volatile uint16_t timer0_overflows = 0;
+
+
 
 #define SCL_BIT   2
 #define SDA_BIT   3
@@ -174,124 +180,147 @@ void SSD1306_DisplayResult(uint8_t page, uint8_t x, uint32_t val, uint8_t is_mic
     }
 }
 
-uint32_t Measure_Single(uint8_t use_1k) {
-    uint32_t cycles = 0;
-    uint32_t max_limit = use_1k ? 80000000 : 3000000;
-    volatile uint16_t discharge;
-
-    P3M1 &= ~0x02; P3M0 |= 0x02; PIN_R1_10K = 0;
-    P5M1 &= ~MASK_R3_1K; P5M0 |= MASK_R3_1K; PIN_R3_1K = 0;
-
-    for(discharge = 0; discharge < 30000; discharge++) { __asm__("nop"); }
-
-    TH0 = 0x00; TL0 = 0x00; TF0 = 0;
-
-    if (use_1k) {
-        P3M1 |= 0x02; P3M0 &= ~0x02;
-        P5M1 &= ~MASK_R3_1K; P5M0 |= MASK_R3_1K; PIN_R3_1K = 1;
-    } else {
-        P5M1 |= MASK_R3_1K; P5M0 &= ~MASK_R3_1K;
-        P3M1 &= ~0x02; P3M0 |= 0x02; PIN_R1_10K = 1;
-    }
-
-    TR0 = 1;
-    while (!(P5 & MASK_DET_55)) {
-        if (TF0) {
-            TF0 = 0;
-            cycles += 65536;
-            if (cycles > max_limit) break;
-        }
-    }
-    TR0 = 0;
-    cycles += ((uint16_t)TH0 << 8) | TL0;
-
-    PIN_R1_10K = 0;
-    PIN_R3_1K = 0;
-
-    return cycles;
+// --- АППАРАТНОЕ ПРЕРЫВАНИЕ ТАЙМЕРА 0 ---
+// Вызывается автоматически каждые 65536 тиков, исключая любые пропуски
+void Timer0_ISR(void) __interrupt (1) {
+    timer0_overflows++;
 }
 
-// --- Основной цикл ---
+// --- Функция одиночного измерения ---
+uint32_t Measure_Single(void) {
+    uint32_t total_ticks = 0;
+    uint8_t stable_counter = 0;
+
+    // Сброс счетчиков перед началом заряда
+    TH0 = 0x00;
+    TL0 = 0x00;
+    TF0 = 0;
+    timer0_overflows = 0;
+
+    // Включаем прерывание Таймера 0
+    ET0 = 1;
+
+    // Переводим пин 10кОм в режим push-pull И подаем логическую 1 для начала заряда
+    P3M1 &= ~0x02; P3M0 |= 0x02;
+    PIN_R1_10K = 1;
+
+    TR0 = 1; // Стартуем Таймер 0
+
+    // --- Высокоскоростной опрос уровня с программным дебаунсом ---
+    while (1) {
+        if (P5 & MASK_DET_55) {
+            stable_counter++;
+            if (stable_counter > 10) {
+                break; // Успешно зарядился
+            }
+        } else {
+            stable_counter = 0;
+        }
+
+        // Аварийный таймаут защиты от зависания (~10 секунд)
+        if (timer0_overflows > 1700) {
+            break;
+        }
+    }
+    TR0 = 0;  // Стоп Таймер 0
+    ET0 = 0;  // Выключаем прерывание таймера, чтобы не мешало основной программе
+
+    // Точный сбор данных: (круги * 65536) + остаток в регистрах
+    total_ticks = ((uint32_t)timer0_overflows << 16) | ((uint16_t)TH0 << 8) | TL0;
+
+    return total_ticks;
+}
+
+// --- Основной цикл программы ---
 void main(void) {
     uint32_t raw_ticks;
     uint32_t final_calc;
     uint32_t last_display_val = 0;
-    float filtered_ticks = 0.0f;
+    uint32_t filtered_ticks = 0;
     uint8_t mode_uf;
     uint8_t is_first_run = 1;
-    uint8_t is_sleeping = 0; //программный флаг сна
+    uint8_t is_sleeping = 0;
+    volatile uint16_t discharge;
 
-    // Компаратор P5.5 на вход
+    // Настраиваем пин P5.5 как цифровой вход с высоким импедансом (Hi-Z)
     P5M1 |= MASK_DET_55; P5M0 &= ~MASK_DET_55;
 
-    // Кнопка P3.0 на вход с подтяжкой
+    // Настройка кнопки P3.0 на вход
     P3M1 |= (1 << 0); P3M0 &= ~(1 << 0);
 
+    // Настройка Таймера 0 на максимальную скорость 1T в режиме 16-бит
     P_SW2 = 0x80; CLKSEL = 0x00; P_SW2 = 0x00;
-    AUXR |= 0x80; TMOD &= 0xF0; TR0 = 0; TF0 = 0;
+    AUXR |= 0x80;
+    TMOD &= 0xF0; // Режим 0 (16-битный таймер)
+    TR0 = 0; TF0 = 0;
+
+    // Разрешаем глобальные прерывания
+    EA = 1;
 
     SCL_HIGH(); SDA_HIGH(); Delay_ms(100);
     SSD1306_Init();
     SSD1306_Clear();
 
     while(1) {
-        // --- ПРОГРАММНЫЙ ХОД В СОН И ВЫХОД ИЗ НЕГО ---
+        // --- ОБРАБОТКА КНОПКИ СНА (Теперь работает мгновенно!) ---
         if (PIN_BUTTON == 0) {
-            Delay_ms(50); // Надежный антидребезг нажатия
+            Delay_ms(40);
             if (PIN_BUTTON == 0) {
+                while(PIN_BUTTON == 0) { Delay_ms(10); }
+                Delay_ms(50);
 
-                // Ждем, пока кнопку полностью отпустят
-                while(PIN_BUTTON == 0) {
-                    Delay_ms(10);
-                }
-                Delay_ms(100); // Антидребезг на размыкание контактов
-
-                // Меняем состояние: если спал — проснись, если работал — усни
                 if (is_sleeping == 0) {
                     is_sleeping = 1;
-                    SSD1306_Command(0xAE); // Просто выключаем экран
+                    SSD1306_Command(0xAE); // Выключить экран
                 } else {
                     is_sleeping = 0;
-                    SSD1306_Command(0xAF); // Просто включаем экран
-                    last_display_val = 0;  // Сброс, чтобы сразу обновить экран актуальным замером
+                    SSD1306_Command(0xAF); // Включить экран
+                    last_display_val = 0;
                     is_first_run = 1;
                 }
             }
         }
 
-        // Если прибор в "программном сне" — пропускаем всю логику замеров и вывода
         if (is_sleeping == 1) {
+            // Если прибор в спячке, принудительно держим разряд и спим короткие интервалы
+            P3M1 &= ~0x02; P3M0 |= 0x02; PIN_R1_10K = 0;
             Delay_ms(100);
-            continue; // Прыгаем обратно в начало while(1) только опрашивать кнопку
+            continue;
         }
 
-        // --- ДАЛЕЕ ИДЕТ СТАНДАРТНАЯ РАБОТА ИЗМЕРИТЕЛЯ ---
-        mode_uf = 0;
-        raw_ticks = Measure_Single(0);
+        // --- ИЗМЕРИТЕЛЬНЫЙ БЛОК ---
+        raw_ticks = Measure_Single(); // Делаем чистый замер времени заряда
 
-        if (raw_ticks > 55000) {
-            mode_uf = 1;
-            raw_ticks = Measure_Single(1);
+        // Плавный фильтр скользящего среднего
+        if (is_first_run || filtered_ticks < 100) {
+            filtered_ticks = raw_ticks;
+            is_first_run = 0;
+        } else {
+            filtered_ticks = ((filtered_ticks >> 1) + (filtered_ticks >> 2)) + (raw_ticks >> 2);
+        }
 
-            if (is_first_run || filtered_ticks < 1000.0f) {
-                filtered_ticks = (float)raw_ticks;
-                is_first_run = 0;
-            } else {
-                filtered_ticks = filtered_ticks + 0.25f * ((float)raw_ticks - filtered_ticks);
-            }
+          if (filtered_ticks > 43000) {
+            mode_uf = 1; // Режим "мкФ"
 
-            // --- ТОЧЕЧНАЯ КОРРЕКЦИЯ КОЭФФИЦИЕНТОВ  ---
-            if (filtered_ticks < 650000.0f) {
-                final_calc = (uint32_t)(filtered_ticks * 0.0000059f); // Скорректировано под 10 мкФ
-            }
-            else if (filtered_ticks >= 650000.0f && filtered_ticks < 2000000.0f) {
-                final_calc = (uint32_t)(filtered_ticks * 0.0001996f);
-            }
-            else {
-                final_calc = (uint32_t)(filtered_ticks * 0.0003050f);
-            }
+            // --- ЕДИНАЯ ЛИНЕЙНАЯ МАТЕМАТИКА ДЛЯ ВСЕХ МКФ ---
+            // Коэффициент 23 идеально подошел для 10 мкФ.
+            // Чтобы он так же точно считал и 100 мкФ, мы просто делим на 100000.
+            final_calc = (filtered_ticks * 23) / 100000;
 
             if (final_calc == 0) final_calc = 1;
+
+            if (final_calc > last_display_val) {
+                if ((final_calc - last_display_val) < 1) final_calc = last_display_val;
+            } else {
+                if ((last_display_val - final_calc) < 1) final_calc = last_display_val;
+            }
+        }
+        else {
+            mode_uf = 0; // Режим "нФ"
+            is_first_run = 1;
+
+            // Математика для нанофарад (оставляем проверенный вами точный коэффициент)
+            final_calc = (filtered_ticks * 23) / 100;
 
             if (final_calc > last_display_val) {
                 if ((final_calc - last_display_val) < 2) final_calc = last_display_val;
@@ -299,24 +328,22 @@ void main(void) {
                 if ((last_display_val - final_calc) < 2) final_calc = last_display_val;
             }
         }
-        else {
-            mode_uf = 0;
-            is_first_run = 1;
 
-            final_calc = (uint32_t)((float)raw_ticks * 0.18823f);
-
-            if (final_calc > last_display_val) {
-                if ((final_calc - last_display_val) < 12) final_calc = last_display_val;
-            } else {
-                if ((last_display_val - final_calc) < 12) final_calc = last_display_val;
-            }
-        }
-
+        // Обновление дисплея
         if (final_calc != last_display_val) {
             SSD1306_DisplayResult(3, 16, final_calc, mode_uf);
             last_display_val = final_calc;
         }
 
-        Delay_ms(300);
+        // --- ЭТАП РАЗРЯДА И ПАУЗЫ (Перенесен сюда!) ---
+        // Переводим пин в режим разряда на GND
+        P3M1 &= ~0x02; P3M0 |= 0x02; PIN_R1_10K = 0;
+
+        // Пока прибор ждет 300 мс перед следующим замером, конденсатор глубоко разряжается.
+        // Мы разбиваем паузу на мелкие части, чтобы кнопка реагировала плавно.
+        for(discharge = 0; discharge < 30; discharge++) {
+            Delay_ms(10);
+            if (PIN_BUTTON == 0) break; // Если во время паузы нажали кнопку — мгновенно прерываем её
+        }
     }
 }

@@ -9,8 +9,8 @@
 -b PSEG = 0x0001
 -b ISEG = 0x0000
 -b BSEG = 0x0000
--k C:\Users\Cociska\.platformio\packages\toolchain-sdcc\lib
--k C:\Users\Cociska\.platformio\packages\toolchain-sdcc\bin\..\lib\large
+-k C:\Program Files\sdcc\lib
+-k C:\Program Files\SDCC\bin\..\lib\large
 -l mcs51
 -l libsdcc
 -l libint
